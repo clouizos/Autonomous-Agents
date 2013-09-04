@@ -5,7 +5,7 @@ import java.util.Random;
 public class PredatorPolicies {
 
 	public String randomPolicy(){
-		String newpos = "";
+		//String newpos = "";
 		String[] actions = {"north","south","west","east","wait"};
 		
 		Random generator = new Random();

@@ -54,4 +54,17 @@ public class Position {
 		return i;
 	}
 	
+	public Position movingPredator(String action){
+		switch (action){
+			case "north":
+				return new Position(x, y-1);
+			case "south":
+				return new Position(x, y+1);
+			case "east":
+				return new Position(x-1, y);
+			case "west":
+				return new Position(x+1, y);			
+		}
+		return new Position(x,y);
+	}
 }
