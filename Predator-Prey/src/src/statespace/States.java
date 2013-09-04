@@ -1,4 +1,4 @@
-package statespace;
+package src.statespace;
 
 public class States {
 

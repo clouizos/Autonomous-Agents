@@ -1,4 +1,4 @@
-package environment;
+package src.environment;
 
 import java.awt.Color;
 import java.awt.Dimension;

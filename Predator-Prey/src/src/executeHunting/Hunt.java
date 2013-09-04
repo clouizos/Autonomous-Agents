@@ -1,10 +1,11 @@
-package executeHunting;
+package src.executeHunting;
 
 import java.awt.EventQueue;
-import environment.VisualizeGrid;
-import policy.PredatorPolicies;
-import policy.PreyPolicies;
-import statespace.Position;
+
+import src.environment.VisualizeGrid;
+import src.policy.PredatorPolicies;
+import src.policy.PreyPolicies;
+import src.statespace.Position;
 
 public class Hunt {
 

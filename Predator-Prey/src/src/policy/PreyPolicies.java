@@ -1,4 +1,4 @@
-package policy;
+package src.policy;
 
 import java.util.Random;
 
