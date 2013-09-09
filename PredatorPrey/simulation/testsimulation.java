@@ -47,22 +47,25 @@ public class testsimulation {
 	    int x = input.readInt();
 	    System.out.println("Please enter y coordinate: ");
 	    int y = input.readInt();*/
-		show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
+		
+		//show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
+		show("At beginloop abs: prey X:"+prey[0]+" prey Y:"+prey[1]);
+		show("At beginloop abs: predator X:"+predator[0]+" predator Y:"+predator[1]+'\n');
 		
 		//preymove
 		//updates the state (prey relative from pred) upon the prey move
 		String move = randomPolicyPrey.getAction(currentState);
-		Position newPreyRel = preyRel.preymove(move);
+		preyRel = preyRel.preymove(move);
 		
 		show("prey move: "+move);
-		show(newPreyRel.toString()+" newPreyRel after prey moves");
+		//show(preyRel.toString()+" PreyRel after prey moves");
 		
-		currentState.updatePosition(newPreyRel);
+		currentState.updatePosition(preyRel);
 		
-		show(currentState.getPrey().toString()+" updated state|newPreyRel");
+		//show(currentState.getPrey().toString()+" updated state|newPreyRel");
 		
 		//updates the absolute prey coordinates within the simulator
-		prey = getAbsPrey(newPreyRel);
+		prey = getAbsPrey(preyRel);
 		
 		show("abs: prey X:"+prey[0]+" prey Y:"+prey[1]);
 		
@@ -70,21 +73,20 @@ public class testsimulation {
 		//predator move on new state(prey)
 		//updates the state (prey relative from pred) according to predator move
 		move = randomPolicyPredator.getAction(currentState);
-		newPreyRel = newPreyRel.predmove(move);
+		preyRel = preyRel.predmove(move);
 		
 		show("predator moved: "+move);
-		show(newPreyRel.toString()+" newPreyRel after pred moves");
+		//show(preyRel.toString()+" PreyRel after pred moves");
 		
-		currentState.updatePosition(newPreyRel);
+		currentState.updatePosition(preyRel);
 		
-		show(currentState.getPrey().toString()+" updated state|newPreyRel");
+		//show(currentState.getPrey().toString()+" updated state|newPreyRel");
 		
 		//updates the absolute predator coordinates within the simulator
 		predmoveAbs(move);
 		  
 	    show("abs: predator X:"+predator[0]+" predator Y:"+predator[1]);
 	    
-	    //System.out.println(p.getAction(currentState));
 	    show("Enter q to quit, c to continue:");
 	    q = input.readChar();
 	    runs++;
