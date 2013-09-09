@@ -14,10 +14,9 @@ public class testsimulation {
 	// init 
 	static int runs = 0;
 	 // absolute coordinates
-	 static int[] predator = {0,0};
-	 static int[] prey = {5,5};
-	 // relative prey from pred
-	
+	static int[] predator = {0,0};
+	static int[] prey = {5,5};
+	 
 	
 	 
     public testsimulation() {
@@ -39,48 +38,61 @@ public class testsimulation {
 	char q = ' ';
 	 Policy randomPolicyPrey = new RandomPolicyPrey();
 	 Policy randomPolicyPredator = new RandomPolicyPredator();
-	 Position prey1 = new Position(prey[0],prey[1]);
-	 State currentState = new State(prey1);
+	 // relative prey from pred
+	 Position preyRel = new Position(prey[0],prey[1]);
+	 State currentState = new State(preyRel);
 	 //State cs1 = new State(prey1);
 	while(q!='q' && runs < 100) {
 		/*System.out.println("Please enter x coordinate: ");
 	    int x = input.readInt();
 	    System.out.println("Please enter y coordinate: ");
 	    int y = input.readInt();*/
+		show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
+		
 		//preymove
-		//updates the state upon the prey move
+		//updates the state (prey relative from pred) upon the prey move
 		String move = randomPolicyPrey.getAction(currentState);
-		Position newPrey = prey1.preymove(move);
-		currentState.updatePosition(newPrey);
-		prey = getAbsPrey(newPrey);
-		System.out.println("prey moved:"+move);
-		System.out.println("prey X:"+prey[0]+" prey Y:"+prey[1]);
-		prey1 = new Position(prey[0],prey[1]);
+		Position newPreyRel = preyRel.preymove(move);
+		
+		show("prey move: "+move);
+		show(newPreyRel.toString()+" newPreyRel after prey moves");
+		
+		currentState.updatePosition(newPreyRel);
+		
+		show(currentState.getPrey().toString()+" updated state|newPreyRel");
+		
+		//updates the absolute prey coordinates within the simulator
+		prey = getAbsPrey(newPreyRel);
+		
+		show("abs: prey X:"+prey[0]+" prey Y:"+prey[1]);
 		
 		
 		//predator move on new state(prey)
-		//updates the state according to predator move
+		//updates the state (prey relative from pred) according to predator move
 		move = randomPolicyPredator.getAction(currentState);
-		System.out.println("prey1:"+prey1);
-		Position newPred = prey1.predmove(move);
-		currentState.updatePosition(newPred);
+		newPreyRel = newPreyRel.predmove(move);
+		
+		show("predator moved: "+move);
+		show(newPreyRel.toString()+" newPreyRel after pred moves");
+		
+		currentState.updatePosition(newPreyRel);
+		
+		show(currentState.getPrey().toString()+" updated state|newPreyRel");
+		
+		//updates the absolute predator coordinates within the simulator
 		predmoveAbs(move);
-		//prey1 = new Position(prey[0],prey[1]);
-		System.out.println("predator moved:"+move);
-	    //Position prey = new Position(x,y);
+		  
+	    show("abs: predator X:"+predator[0]+" predator Y:"+predator[1]);
 	    
-	    //int preyX = prey[0];
-	    //int preyY = prey[1];
-	    
-	    System.out.println("predator X:"+predator[0]+" predator Y:"+predator[1]);
 	    //System.out.println(p.getAction(currentState));
-	    System.out.println("Enter q to quit, c to continue:");
+	    show("Enter q to quit, c to continue:");
 	    q = input.readChar();
 	    runs++;
 
 	}
     }
     
+    //returns the absolute coordinates from prey within the simulator
     public static int[] getAbsPrey(Position prey) {
     	
     	int absPreyX = wrapAbs(prey.getX() + predator[0]);
@@ -117,4 +129,8 @@ public class testsimulation {
     	    return i += 11;
     	return i;
         }
+    
+    public static void show(String s) {
+        System.out.println(s);
+    }
 }
