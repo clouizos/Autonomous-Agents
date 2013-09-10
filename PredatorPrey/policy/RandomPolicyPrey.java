@@ -22,7 +22,7 @@ public class RandomPolicyPrey implements Policy{
 		}
 		
 		Random generator = new Random();
-		double probability = 100*generator.nextDouble();
+		double probability = 100 * generator.nextDouble();
 
 		if(probability > 80){
 			int randomIndex = generator.nextInt(possibleActions.size());
