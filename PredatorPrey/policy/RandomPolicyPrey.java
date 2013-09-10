@@ -22,9 +22,9 @@ public class RandomPolicyPrey implements Policy{
 		}
 		
 		Random generator = new Random();
-		double probability = 100 * generator.nextDouble();
-
-		if(probability > 80){
+		double probability = generator.nextDouble();
+		//System.out.println("prob:"+probability);
+		if(probability > 0.8){
 			int randomIndex = generator.nextInt(possibleActions.size());
 			return possibleActions.get(randomIndex);
 		}else{
