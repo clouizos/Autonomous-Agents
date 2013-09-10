@@ -11,10 +11,10 @@ public class RandomPolicyPrey implements Policy{
 	}
 	
 	public String getAction(State cs){
-		String[] actions = {"north","south","west","east","wait"};
+		String[] actions = {"north","south","west","east"};
 		Position prey = cs.getPrey();
 		ArrayList<String> possibleActions = new ArrayList<String>();
-		for(int i=0;i<4;i++){
+		for(int i=0;i<actions.length;i++){
 			Position newPos = prey.preymove(actions[i]);
 			if(newPos.getX() != 0 || newPos.getY() != 0){
 				possibleActions.add(actions[i]);
@@ -22,10 +22,14 @@ public class RandomPolicyPrey implements Policy{
 		}
 		
 		Random generator = new Random();
-		
-		int randomIndex = generator.nextInt(possibleActions.size());
-		return possibleActions.get(randomIndex);
-		
+		double probability = 100*generator.nextDouble();
+		System.out.println("probability:"+probability);
+		if(probability > 80){
+			int randomIndex = generator.nextInt(possibleActions.size());
+			return possibleActions.get(randomIndex);
+		}else{
+			return "wait";
+		}
 
 	}
 
