@@ -6,11 +6,26 @@ import java.util.Hashtable;
 import statespace.*;
 
 public class policyEval {
+	private static State[][][][] statespace;
+	public policyEval(){
+		statespace = new State[11][11][11][11];
+		for(int i = 0; i < 11; i++) {
+		    for(int j = 0; j < 11; j++) {
+		    	for(int k = 0; k < 11; k++) {
+		    		for(int l = 0; l < 11; l++) {
+		    			State s = new State(new Position(i, j), new Position(k, l), 0);
+		    			statespace[i][j][k][l] = s;
+		    		}
+		    	}
+
+		    }
+		}
+	}
 	
 	/* max statespace state[i][j][k][l]
 	 * where predator[i][j] prey[k][l]
 	 */
-	private State[][][][] statespace;
+	
 	/* gamma = discount factor (0.8)
 	 * theta = small positive number; threshold for continueing evaluation
 	 * delta = change in state value  
@@ -18,7 +33,7 @@ public class policyEval {
 	private double gamma, delta, theta;
 	//dfsf
 	//Dummy method getActionList
-	public ArrayList<String> getActionList(Policy p, State s){
+	public ArrayList<String> getActionList(State s){
 		ArrayList<String> allAction = new ArrayList<String>();
 		allAction.add("north");
 		allAction.add("south");
@@ -28,9 +43,16 @@ public class policyEval {
 		return allAction;
 	}
 	
+	public int wrap(int i) {
+		if ((i > 10))
+		    return i -= 11;
+		if ((i < 0))
+		    return i += 11;
+		return i;
+	}
 	//Dummy method getAllNextState
-	public ArrayList<State> getAllNextState(State[][][][] allState, State s, String a){
-		/*this method receives statespace naming allState, current state, and action as parameter
+	public ArrayList<State> getAllNextState(State[][][][] statespace, State s, String a){
+		/*this method receives statespace naming statespace, current state, and action as parameter
 		and return all possible next state objects
 		*/
 		int currPredX, currPredY, currPreyX, currPreyY = 0;
@@ -42,17 +64,17 @@ public class policyEval {
 		currPreyY = s.getPrey().getY();
 		
 		switch (a){
-		case "north" : 	currPredY -=1; 
+		case "north" : 	currPredY = wrap(currPredY-1); 
 						break;
-		case "south" : 	currPredY +=1; 
+		case "south" : 	currPredY = wrap(currPredY+1); 
 						break;
-		case "west" : 	currPredX -=1; 
+		case "west" : 	currPredX = wrap(currPredY-1); 
 						break;
-		case "east" : 	currPredX +=1; 
+		case "east" : 	currPredX = wrap(currPredY+1); 
 						break;
 		}
 		
-		nextState = allState[currPredX][currPredY][currPreyX][currPreyY];
+		nextState = statespace[currPredX][currPredY][currPreyX][currPreyY];
 		allNextState.add(nextState);
 		return allNextState;
 	}
@@ -65,7 +87,9 @@ public class policyEval {
 	
 	//Dummy method getTransReward
 	public double getTransReward(State cs, String a, State ns){
-		double transReward=1;
+		double transReward=0;
+		if (ns.endState())
+			transReward = 10;
 		return transReward;
 	}
 	
@@ -75,7 +99,7 @@ public class policyEval {
 		return 0.5;
 	}
 		
-	public policyEval(double gamma, Policy p, State[][][][] allState) {
+	public void doEvaluation(double gamma, State[][][][] statespace) {
         // statespace init
 		double delta;
 		double theta = 0.0001;
@@ -93,21 +117,24 @@ public class policyEval {
 		ArrayList<String> allAction = new ArrayList<String>();
 		ArrayList<State> allNextState = new ArrayList<State>();
 		State currentState;
+		int counter = 0;
 		do{
+			counter ++;
+			System.out.println("Iteration - "+counter);
 			delta = 0;
 			for(int i = 0; i < 11; i++) 
 			    for(int j = 0; j < 11; j++) 
 			    	for(int k = 0; k < 11; k++) 
 			    		for(int l = 0; l < 11; l++){
-			    			currentState = allState[i][j][k][l]; 
+			    			currentState = statespace[i][j][k][l]; 
 			    			v = currentState.getValue();
 			    			V = 0;
 			    			//get All possible actions in state s
-			    			allAction = getActionList(p,currentState);
+			    			allAction = getActionList(currentState);
 			    			for (String action : allAction){
 			    				actionProb = getActionProb(currentState, action);
 			    				//get all possible next states (but in this problem only one possible next state)
-			    				allNextState = getAllNextState(allState, currentState,action);
+			    				allNextState = getAllNextState(statespace, currentState,action);
 			    				rightSideV = 0;
 			    				for (State nextState : allNextState){
 			    					transProb = getTransProb(currentState, action,nextState);
@@ -117,16 +144,18 @@ public class policyEval {
 			    				}
 			    				V += actionProb*rightSideV;
 			    			}
-			    			allState[i][j][k][l].setValue(V);
+			    			statespace[i][j][k][l].setValue(V);
 			    			delta = Math.max(delta, Math.abs(v-V));
 			    		}
-			
-		} while (delta<theta);
+			System.out.println("Value of delta "+delta);
+		} while (delta>theta);
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		policyEval PE = new policyEval();
+		PE.doEvaluation(0.8, statespace);
+		
 	}
 
 }
