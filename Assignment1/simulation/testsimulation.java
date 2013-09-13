@@ -2,6 +2,7 @@ package simulation;
 
 import io.MyInput;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,7 +43,15 @@ public class testsimulation {
 	 MyInput input = new MyInput();
 	 char q = ' ';
 	 Policy randomPolicyPrey = new RandomPolicyPrey();
-	 Policy randomPolicyPredator = new RandomPolicyPredator();
+	 //Policy randomPolicyPredator = new RandomPolicyPredator();
+	 VIPolicy viPolicyPred = new VIPolicy();
+		File file = new File("predator/policy.data");
+        try {
+        	viPolicyPred.filltable(file);
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 
 	 State currentState = new State(prey, predator);
 	 //State cs1 = new State(prey1);
@@ -88,7 +97,8 @@ public class testsimulation {
 		//predator move on new state(prey)
 		
 		//updates the state according to predator move
-		move = randomPolicyPredator.getAction(currentState);
+		//move = randomPolicyPredator.getAction(currentState);
+		move = viPolicyPred.getAction(currentState);
 		predator = predator.move(move);
 		
 		show("predator moved: "+move);

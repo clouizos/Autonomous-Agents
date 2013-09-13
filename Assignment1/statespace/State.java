@@ -82,7 +82,7 @@ public class State {
      */
     public Vector nextStates(String predmove) {
 	Vector succstates = new Vector();
-	String[] moves = {"north", "east", "south", "west", "none"};
+	String[] moves = {"north", "east", "south", "west", "wait"};
 	Position preDnext, preYnext;
 	// the next position of the predator when taken a:predmove
 	preDnext = predator.move(predmove);

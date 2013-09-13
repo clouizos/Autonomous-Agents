@@ -24,34 +24,36 @@ import java.util.Hashtable;
  * @version 1.0
  */
 public class VIPolicy implements Policy {
-    private State[][] statespace;
+    private State[][][][] statespace;
     private Hashtable stateactions;
     private double gamma, delta, theta;
     //int size = 0;
 
     public VIPolicy(double g, double t) {
-        // statespace init
-	statespace = new State[11][11];
-	for(int x = -5; x <= 5; x++) {
-	    for(int y = -5; y <= 5; y++) {
-		State s = new State(new Position(x, y), 0);
-		statespace[x+5][y+5] = s;
+       // statespace init
+	statespace = new State[11][11][11][11];
+	for(int i = 0; i < 11; i++) {
+	    for(int j = 0; j < 11; j++) {
+	    	for(int k = 0; k < 11; k++) {
+	    		for(int l = 0; l < 11; l++) {
+	    			State s = new State(new Position(i, j), new Position(k, l), 0);
+	    			statespace[i][j][k][l] = s;
+	    		}
+	    	}
+
 	    }
 	}
-        stateactions = new Hashtable();
         gamma = g;
         theta = t;
-        //multisweep();
-        //show(""+ stateactions.size());
-        
-    }
+        stateactions = new Hashtable<>();
+	}
     
     public VIPolicy() {}
 
     public static void main(String[] args) {
         VIPolicy p = new VIPolicy(0.9, 0.001);
         p.multisweep();
-        p.show("size stateactions: " + p.stateactions.size());
+        
         //p.show("size statespace tree: " + p.size);
         try {
 	    p.output();
@@ -98,15 +100,19 @@ public class VIPolicy implements Policy {
         //loop: for every state/node
         for(int i=0;i<11;i++) {
             for(int j=0;j<11;j++) {
-        	State currentState = statespace[i][j];
-        	//show(currentState.toString());
-        	v = currentState.getValue();
-        	show("current value: "+v);
-        	vUpdate = updateValue(currentState);
-        	show("updated value: "+vUpdate);
-        	currentState.setValue(vUpdate);
-        	show("check updated value: "+currentState.getValue());
-                delta = Math.max(delta, Math.abs(v - currentState.getValue()));
+            	for(int k = 0; k < 11; k++) {
+    	    		for(int l = 0; l < 11; l++) {
+    	    			State currentState = statespace[i][j][k][l];
+    	    			//show(currentState.toString());
+    	    			v = currentState.getValue();
+    	    			show("current value: "+v);
+    	    			vUpdate = updateValue(currentState);
+    	    			show("updated value: "+vUpdate);
+    	    			currentState.setValue(vUpdate);
+    	    			show("check updated value: "+currentState.getValue());
+    	    			delta = Math.max(delta, Math.abs(v - currentState.getValue()));
+    	    		}
+            	}
             }
         }
         show("booya delta: " + delta);
@@ -114,10 +120,10 @@ public class VIPolicy implements Policy {
     }
 
     public double updateValue(State cS) {
-	String action = "none"; // action
+	String action = "wait"; // action
 	State currentState = cS;
 	State nextState;
-        String[] moves = {"north", "south", "east", "west", "none"};
+        String[] moves = {"north", "south", "east", "west", "wait"};
         double[] actions = {0,0,0,0,0};
         Vector nextStates;
         for(int i=0;i<moves.length;i++) {
@@ -131,9 +137,13 @@ public class VIPolicy implements Policy {
                     getReward(nextState);
         	} else {*/
         	 //   if(stateactions.containsKey(nextState.toString())) {
+		        	int predX = nextState.getPredator().getX();
+		        	int predY = nextState.getPredator().getY();
+        			int preyX = nextState.getPrey().getX();
+        			int preyY = nextState.getPrey().getY();
                 	actions[i] += getP(nextStates.size(), nextState) *
                         (getReward(nextState) +
-                         (gamma * statespace[nextState.getPrey().getX()+5][nextState.getPrey().getY()+5].getValue()));
+                         (gamma * statespace[predX][predY][preyX][preyY].getValue()));
         	    //System.out.println("nextstate value: "+statespace[nextState.getPrey().getX()+7][nextState.getPrey().getY()+7].getValue());
                 	/*
         	    actions[i] += getP(nextStates.size(), nextState) *
@@ -163,7 +173,7 @@ public class VIPolicy implements Policy {
 
     // todo: implement probablity of next state following current state
     public double getP(int nrnextstates, State next) {
-	if(next.getPreyaction().compareTo("none")==0)
+	if(next.getPreyaction().compareTo("wait")==0)
 	    return (0.2);
 	else
 	    return (0.8/nrnextstates);
@@ -172,8 +182,8 @@ public class VIPolicy implements Policy {
     // implement reward function
     public double getReward(State s) {
         if(s.endState())
-            return 1.0;
-	return -(1.0/30.0);
+            return 10.0;
+	return 0.0;
     }
 
     public void show(String s) {
