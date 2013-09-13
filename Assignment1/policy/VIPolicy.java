@@ -25,7 +25,7 @@ import java.util.Hashtable;
  */
 public class VIPolicy implements Policy {
     private State[][][][] statespace;
-    private Hashtable stateactions;
+    private static Hashtable stateactions, statevalues;
     private double gamma, delta, theta;
     //int size = 0;
 
@@ -46,6 +46,7 @@ public class VIPolicy implements Policy {
         gamma = g;
         theta = t;
         stateactions = new Hashtable<>();
+        statevalues = new Hashtable<>();
 	}
     
     public VIPolicy() {}
@@ -53,6 +54,15 @@ public class VIPolicy implements Policy {
     public static void main(String[] args) {
         VIPolicy p = new VIPolicy(0.9, 0.001);
         p.multisweep();
+        
+        // outputs the values of all states where prey[5][5]
+        Position prey55 = new Position(5,5);
+    	for(int i = 0; i < 11; i++) {
+    	    for(int j = 0; j < 11; j++) {
+    	    	State statePrey55 = new State(new Position(i,j), prey55);
+    	    	p.show(statePrey55.toString() +  " " +(double)statevalues.get(statePrey55.toString()));
+    	    }
+    	}
         
         //p.show("size statespace tree: " + p.size);
         try {
@@ -65,6 +75,10 @@ public class VIPolicy implements Policy {
 
     public Hashtable getSA() {
         return stateactions;
+    }
+    
+    public Hashtable getSV() {
+        return statevalues;
     }
 
     public String getAction(State currentState){
@@ -109,6 +123,8 @@ public class VIPolicy implements Policy {
     	    			vUpdate = updateValue(currentState);
     	    			show("updated value: "+vUpdate);
     	    			currentState.setValue(vUpdate);
+    	    			// put the statevalue for currentState in the look up table
+    	    	        statevalues.put(currentState.toString(), vUpdate);
     	    			show("check updated value: "+currentState.getValue());
     	    			delta = Math.max(delta, Math.abs(v - currentState.getValue()));
     	    		}
