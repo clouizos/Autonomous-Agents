@@ -6,9 +6,9 @@ import java.util.Vector;
 
 import statespace.*;
 
-public class policyEval {
+public class PolicyEval {
 	private static State[][][][] statespace;
-	public policyEval(){
+	public PolicyEval(){
 		statespace = new State[11][11][11][11];
 		for(int i = 0; i < 11; i++) {
 		    for(int j = 0; j < 11; j++) {
@@ -140,7 +140,7 @@ public class policyEval {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		policyEval PE = new policyEval();
+		PolicyEval PE = new PolicyEval();
 		PE.doEvaluation(0.8, statespace);		
 	}
 

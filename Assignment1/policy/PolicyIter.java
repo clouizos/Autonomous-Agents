@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import statespace.*;
 
-public class policyIter implements Policy{
+public class PolicyIter implements Policy{
 
 	/* max statespace state[i][j][k][l]
 	 * where predator[i][j] prey[k][l]
@@ -20,7 +20,7 @@ public class policyIter implements Policy{
 	private int evaluation_runs = 0;
 	private int improvement_runs = 0;
 	
-	public policyIter(double g, double t) {
+	public PolicyIter(double g, double t) {
         // statespace init
 	statespace = new State[11][11][11][11];
 	for(int i = 0; i < 11; i++) {
@@ -212,7 +212,7 @@ public class policyIter implements Policy{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		policyIter PI = new policyIter(0.8, 0.001);
+		PolicyIter PI = new PolicyIter(0.8, 0.001);
 		PI.doIteration(0.8, statespace);
 
 	}
