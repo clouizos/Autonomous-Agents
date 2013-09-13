@@ -1,6 +1,7 @@
 package statespace;
 
 public class Position {
+	// absolute coordinates
     private int x, y;
 
     public Position(int a, int b) {

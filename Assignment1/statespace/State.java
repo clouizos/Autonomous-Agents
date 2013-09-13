@@ -15,12 +15,22 @@ import java.util.Vector;
  */
 public class State {
     
-    private double stateValue;
+    // State is defined on position prey and predator
     private Position prey;
+    private Position predator;
+    private double stateValue;
+    
     private String preyaction;
 
-    public State(Position p) {
-	prey = p;
+    public State(Position prey, Position pred) {
+	this.prey = prey;
+	this.predator = pred;
+    }
+    
+    public State(Position prey, Position pred, String preya) {
+	this.prey = prey;
+	predator = pred;
+	preyaction = preya;
     }
 
     public State(Position p, String preya) {
@@ -41,13 +51,13 @@ public class State {
         return stateValue;
     }
     
-    public void updatePosition(Position prey){
+    public void updatePosition(Position prey, Position predator){
     	this.prey = prey;
+    	this.predator = predator;
     }
     
     public boolean endState() {
-	Position onprey = new Position(0,0);
-	if(prey.equals(onprey)) {
+	if(prey.equals(predator)) {
 	    //show("captured!!");
 	    return true;
 	}
@@ -58,19 +68,25 @@ public class State {
 	return preyaction;
     }
     
-    public Vector nextStates(String mymove) {
+    /* predmove -> preymove
+     * Next states is defined on the next position of the predator
+     * and the possible positions the prey would get on succession.
+     * However the prey would never go to a position already occupied,
+     * so that has to be taken into account on the possible next states. 
+     */
+    public Vector nextStates(String predmove) {
 	Vector succstates = new Vector();
 	String[] moves = {"north", "east", "south", "west", "none"};
-	Position preynext1, preynext2;
-	// mymove
-	preynext1 = prey.predmove(mymove);
-	//show(preynext1.toString());
+	Position preDnext, preYnext;
+	// the next position of the predator when taken a:predmove
+	preDnext = predator.move(predmove);
 	// preymoves
 	for(int i=0;i<moves.length;i++) {
-	    preynext2 = preynext1.preymove(moves[i]);
+	    // the next position of the prey
+		preYnext = prey.move(moves[i]);
 	    //show(preynext2.toString());
-	    State nextstate = new State(preynext2, moves[i]);
-	    // a prey will never move to a occupied position
+	    State nextstate = new State(preYnext, preDnext, moves[i]);
+	    // a prey will never move to an occupied position
 	    if(nextstate.endState()&&i!=4)
 		continue;
 	    else
@@ -79,19 +95,43 @@ public class State {
 	return succstates;
     }
     
+    // next state after prey has taken a:preymove
+    public State nextStatePrey(String preymove) {
+    	return new State(prey.move(preymove), predator);
+    }
+    
+    // next state after predator has taken a:predmove
+    public State nextStatePred(String predmove) {
+    	return new State(prey, predator.move(predmove));
+    }
+    
     public String toString() {
-	return prey.toString();
+	return "Prey: "+prey.toString()+" Predator: "+predator.toString();
     }
     
     public void show(String s) {
 	System.out.println(s);
     }
-
+    
+    // setter getters for prey and predator
     public Position getPrey() {
         return prey;
+    }
+    
+    public Position getPredator() {
+    	return predator;
     }
 
     public void setPrey(Position prey) {
         this.prey = prey;
+    }
+    
+    public void setPredator(Position predator) {
+        this.predator = predator;
+    }
+    
+    public void setPreyPred(Position prey, Position predator) {
+    	this.prey = prey;
+    	this.predator = predator;
     }
 }

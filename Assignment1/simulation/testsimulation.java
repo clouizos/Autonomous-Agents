@@ -18,9 +18,9 @@ public class testsimulation {
 	static ArrayList<Integer> allRuns = new ArrayList<Integer>();
 	static double averageRuns = 0;
 	static int timesRun = 0;
-	 // absolute coordinates
-	static int[] predator = {0,0};
-	static int[] prey = {5,5};
+
+	static Position predator = new Position(0,0);
+	static Position prey = new Position(5,5);
 	static boolean resetGrid = false;
 	
 	 
@@ -43,20 +43,19 @@ public class testsimulation {
 	 char q = ' ';
 	 Policy randomPolicyPrey = new RandomPolicyPrey();
 	 Policy randomPolicyPredator = new RandomPolicyPredator();
-	 // relative prey from pred
-	 Position preyRel = new Position(prey[0],prey[1]);
-	 State currentState = new State(preyRel);
+
+	 State currentState = new State(prey, predator);
 	 //State cs1 = new State(prey1);
 	while(q!='q' && timesRun < 100) {
 		if(resetGrid){
 			runs = 0;
 			System.out.println("Resetting Grid for the "+timesRun+" run!");
 			//System.out.println("prey: "+prey[0]+" "+prey[1]);
-			prey[0] = 5;
-			prey[1] = 5;
-			preyRel.setX(prey[0]);
-			preyRel.setY(prey[1]);
-			currentState.updatePosition(preyRel);
+			prey.setX(5);
+			prey.setY(5);
+			predator.setX(0);
+			predator.setY(0);
+			currentState.updatePosition(prey, predator);
 			resetGrid = false;
 			//Position test = currentState.getPrey();
 			//System.out.println(test.getX()+" "+test.getY());
@@ -68,44 +67,37 @@ public class testsimulation {
 	    int y = input.readInt();*/
 		
 		//show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
-		show("At beginloop abs: Prey("+prey[0]+", "+prey[1]+")");
-		show("At beginloop abs: Predator("+predator[0]+", "+predator[1]+")"+'\n');
+		show("At beginloop: Prey "+ prey.toString());
+		show("At beginloop: Predator "+ predator.toString()+'\n');
 		
 		//preymove
 		//updates the state (prey relative from pred) upon the prey move
 		String move = randomPolicyPrey.getAction(currentState);
-		preyRel = preyRel.preymove(move);
+		prey = prey.move(move);
 		
 		show("prey move: "+move);
-		//show(preyRel.toString()+" PreyRel after prey moves");
+		//show(prey.toString()+" after prey moves");
 		
-		currentState.updatePosition(preyRel);
+		// update state after prey moves
+		currentState.setPrey(prey);
 		
-		//show(currentState.getPrey().toString()+" updated state|newPreyRel");
+		//show(currentState.getPrey().toString()+" updated state");
 		
-		//updates the absolute prey coordinates within the simulator
-		prey = getAbsPrey(preyRel);
-		
-		show("abs: Prey:("+prey[0]+", "+prey[1]+")");
-		
-		
+		show("Prey: " + prey.toString());
+				
 		//predator move on new state(prey)
-		//updates the state (prey relative from pred) according to predator move
+		
+		//updates the state according to predator move
 		move = randomPolicyPredator.getAction(currentState);
-		preyRel = preyRel.predmove(move);
+		predator = predator.move(move);
 		
 		show("predator moved: "+move);
 		//show(preyRel.toString()+" PreyRel after pred moves");
 		
-		currentState.updatePosition(preyRel);
+		currentState.setPredator(predator);
+		show("Predator: " + predator.toString());
 		
-		//show(currentState.getPrey().toString()+" updated state|newPreyRel");
-		
-		//updates the absolute predator coordinates within the simulator
-		predmoveAbs(move);
-		  
-	    show("abs: Predator("+predator[0]+", "+predator[1]+")");
-	    if(predator[0] == prey[0] && predator[1] == prey[1]){
+	    if(currentState.endState()){
 	    	show("Predator catched the prey in "+runs+" runs!");
 	    	timesRun++;
 	    	allRuns.add(runs);
@@ -120,7 +112,7 @@ public class testsimulation {
 
 	}
 	
-	System.out.println("All runs overiview:");
+	System.out.println("All runs overview:");
 	System.out.println(allRuns);
 	
 	/*for (int i=0;i<allRuns.size();i++){
@@ -136,14 +128,6 @@ public class testsimulation {
 	//}
     }
     
-    //returns the absolute coordinates from prey within the simulator
-    public static int[] getAbsPrey(Position prey) {
-    	
-    	int absPreyX = wrapAbs(prey.getX() + predator[0]);
-    	int absPreyY = wrapAbs(prey.getY() + predator[1]);
-    	int[] absPrey = {absPreyX,absPreyY}; 
-    	return absPrey;
-    }
     static double getAverage(ArrayList<Integer> allRuns){
     	double average = 0.0;
     	for (int i=0;i<allRuns.size();i++){
@@ -168,35 +152,6 @@ public class testsimulation {
         return Math.sqrt(getVariance(allRuns));
     }
 
-    //absolute move updates
-    public static void predmoveAbs(String move) {
-    	if(move.compareTo("north")==0)
-    	    //return new Position(x, y-1);
-    		predator[1] -=1;
-    		predator[1] = wrapAbs(predator[1]);
-    	if(move.compareTo("south")==0)
-    	   // return new Position(x, y+1);
-    		predator[1] +=1;
-    		predator[1] = wrapAbs(predator[1]);
-    	if(move.compareTo("west")==0)
-    		//return new Position(x+1, y);
-    		predator[0] -=1;
-    		predator[0] = wrapAbs(predator[0]);
-    	if(move.compareTo("east")==0)
-    	    //return new Position(x-1, y);
-    		predator[0] +=1;
-    		predator[0] = wrapAbs(predator[0]);
-    	//return new Position(x, y);
-        }
-     
-    public static int wrapAbs(int i) {
-    	if ((i > 10))
-    	    return i -= 11;
-    	if ((i < 0))
-    	    return i += 11;
-    	return i;
-        }
-    
     public static void show(String s) {
         System.out.println(s);
     }

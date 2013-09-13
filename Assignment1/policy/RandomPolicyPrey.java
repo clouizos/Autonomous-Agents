@@ -15,8 +15,9 @@ public class RandomPolicyPrey implements Policy{
 		Position prey = cs.getPrey();
 		ArrayList<String> possibleActions = new ArrayList<String>();
 		for(int i=0;i<actions.length;i++){
-			Position newPos = prey.preymove(actions[i]);
-			if(newPos.getX() != 0 || newPos.getY() != 0){
+			State nextState = cs.nextStatePrey(actions[i]);
+			// prey can't move to an occupied position
+			if(!nextState.endState()){
 				possibleActions.add(actions[i]);
 			}
 		}
