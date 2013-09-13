@@ -48,7 +48,7 @@ public class VIPolicy implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
-    	VIPolicy p = new VIPolicy(0.9, 0.001);
+    	VIPolicy p = new VIPolicy(0.5, 0.001);
         p.multisweep();
         
         // outputs the values of all states where state:predator[i][j]prey[5][5]
@@ -61,7 +61,7 @@ public class VIPolicy implements Policy {
     	}
         
         // outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-    	p.show("======statevalues in grid around prey[5][5]======\n");
+    	p.show("\n======statevalues in grid around prey[5][5]======\n");
     	int nextline = 0;
     	for(int i = 0; i < 11; i++) {
     		if(nextline < i) {p.show("\n");}
@@ -90,7 +90,6 @@ public class VIPolicy implements Policy {
     }
 
     public String getAction(State currentState){
-         show(currentState.toString());
 	return (String)stateactions.get(currentState.toString());
     }
     
@@ -102,13 +101,13 @@ public class VIPolicy implements Policy {
             delta = 0;
             stateactions.clear();
             delta = sweep();
-            show("delta: " + delta);
-            show("theta: " + theta);
+            show("delta: " + delta+'\n');
+            show("theta: " + theta+'\n');
             k++;
             //--k;
         } //while (k>0);
         while(delta > theta);
-        show("nr of iterations: "+k);
+        show("nr of iterations: "+k+'\n');
     }
 /*
  *     2nd loop: for each state perform the update of state value.
@@ -254,7 +253,6 @@ public class VIPolicy implements Policy {
 				stateactions.put(state, action);
 			}
 		}
-	readBuf.close();
 	}
     }
 }

@@ -60,7 +60,7 @@ public class Testsimulation {
     		}
 
     		//show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
-    		show("At beginloop: Prey "+ prey.toString());
+    		show("\n===========\nAt beginloop: Prey "+ prey.toString());
     		show("At beginloop: Predator "+ predator.toString()+'\n');
 
     		//prey move
@@ -76,12 +76,12 @@ public class Testsimulation {
     		//updates the state according to predator move
     		move = predPolicy.getAction(currentState);
     		predator = predator.move(move);
-    		show("predator moved: "+move);
+    		show("\npredator moved: "+move);
     		currentState.setPredator(predator);
     		show("Predator: " + predator.toString());
 
     		if(currentState.endState()){
-    			show("Predator catched the prey in "+runs+" runs!");
+    			show("\nPredator catched the prey in "+runs+" runs!");
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
@@ -94,7 +94,7 @@ public class Testsimulation {
 
     	}
 	
-	System.out.println("All runs overview:");
+	System.out.println("\nAll runs overview:");
 	System.out.println(allRuns);
 	
 	/*for (int i=0;i<allRuns.size();i++){
