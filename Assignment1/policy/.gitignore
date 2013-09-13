@@ -2,3 +2,5 @@
 /RandomPolicyPredator.class
 /RandomPolicyPrey.class
 /VIPolicy.class
+/policyEval.class
+/policyIter.class

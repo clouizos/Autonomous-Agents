@@ -55,7 +55,7 @@ public class testsimulation {
 			prey.setY(5);
 			predator.setX(0);
 			predator.setY(0);
-			currentState.updatePosition(prey, predator);
+			currentState.updatePosition(predator, prey);
 			resetGrid = false;
 			//Position test = currentState.getPrey();
 			//System.out.println(test.getX()+" "+test.getY());
@@ -71,7 +71,7 @@ public class testsimulation {
 		show("At beginloop: Predator "+ predator.toString()+'\n');
 		
 		//preymove
-		//updates the state (prey relative from pred) upon the prey move
+		//updates the state upon the prey move
 		String move = randomPolicyPrey.getAction(currentState);
 		prey = prey.move(move);
 		
@@ -108,8 +108,7 @@ public class testsimulation {
 	    }
 	    //show("Enter q to quit, c to continue:");
 	    //q = input.readChar();
-	    
-
+   
 	}
 	
 	System.out.println("All runs overview:");

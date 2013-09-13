@@ -16,26 +16,32 @@ import java.util.Vector;
 public class State {
     
     // State is defined on position prey and predator
-    private Position prey;
     private Position predator;
+    private Position prey;
     private double stateValue;
     
     private String preyaction;
 
-    public State(Position prey, Position pred) {
-	this.prey = prey;
-	this.predator = pred;
-    }
+    public State(Position pred, Position prey) {
+    this.predator = pred;
+    this.prey = prey;
+	}
     
-    public State(Position prey, Position pred, String preya) {
-	this.prey = prey;
-	predator = pred;
+    public State(Position pred, Position prey, String preya) {
+    predator = pred;
+    this.prey = prey;
 	preyaction = preya;
     }
 
     public State(Position p, String preya) {
 	prey = p;
 	preyaction = preya;
+    }
+    
+    public State(Position pred, Position prey, double v) {
+    predator = pred;
+    this.prey = prey;
+	stateValue = v;
     }
     
     public State(Position p, double v) {
@@ -51,9 +57,9 @@ public class State {
         return stateValue;
     }
     
-    public void updatePosition(Position prey, Position predator){
-    	this.prey = prey;
+    public void updatePosition(Position predator, Position prey){
     	this.predator = predator;
+    	this.prey = prey;
     }
     
     public boolean endState() {
@@ -85,7 +91,7 @@ public class State {
 	    // the next position of the prey
 		preYnext = prey.move(moves[i]);
 	    //show(preynext2.toString());
-	    State nextstate = new State(preYnext, preDnext, moves[i]);
+	    State nextstate = new State(preDnext, preYnext, moves[i]);
 	    // a prey will never move to an occupied position
 	    if(nextstate.endState()&&i!=4)
 		continue;
@@ -97,12 +103,12 @@ public class State {
     
     // next state after prey has taken a:preymove
     public State nextStatePrey(String preymove) {
-    	return new State(prey.move(preymove), predator);
+    	return new State(predator, prey.move(preymove));
     }
     
     // next state after predator has taken a:predmove
     public State nextStatePred(String predmove) {
-    	return new State(prey, predator.move(predmove));
+    	return new State(predator.move(predmove), prey);
     }
     
     public String toString() {
@@ -130,8 +136,8 @@ public class State {
         this.predator = predator;
     }
     
-    public void setPreyPred(Position prey, Position predator) {
-    	this.prey = prey;
+    public void setPreyPred(Position predator, Position prey) {
     	this.predator = predator;
+    	this.prey = prey;
     }
 }
