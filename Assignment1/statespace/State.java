@@ -82,12 +82,22 @@ public class State {
         and just return the terminal state as next state
         For the transition probability, it will become 1.
         This change may affect VIPolicy..
-	 */
+        
+        No, even if one of the possible next state would be the captured state, 
+        it doesn't exclude the possibility of the prey not standing still. So, you have to consider
+        that as possible next states. Remember the prey is modeled into the enviroment, 
+        so you have to express that uncertainty into the possible next states. 
+        See it like a simultaneous move of predator and prey, if you will, to make it clearer; the next state 
+        considers the predator making a move (probabilty 1), but the prey making a move too with probabilities 
+        as documented; you can refer to the latest mail of the TA about this.
+        
+        Besides it will create a nullpointerException :p 
+	 
 	State testState = new State(preDnext, prey);
 	if (testState.endState()){
 		succstates.add(testState);
 		return succstates;
-	}
+	}*/
 	
 	// preymoves
 	for(int i=0;i<moves.length;i++) {
