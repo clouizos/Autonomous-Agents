@@ -34,7 +34,7 @@ public class testsimulation {
      */
     public static void main(String[] args) {
 	// TODO Auto-generated method stub
-	VIPolicy p = new VIPolicy(1.0, 0.1);
+	VIPolicy p = new VIPolicy();
         //p.multisweep();
         test(p);
     }
@@ -44,14 +44,14 @@ public class testsimulation {
 	 char q = ' ';
 	 Policy randomPolicyPrey = new RandomPolicyPrey();
 	 //Policy randomPolicyPredator = new RandomPolicyPredator();
-	 VIPolicy viPolicyPred = new VIPolicy();
-		File file = new File("predator/policy.data");
-        try {
-        	viPolicyPred.filltable(file);
-	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	 VIPolicy viPolicyPred = (VIPolicy) p;
+	 File file = new File("policy.data");
+	 try {
+		 viPolicyPred.filltable(file);
+	 } catch (Exception e) {
+		 // TODO Auto-generated catch block
+		 e.printStackTrace();
+	 }
 
 	 State currentState = new State(prey, predator);
 	 //State cs1 = new State(prey1);

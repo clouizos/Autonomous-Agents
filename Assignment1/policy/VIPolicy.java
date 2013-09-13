@@ -75,7 +75,7 @@ public class VIPolicy implements Policy {
          //if(stateactions.containsKey(currentState.toString()))
          //    show("in!!");
          //return 0;
-	return "(move "+ (String)stateactions.get(currentState.toString())+")";
+	return (String)stateactions.get(currentState.toString());
     }
 
     public void multisweep() {
@@ -233,7 +233,7 @@ public class VIPolicy implements Policy {
 	BufferedReader readBuf = new BufferedReader(readFile);
 	
 	while((s = readBuf.readLine())!=null) {
-	    System.out.println(s);
+	    //System.out.println(s);
 	    String[] stateaction = s.split("=>");
 		if(stateaction.length>1) {
 			String state = stateaction[0];

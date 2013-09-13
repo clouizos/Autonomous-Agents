@@ -112,7 +112,7 @@ public class State {
     }
     
     public String toString() {
-	return "Prey: "+prey.toString()+" Predator: "+predator.toString();
+	return "Predator: "+predator.toString() + "Prey: "+prey.toString();
     }
     
     public void show(String s) {
