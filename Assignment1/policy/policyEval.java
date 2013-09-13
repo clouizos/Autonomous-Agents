@@ -2,6 +2,7 @@ package policy;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import statespace.*;
 
@@ -43,46 +44,16 @@ public class policyEval {
 		return allAction;
 	}
 	
-	public int wrap(int i) {
-		if ((i > 10))
-		    return i -= 11;
-		if ((i < 0))
-		    return i += 11;
-		return i;
-	}
-	//Dummy method getAllNextState
-	public ArrayList<State> getAllNextState(State[][][][] statespace, State s, String a){
-		/*this method receives statespace naming statespace, current state, and action as parameter
-		and return all possible next state objects
-		*/
-		int currPredX, currPredY, currPreyX, currPreyY = 0;
-		ArrayList<State> allNextState = new ArrayList<State>();
-		State nextState;
-		currPredX = s.getPredator().getX();
-		currPredY = s.getPredator().getY();
-		currPreyX = s.getPrey().getX();
-		currPreyY = s.getPrey().getY();
-		
-		switch (a){
-		case "north" : 	currPredY = wrap(currPredY-1); 
-						break;
-		case "south" : 	currPredY = wrap(currPredY+1); 
-						break;
-		case "west" : 	currPredX = wrap(currPredY-1); 
-						break;
-		case "east" : 	currPredX = wrap(currPredY+1); 
-						break;
-		}
-		
-		nextState = statespace[currPredX][currPredY][currPreyX][currPreyY];
-		allNextState.add(nextState);
-		return allNextState;
-	}
 	
 	//Dummy method getTransProb
-	public double getTransProb(State cs, String a, State ns){
-		double transProb=1;
-		return transProb;
+	
+	public double getTransProb(int numberOfNextStates, String action, State nextState) {
+		if (nextState.endState())
+			return 1;
+		if(action.equals("wait"))
+		    return (0.8);
+		else
+		    return (0.2/(numberOfNextStates-1));
 	}
 	
 	//Dummy method getTransReward
@@ -96,13 +67,13 @@ public class policyEval {
 	//Dummy method to get probability taking action a in current state
 	//based on current policy
 	public double getActionProb(State cs, String a){
-		return 0.5;
+		return 0.2;
 	}
 		
 	public void doEvaluation(double gamma, State[][][][] statespace) {
         // statespace init
 		double delta;
-		double theta = 0.0001;
+		double theta = 0.001;
 		double V,v;
 		double rightSideV; 	//variable to save the summation over 
 							//all state prime(nextstate) in the equation 
@@ -116,7 +87,8 @@ public class policyEval {
 		
 		ArrayList<String> allAction = new ArrayList<String>();
 		ArrayList<State> allNextState = new ArrayList<State>();
-		State currentState;
+		Vector allNextStates;
+		State currentState, nextState;
 		int counter = 0;
 		do{
 			counter ++;
@@ -134,16 +106,31 @@ public class policyEval {
 			    			for (String action : allAction){
 			    				actionProb = getActionProb(currentState, action);
 			    				//get all possible next states (but in this problem only one possible next state)
-			    				allNextState = getAllNextState(statespace, currentState,action);
+			    				allNextStates = currentState.nextStates(action);
 			    				rightSideV = 0;
-			    				for (State nextState : allNextState){
-			    					transProb = getTransProb(currentState, action,nextState);
+			    				//for (State nextState : allNextStates){
+			    				for (int ii=0;ii<allNextStates.size();ii++){
+			    					nextState = (State) allNextStates.elementAt(ii);
+			    					String preyaction = nextState.getPreyaction();
+			    					int predX = nextState.getPredator().getX();
+			    		        	int predY = nextState.getPredator().getY();
+			            			int preyX = nextState.getPrey().getX();
+			            			int preyY = nextState.getPrey().getY();
+			    					nextState = statespace[predX][predY][preyX][preyY];
+			            			VNextState = nextState.getValue();
+			            			transProb = getTransProb(allNextStates.size(), preyaction, nextState);
 			    					transReward = getTransReward(currentState, action,nextState);
-			    					VNextState = nextState.getValue();
+			    					nextState.toString();
+			    					if (transReward==1055){
+			    						System.out.println("reward "+transReward);
+			    						System.out.println("trans prob "+transProb);
+			    						//System.out.println("TransReward"+transReward);
+			    					}
 			    					rightSideV += transProb*(transReward + gamma*VNextState);
 			    				}
 			    				V += actionProb*rightSideV;
 			    			}
+			    			//System.out.println("Value of V "+V);
 			    			statespace[i][j][k][l].setValue(V);
 			    			delta = Math.max(delta, Math.abs(v-V));
 			    		}
@@ -154,8 +141,7 @@ public class policyEval {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		policyEval PE = new policyEval();
-		PE.doEvaluation(0.8, statespace);
-		
+		PE.doEvaluation(0.8, statespace);		
 	}
 
 }

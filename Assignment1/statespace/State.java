@@ -74,6 +74,10 @@ public class State {
 	return preyaction;
     }
     
+    public void setPreyaction(String action){
+    	preyaction = action;
+    }
+    
     /* predmove -> preymove
      * Next states is defined on the next position of the predator
      * and the possible positions the prey would get on succession.
@@ -81,24 +85,38 @@ public class State {
      * so that has to be taken into account on the possible next states. 
      */
     public Vector nextStates(String predmove) {
-	Vector succstates = new Vector();
-	String[] moves = {"north", "east", "south", "west", "wait"};
-	Position preDnext, preYnext;
-	// the next position of the predator when taken a:predmove
-	preDnext = predator.move(predmove);
-	// preymoves
-	for(int i=0;i<moves.length;i++) {
-	    // the next position of the prey
-		preYnext = prey.move(moves[i]);
-	    //show(preynext2.toString());
-	    State nextstate = new State(preDnext, preYnext, moves[i]);
-	    // a prey will never move to an occupied position
-	    if(nextstate.endState()&&i!=4)
-		continue;
-	    else
-		succstates.add(nextstate);
-	}
-	return succstates;
+    	Vector succstates = new Vector();
+    	String[] moves = {"north", "east", "south", "west", "wait"};
+    	Position preDnext, preYnext;
+    	// the next position of the predator when taken a:predmove
+    	preDnext = predator.move(predmove);
+    	
+    	/*SAID ADD HERE, PLEASE CORRECT ME IF I'M WRONG ===================================
+    	if After predator move, the state is the terminal state, 
+    	then there shouldn't be any next state right? so we don't consider prey can move anymore
+    	and just return the terminal state as next state
+    	For the transition probability, it will become 1.
+    	This change may affect VIPolicy..
+    	*/
+    	State testState = new State(preDnext, prey);
+    	if (testState.endState()){
+    		succstates.add(testState);
+    		return succstates;
+    	}
+    	//===================================================================================
+    	// preymoves
+    	for(int i=0;i<moves.length;i++) {
+    		// the next position of the prey
+    		preYnext = prey.move(moves[i]);
+    		//show(preynext2.toString());
+    		State nextstate = new State(preDnext, preYnext, moves[i]);
+    		// a prey will never move to an occupied position
+    		if(nextstate.endState()&&i!=4)
+    			continue;
+    		else
+    			succstates.add(nextstate);
+    	}
+    	return succstates;
     }
     
     // next state after prey has taken a:preymove
