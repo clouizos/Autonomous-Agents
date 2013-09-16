@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.Hashtable;
+
 import policy.RandomPolicyPredator;
 import policy.RandomPolicyPredator;
 
@@ -22,9 +23,9 @@ public class PolicyEval implements Policy {
 	 * theta = small positive number; threshold for continueing evaluation
 	 * delta = change in state value  
 	 */
-    private static State[][][][] statespace;
-    private static Hashtable stateactions, statevalues;
-    private static double gamma, delta, theta;
+    protected State[][][][] statespace;
+    protected Hashtable stateactions, statevalues;
+    protected double gamma, delta, theta;
     private static Policy policy;
 
     public PolicyEval(double g, double t, Policy p) {
@@ -40,8 +41,8 @@ public class PolicyEval implements Policy {
 	    	for(int k = 0; k < 11; k++) {
 	    		for(int l = 0; l < 11; l++) {
 	    			State s = new State(new Position(i, j), new Position(k, l), 0);
-	    			statespace[i][j][k][l] = s;
 	    			action = rpp.getAction(s);
+	    			statespace[i][j][k][l] = s;
 	    			stateactions.put(s.toString(), action);
 					statevalues.put(s.toString(), 0.0);
 	    		}
@@ -54,52 +55,12 @@ public class PolicyEval implements Policy {
       
 	}
     
-    public static State[][][][] getStatespace() {
-		return statespace;
-	}
-
-	public static void setStatespace(State[][][][] statespace) {
-		PolicyEval.statespace = statespace;
-	}
-
-	public static Hashtable getStateactions() {
-		return stateactions;
-	}
-
-	public static void setStateactions(Hashtable stateactions) {
-		PolicyEval.stateactions = stateactions;
-	}
-
-	public static Hashtable getStatevalues() {
-		return statevalues;
-	}
-
-	public static void setStatevalues(Hashtable statevalues) {
-		PolicyEval.statevalues = statevalues;
-	}
-
-	public static double getTheta() {
-		return theta;
-	}
-
-	public static void setTheta(double theta) {
-		PolicyEval.theta = theta;
-	}
-
-	public static void setGamma(double gamma) {
-		PolicyEval.gamma = gamma;
-	}
-	
-	public static double getGamma() {
-		return gamma;
-	}
-
-	public PolicyEval() {}
+    public PolicyEval() {}
     
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-    	PolicyEval p = new PolicyEval(0.5, 0.001, rPolpred);
+    	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
         p.multisweep();
         
         // outputs the values of all states where state:predator[i][j]prey[5][5]
@@ -107,7 +68,7 @@ public class PolicyEval implements Policy {
     	for(int i = 0; i < 11; i++) {
     	    for(int j = 0; j < 11; j++) {
     	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
+    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)p.statevalues.get(statePrey55.toString()) +'\n');
     	    }
     	}
         
@@ -133,17 +94,7 @@ public class PolicyEval implements Policy {
     }
     
     public void doPolicyEvaluation(){
-    	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-    	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
-        p.multisweep();   	
-    }
-
-    public Hashtable getSA() {
-        return stateactions;
-    }
-    
-    public Hashtable getSV() {
-        return statevalues;
+        multisweep();   	
     }
 
     public String getAction(State currentState){
@@ -156,7 +107,6 @@ public class PolicyEval implements Policy {
         //int depth = 0;
         do {
             delta = 0;
-            stateactions.clear();
             delta = sweep();
             //show("delta: " + delta+'\n');
             //show("theta: " + theta+'\n');
@@ -181,9 +131,9 @@ public class PolicyEval implements Policy {
     	    		for(int l = 0; l < 11; l++) {
     	    			State currentState = statespace[i][j][k][l];
     	    			v = currentState.getValue();
-    	    			show("current value: "+v+'\n');
+    	    			//show("current value: "+v+'\n');
     	    			vUpdate = updateValue(currentState);
-    	    			show("updated value: "+vUpdate+'\n');
+    	    			//show("updated value: "+vUpdate+'\n');
     	    			currentState.setValue(vUpdate);
     	    			// put the statevalue for currentState in the look up table
     	    	        statevalues.put(currentState.toString(), vUpdate);
@@ -320,6 +270,72 @@ public double getActionProb(){
 		}
 	}
     }
+    
+    public void printTable(Position prey){
+
+    	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
+    	show("\n======statevalues in grid around prey[5][5]======\n");
+    	int nextline = 0;
+    	for(int i = 0; i < 11; i++) {
+    		if(nextline < i) {show("\n");}
+    		for(int j = 0; j < 11; j++) {
+    			State statePrey = new State(new Position(i,j), prey);
+    			//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
+    			show(String.format( "%.3f",(double) statevalues.get(statePrey.toString())) + " ");
+    		}
+    		nextline = i;
+    	}
+    }
+
+    public void printList(Position prey){
+    	show("\n");
+    	for(int i = 0; i < 11; i++) {
+    		for(int j = 0; j < 11; j++) {
+    			State statePrey = new State(new Position(i,j), prey);
+    			show(statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()) +'\n');
+    		}
+    	}
+    }
+    
+    public State[][][][] getStatespace() {
+		return statespace;
+	}
+
+	public void setStatespace(State[][][][] statespace) {
+		this.statespace = statespace;
+	}
+
+	public Hashtable getStateactions() {
+		return stateactions;
+	}
+
+	public void setStateactions(Hashtable stateactions) {
+		this.stateactions = stateactions;
+	}
+
+	public Hashtable getStatevalues() {
+		return statevalues;
+	}
+
+	public void setStatevalues(Hashtable statevalues) {
+		this.statevalues = statevalues;
+	}
+
+	public double getTheta() {
+		return theta;
+	}
+
+	public void setTheta(double theta) {
+		this.theta = theta;
+	}
+
+	public void setGamma(double gamma) {
+		this.gamma = gamma;
+	}
+	
+	public double getGamma() {
+		return gamma;
+	}
     
 //	public void initPolicy(State[][][][] statespace){
 //	State currentState;

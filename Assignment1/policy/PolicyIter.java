@@ -14,21 +14,21 @@ public class PolicyIter extends PolicyEval{
 	/*
 	 * max statespace state[i][j][k][l] where predator[i][j] prey[k][l]
 	 */
-	private static State[][][][] statespace;
-	private static Hashtable stateactions, statevalues;
+	//private static State[][][][] statespace;
+	//private static Hashtable stateactions, statevalues;
 	/*
 	 * gamma = discount factor (0.8) theta = small positive number; threshold
 	 * for continueing evaluation delta = change in state value
 	 */
-	private double gamma, delta, theta;
+	//private double gamma, delta, theta;
 	private int evaluation_runs = 0;
 	private int improvement_runs = 0;
-	private static PolicyEval polEval;
+	//private static PolicyEval polEval;
 
 	public PolicyIter(double g, double t) {
+		super(g, t, new RandomPolicyPredator());
 		// statespace init
-		RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-		polEval = new PolicyEval(g, t, rPolpred);
+		//polEval = new PolicyEval(g, t, rPolpred);
 //		statespace = new State[11][11][11][11];
 //		for (int i = 0; i < 11; i++) {
 //			for (int j = 0; j < 11; j++) {
@@ -42,27 +42,20 @@ public class PolicyIter extends PolicyEval{
 //
 //			}
 //		}
-		statespace = polEval.getStatespace();
-		gamma = polEval.getGamma();
-		theta = polEval.getTheta();
-		stateactions = polEval.getStateactions();
-		statevalues = polEval.getStatevalues();
+//		statespace = polEval.getStatespace();
+//		gamma = polEval.getGamma();
+//		theta = polEval.getTheta();
+//		stateactions = polEval.getStateactions();
+//		statevalues = polEval.getStatevalues();
 
 	}
-
-	public Hashtable getSA() {
-		return stateactions;
-	}
-
-	public Hashtable getSV() {
-		return statevalues;
-	}
-
+	
+	public PolicyIter() {}
 
 	public String getAction(State currentState) {
 		show("inside get action: "+currentState);
 
-		return (String) stateactions.get(currentState);
+		return (String) stateactions.get(currentState.toString());
 	}
 	
 
@@ -75,7 +68,7 @@ public class PolicyIter extends PolicyEval{
 		//initPolicy(statespace);
 		while(stop_while){
 			//doPolicyEvaluation(gamma, PolicyIter.statespace);
-			polEval.doPolicyEvaluation();
+			doPolicyEvaluation();
 			show("Beginning Improvement");
 			noChange = doPolicyImprovement();
 			System.out.println("noChange: "+noChange);
@@ -196,35 +189,13 @@ improvement:for (int i = 0; i < 11; i++) {
 		PolicyIter PI = new PolicyIter(0.8, 0.001);
 		PI.doIteration();
 		//printTable();
-		printList();
-
+		PI.printTable(new Position(5,5));
+		
+        try {
+	    PI.output();
+        } catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+        }
 	}
-	
-	public static void printTable(){
-		 Position prey55 = new Position(5,5);
-		 
-	        // outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-	    	polEval.show("\n======statevalues in grid around prey[5][5]======\n");
-	    	int nextline = 0;
-	    	for(int i = 0; i < 11; i++) {
-	    		if(nextline < i) {polEval.show("\n");}
-	    		for(int j = 0; j < 11; j++) {
-	    	    	State statePrey55 = new State(new Position(i,j), prey55);
-	    	    	//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
-	    	    	polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
-	    	    }
-	    	    nextline = i;
-	    	}
-	}
-	
-	public static void printList(){
-		Position prey55 = new Position(5,5);
-		for(int i = 0; i < 11; i++) {
-    	    for(int j = 0; j < 11; j++) {
-    	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	polEval.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
-    	    }
-    	}
-	}
-
 }

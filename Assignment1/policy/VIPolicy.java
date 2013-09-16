@@ -50,28 +50,10 @@ public class VIPolicy implements Policy {
         // value iteration is run with VIpolicy(gamma, theta)
     	VIPolicy p = new VIPolicy(0.5, 0.001);
         p.multisweep();
+        Position prey = new Position(5,5);
+        p.printList(prey);
+        p.printTable(prey);
         
-        // outputs the values of all states where state:predator[i][j]prey[5][5]
-        Position prey55 = new Position(5,5);
-    	for(int i = 0; i < 11; i++) {
-    	    for(int j = 0; j < 11; j++) {
-    	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
-    	    }
-    	}
-        
-        // outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-    	p.show("\n======statevalues in grid around prey[5][5]======\n");
-    	int nextline = 0;
-    	for(int i = 0; i < 11; i++) {
-    		if(nextline < i) {p.show("\n");}
-    		for(int j = 0; j < 11; j++) {
-    	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	p.show(String.format( "%.2f",(double)statevalues.get(statePrey55.toString())) + " ");
-    	    }
-    	    nextline = i;
-    	}
-    	
         //p.show("size statespace tree: " + p.size);
         try {
 	    p.output();
@@ -101,7 +83,7 @@ public class VIPolicy implements Policy {
         stateactions.clear();
         do {
             delta = 0;
-            stateactions.clear();
+            //stateactions.clear();
             delta = sweep();
             show("delta: " + delta+'\n');
             show("theta: " + theta+'\n');
@@ -257,5 +239,31 @@ public class VIPolicy implements Policy {
 			}
 		}
 	}
+    }
+    
+    public void printTable(Position prey){
+
+    	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
+    	show("\n======statevalues in grid around prey[5][5]======\n");
+    	int nextline = 0;
+    	for(int i = 0; i < 11; i++) {
+    		if(nextline < i) {show("\n");}
+    		for(int j = 0; j < 11; j++) {
+    			State statePrey = new State(new Position(i,j), prey);
+    			//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
+    			show(String.format( "%.3f",(double) statevalues.get(statePrey.toString())) + " ");
+    		}
+    		nextline = i;
+    	}
+    }
+
+    public void printList(Position prey){
+    	show("\n");
+    	for(int i = 0; i < 11; i++) {
+    		for(int j = 0; j < 11; j++) {
+    			State statePrey = new State(new Position(i,j), prey);
+    			show(statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()) +'\n');
+    		}
+    	}
     }
 }

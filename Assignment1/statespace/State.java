@@ -1,5 +1,6 @@
 package statespace;
 
+import java.io.File;
 import java.util.Vector;
 
 public class State {
@@ -9,44 +10,27 @@ public class State {
     private Position prey;
     private double stateValue;
     
-    private String preyaction;
-
+    //private String action;
+    private String preyAction;
+    
     public State(Position pred, Position prey) {
-    this.predator = pred;
+    predator = pred;
     this.prey = prey;
 	}
-    
-    public State(Position pred, Position prey, String preya) {
+
+    public State(Position pred, Position prey, String a) {
     predator = pred;
     this.prey = prey;
-	preyaction = preya;
-    }
-
-    public State(Position p, String preya) {
-	prey = p;
-	preyaction = preya;
-    }
+    preyAction = a;
+	}
     
-    public State(Position pred, Position prey, double v) {
-    predator = pred;
+    public State(Position pred, Position prey, int v) {
+	predator = pred;
     this.prey = prey;
-	stateValue = v;
-    }
-    
-    public State(Position p, double v) {
-	prey = p;
-	this.stateValue = v;
-    }
-    
-    public void setValue(double value) {
-        this.stateValue = value;
-    }
+    stateValue = v;
+	}
 
-    public double getValue() {
-        return stateValue;
-    }
-    
-    public void updatePosition(Position predator, Position prey){
+	public void updatePosition(Position predator, Position prey){
     	this.predator = predator;
     	this.prey = prey;
     }
@@ -57,10 +41,6 @@ public class State {
 	    return true;
 	}
 	return false;
-    }
-    
-    public String getPreyaction() {
-	return preyaction;
     }
     
     /* predmove -> preymove
@@ -153,4 +133,16 @@ public class State {
     	this.predator = predator;
     	this.prey = prey;
     }
+
+	public String getPreyaction() {
+		return preyAction;
+	}
+
+	public double getValue() {
+		return stateValue;
+	}
+
+	public void setValue(double v) {
+		stateValue = v;		
+	}
 }
