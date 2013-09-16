@@ -1,28 +1,19 @@
 package policy;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import statespace.*;
 
-public class PolicyEval {
-	private static State[][][][] statespace;
-	public PolicyEval(){
-		statespace = new State[11][11][11][11];
-		for(int i = 0; i < 11; i++) {
-		    for(int j = 0; j < 11; j++) {
-		    	for(int k = 0; k < 11; k++) {
-		    		for(int l = 0; l < 11; l++) {
-		    			State s = new State(new Position(i, j), new Position(k, l), 0);
-		    			statespace[i][j][k][l] = s;
-		    		}
-		    	}
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.util.Hashtable;
+import policy.RandomPolicyPredator;
+import policy.RandomPolicyPredator;
 
-		    }
-		}
-	}
-	
+public class PolicyEval implements Policy {
 	/* max statespace state[i][j][k][l]
 	 * where predator[i][j] prey[k][l]
 	 */
@@ -31,117 +22,318 @@ public class PolicyEval {
 	 * theta = small positive number; threshold for continueing evaluation
 	 * delta = change in state value  
 	 */
-	private double gamma, delta, theta;
-	//dfsf
-	//Dummy method getActionList
-	public ArrayList<String> getActionList(State s){
-		ArrayList<String> allAction = new ArrayList<String>();
-		allAction.add("north");
-		allAction.add("south");
-		allAction.add("west");
-		allAction.add("east");
-		allAction.add("wait");
-		return allAction;
+    private static State[][][][] statespace;
+    private static Hashtable stateactions, statevalues;
+    private static double gamma, delta, theta;
+    private static Policy policy;
+
+    public PolicyEval(double g, double t, Policy p) {
+    policy = p;
+    	// statespace init
+	statespace = new State[11][11][11][11];
+	stateactions = new Hashtable<>();
+    statevalues = new Hashtable<>();
+    String action;
+    RandomPolicyPredator rpp = new RandomPolicyPredator();
+	for(int i = 0; i < 11; i++) {
+	    for(int j = 0; j < 11; j++) {
+	    	for(int k = 0; k < 11; k++) {
+	    		for(int l = 0; l < 11; l++) {
+	    			State s = new State(new Position(i, j), new Position(k, l), 0);
+	    			statespace[i][j][k][l] = s;
+	    			action = rpp.getAction(s);
+	    			stateactions.put(s.toString(), action);
+					statevalues.put(s.toString(), 0.0);
+	    		}
+	    	}
+
+	    }
 	}
-	
-	
-	//Dummy method getTransProb
-	
-	public double getTransProb(int numberOfNextStates, String action, State nextState) {
-		if (nextState.endState())
-			return 1;
-		if(action.equals("wait"))
-		    return (0.8);
-		else
-		    return (0.2/(numberOfNextStates-1));
+        gamma = g;
+        theta = t;
+      
 	}
-	
-	//Dummy method getTransReward
-	public double getTransReward(State cs, String a, State ns){
-		double transReward=0;
-		if (ns.endState())
-			transReward = 10;
-		return transReward;
-	}
-	
-	//Dummy method to get probability taking action a in current state
-	//based on current policy
-	public double getActionProb(State cs, String a){
-		return 0.2;
-	}
-		
-	public void doEvaluation(double gamma, State[][][][] statespace) {
-        // statespace init
-		double delta;
-		double theta = 0.001;
-		double V,v;
-		double rightSideV; 	//variable to save the summation over 
-							//all state prime(nextstate) in the equation 
-		double transProb;	//probability go to state s prime if we take 
-							//action a from current state s
-		double transReward;	//expected immediate reward of going to state s prime
-							//by taking action a from state s
-		double VNextState;	//value of next state
-		double actionProb;	//probability taking action a in state s
-							//under current policy
-		
-		ArrayList<String> allAction = new ArrayList<String>();
-		ArrayList<State> allNextState = new ArrayList<State>();
-		Vector allNextStates;
-		State currentState, nextState;
-		int counter = 0;
-		do{
-			counter ++;
-			System.out.println("Iteration - "+counter);
-			delta = 0;
-			for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) 
-			    	for(int k = 0; k < 11; k++) 
-			    		for(int l = 0; l < 11; l++){
-			    			currentState = statespace[i][j][k][l]; 
-			    			v = currentState.getValue();
-			    			V = 0;
-			    			//get All possible actions in state s
-			    			allAction = getActionList(currentState);
-			    			for (String action : allAction){
-			    				actionProb = getActionProb(currentState, action);
-			    				//get all possible next states (but in this problem only one possible next state)
-			    				allNextStates = currentState.nextStates(action);
-			    				rightSideV = 0;
-			    				//for (State nextState : allNextStates){
-			    				for (int ii=0;ii<allNextStates.size();ii++){
-			    					nextState = (State) allNextStates.elementAt(ii);
-			    					String preyaction = nextState.getPreyaction();
-			    					int predX = nextState.getPredator().getX();
-			    		        	int predY = nextState.getPredator().getY();
-			            			int preyX = nextState.getPrey().getX();
-			            			int preyY = nextState.getPrey().getY();
-			    					nextState = statespace[predX][predY][preyX][preyY];
-			            			VNextState = nextState.getValue();
-			            			transProb = getTransProb(allNextStates.size(), preyaction, nextState);
-			    					transReward = getTransReward(currentState, action,nextState);
-			    					nextState.toString();
-			    					if (transReward==1055){
-			    						System.out.println("reward "+transReward);
-			    						System.out.println("trans prob "+transProb);
-			    						//System.out.println("TransReward"+transReward);
-			    					}
-			    					rightSideV += transProb*(transReward + gamma*VNextState);
-			    				}
-			    				V += actionProb*rightSideV;
-			    			}
-			    			//System.out.println("Value of V "+V);
-			    			statespace[i][j][k][l].setValue(V);
-			    			delta = Math.max(delta, Math.abs(v-V));
-			    		}
-			System.out.println("Value of delta "+delta);
-		} while (delta>theta);
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PolicyEval PE = new PolicyEval();
-		PE.doEvaluation(0.8, statespace);		
+    
+    public static State[][][][] getStatespace() {
+		return statespace;
 	}
 
+	public static void setStatespace(State[][][][] statespace) {
+		PolicyEval.statespace = statespace;
+	}
+
+	public static Hashtable getStateactions() {
+		return stateactions;
+	}
+
+	public static void setStateactions(Hashtable stateactions) {
+		PolicyEval.stateactions = stateactions;
+	}
+
+	public static Hashtable getStatevalues() {
+		return statevalues;
+	}
+
+	public static void setStatevalues(Hashtable statevalues) {
+		PolicyEval.statevalues = statevalues;
+	}
+
+	public static double getTheta() {
+		return theta;
+	}
+
+	public static void setTheta(double theta) {
+		PolicyEval.theta = theta;
+	}
+
+	public static void setGamma(double gamma) {
+		PolicyEval.gamma = gamma;
+	}
+	
+	public static double getGamma() {
+		return gamma;
+	}
+
+	public PolicyEval() {}
+    
+    public static void main(String[] args) {
+        // value iteration is run with VIpolicy(gamma, theta
+    	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
+    	PolicyEval p = new PolicyEval(0.5, 0.001, rPolpred);
+        p.multisweep();
+        
+        // outputs the values of all states where state:predator[i][j]prey[5][5]
+        Position prey55 = new Position(5,5);
+//    	for(int i = 0; i < 11; i++) {
+//    	    for(int j = 0; j < 11; j++) {
+//    	    	State statePrey55 = new State(new Position(i,j), prey55);
+//    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
+//    	    }
+//    	}
+        
+        // outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
+    	p.show("\n======statevalues in grid around prey[5][5]======\n");
+    	int nextline = 0;
+    	for(int i = 0; i < 11; i++) {
+    		if(nextline < i) {p.show("\n");}
+    		for(int j = 0; j < 11; j++) {
+    	    	State statePrey55 = new State(new Position(i,j), prey55);
+    	    	p.show(String.format( "%.2f",(double)statevalues.get(statePrey55.toString())) + " ");
+    	    }
+    	    nextline = i;
+    	}
+    	
+        //p.show("size statespace tree: " + p.size);
+        try {
+	    p.output();
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+    
+    public void doPolicyEvaluation(){
+    	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
+    	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
+        p.multisweep();   	
+    }
+
+    public Hashtable getSA() {
+        return stateactions;
+    }
+    
+    public Hashtable getSV() {
+        return statevalues;
+    }
+
+    public String getAction(State currentState){
+	return (String)stateactions.get(currentState.toString());
+    }
+    
+    // the outer loop: repreat untill delta is smaller than theta
+    public void multisweep() {
+        int k = 0;
+        //int depth = 0;
+        do {
+            delta = 0;
+            stateactions.clear();
+            delta = sweep();
+            //show("delta: " + delta+'\n');
+            //show("theta: " + theta+'\n');
+            k++;
+            //--k;
+        } //while (k>0);
+        while(delta > theta);
+        show("nr of iterations: "+k+'\n');
+    }
+/*
+ *     2nd loop: for each state perform the update of state value.
+ *     Policy evaluation is stopped after just one sweep 
+ *     (one backup of each state).
+ */
+    public double sweep() {
+        double v;
+        double vUpdate;
+        //loop: for every state/node
+        for(int i=0;i<11;i++) {
+            for(int j=0;j<11;j++) {
+            	for(int k = 0; k < 11; k++) {
+    	    		for(int l = 0; l < 11; l++) {
+    	    			State currentState = statespace[i][j][k][l];
+    	    			v = currentState.getValue();
+    	    			show("current value: "+v+'\n');
+    	    			vUpdate = updateValue(currentState);
+    	    			show("updated value: "+vUpdate+'\n');
+    	    			currentState.setValue(vUpdate);
+    	    			// put the statevalue for currentState in the look up table
+    	    	        statevalues.put(currentState.toString(), vUpdate);
+    	    			//show("check updated value: "+currentState.getValue()+'\n');
+    	    			delta = Math.max(delta, Math.abs(v - vUpdate));
+    	    		}
+            	}
+            }
+        }
+        //show("booya delta: " + delta);
+        return delta;
+    }
+    /*
+     * Backup operation that combines the policy improvement 
+     * and truncated policy evaluation steps.
+     */
+    public double updateValue(State cS) {
+    	String action = "wait"; // action
+    	State currentState = cS;
+    	State nextState;
+    	String[] moves = {"north", "south", "east", "west", "wait"};
+    	// records the right part: sum: Pss'a(Rss'a+gamma V(s'))
+    	double[] actions = {0,0,0,0,0};
+    	Vector nextStates;
+    	for(int i=0;i<moves.length;i++) {
+    		action = moves[i];
+    		nextStates = currentState.nextStates(action);
+    		for(int j=0; j<nextStates.size();j++) {
+    			nextState = (State) nextStates.elementAt(j);
+    			int predX = nextState.getPredator().getX();
+    			int predY = nextState.getPredator().getY();
+    			int preyX = nextState.getPrey().getX();
+    			int preyY = nextState.getPrey().getY();
+    			actions[i] += getP(nextStates.size(), nextState) *
+    					(getReward(nextState) +
+    							(gamma * statespace[predX][predY][preyX][preyY].getValue()));
+    		}
+    	}
+    	double sumRightpart = actions[0];
+    	action = moves[0];
+    	for(int i=1;i<actions.length;i++) {
+    		sumRightpart*=getActionProb();
+    	}
+    	//statevalues.put(currentState.toString(), action);
+    	//return max;
+    	return sumRightpart;
+    }
+
+
+//Dummy method to get probability taking action a in current state
+//based on current policy
+public double getActionProb(){
+	// formally derived from policy, in this case equiprobable.
+	return 0.2;
+}
+
+    /*  Uncertainty in prey action is expressed in P; prey is modeled into the state.
+    *	See State.nextStates()
+    */
+    public double getP(int nrnextstates, State next) {
+	if(next.getPreyaction().compareTo("wait")==0)
+	    return (0.2);
+	else
+	    return (0.8/nrnextstates);
+    }
+
+    // implement reward function: only when captured the immediate award=10, else 0
+    public double getReward(State s) {
+        if(s.endState())
+            return 10.0;
+	return 0.0;
+    }
+
+    public static void show(String s) {
+        System.out.print(s);
+    }
+    
+    public static void write(File file, String string, boolean append) throws Exception
+    {
+	if(append==false)
+	{
+	    file.delete();
+	    file.createNewFile();
+	}
+
+	FileOutputStream WriteFile = new FileOutputStream(file, true);
+	OutputStreamWriter WriteBuff = new OutputStreamWriter(WriteFile, "UTF8");
+	WriteBuff.write(string);
+	WriteBuff.close();
+	WriteFile.close();
+    }
+    
+    // outputs the state actions into a file policy.data
+    public void output() throws Exception {
+	File policyfile = new File("policy.data");
+	policyfile.delete();
+	policyfile.createNewFile();
+	if(!stateactions.isEmpty()) {
+	    Enumeration enu = stateactions.keys();
+	    while(enu.hasMoreElements()) {
+		String state = (String) enu.nextElement();
+		String action = (String) stateactions.get(state);
+		try {
+		    write(policyfile, state+"=>"+action+"\n", true);
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		    System.out.println("Cannot write to file");
+		}
+	    }
+	} else
+	    show("State actions table is empty!!");
+    }
+    
+    // fill the stateactions "look up table" with the values in policy.data
+    public void filltable(File file) throws Exception {
+	String s;
+	stateactions = new Hashtable<> ();
+	FileReader readFile = new FileReader(file);
+	BufferedReader readBuf = new BufferedReader(readFile);
+	
+	while((s = readBuf.readLine())!=null) {
+		String[] stateaction = s.split("=>");
+		if(stateaction.length>1) {
+			String state = stateaction[0];
+			String action = stateaction[1];
+			if(stateactions.containsKey(state)) {
+				System.out.println("stateactions is not empty!");
+				return;
+			} else {
+				stateactions.put(state, action);
+			}
+		}
+	}
+    }
+    
+//	public void initPolicy(State[][][][] statespace){
+//	State currentState;
+//	Random generator = new Random();
+//	ArrayList<String> actions = getActions();
+//	String action;
+//	for(int i=0; i < 11; i++)
+//		for(int j=0; j< 11; j++)
+//			for(int k=0; k<11; k++)
+//				for(int l=0;l<11;l++){
+//					currentState = statespace[i][j][k][l];
+//					action = actions.get(generator.nextInt(5)); 
+//					stateactions.put(currentState, action);
+//					statevalues.put(currentState, 0.0);
+//				}	
+////System.out.println(stateactions.get(statespace[0][0][0][0]));
+//}
 }
