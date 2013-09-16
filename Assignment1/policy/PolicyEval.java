@@ -104,14 +104,14 @@ public class PolicyEval implements Policy {
         
         // outputs the values of all states where state:predator[i][j]prey[5][5]
         Position prey55 = new Position(5,5);
-//    	for(int i = 0; i < 11; i++) {
-//    	    for(int j = 0; j < 11; j++) {
-//    	    	State statePrey55 = new State(new Position(i,j), prey55);
-//    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
-//    	    }
-//    	}
+    	for(int i = 0; i < 11; i++) {
+    	    for(int j = 0; j < 11; j++) {
+    	    	State statePrey55 = new State(new Position(i,j), prey55);
+    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)statevalues.get(statePrey55.toString()) +'\n');
+    	    }
+    	}
         
-        // outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
+        /* outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
     	p.show("\n======statevalues in grid around prey[5][5]======\n");
     	int nextline = 0;
     	for(int i = 0; i < 11; i++) {
@@ -121,7 +121,7 @@ public class PolicyEval implements Policy {
     	    	p.show(String.format( "%.2f",(double)statevalues.get(statePrey55.toString())) + " ");
     	    }
     	    nextline = i;
-    	}
+    	}*/
     	
         //p.show("size statespace tree: " + p.size);
         try {
@@ -208,28 +208,29 @@ public class PolicyEval implements Policy {
     	// records the right part: sum: Pss'a(Rss'a+gamma V(s'))
     	double[] actions = {0,0,0,0,0};
     	Vector nextStates;
+    	int predX, predY, preyX, preyY;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);
-    			int predX = nextState.getPredator().getX();
-    			int predY = nextState.getPredator().getY();
-    			int preyX = nextState.getPrey().getX();
-    			int preyY = nextState.getPrey().getY();
+    			predX = nextState.getPredator().getX();
+    			predY = nextState.getPredator().getY();
+    			preyX = nextState.getPrey().getX();
+    			preyY = nextState.getPrey().getY();
     			actions[i] += getP(nextStates.size(), nextState) *
     					(getReward(nextState) +
     							(gamma * statespace[predX][predY][preyX][preyY].getValue()));
     		}
     	}
-    	double sumRightpart = actions[0];
+    	double valueUpdate = actions[0]*getActionProb();
     	action = moves[0];
     	for(int i=1;i<actions.length;i++) {
-    		sumRightpart*=getActionProb();
+    		valueUpdate+=actions[i]*getActionProb();
     	}
     	//statevalues.put(currentState.toString(), action);
     	//return max;
-    	return sumRightpart;
+    	return valueUpdate;
     }
 
 

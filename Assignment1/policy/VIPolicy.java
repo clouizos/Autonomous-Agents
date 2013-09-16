@@ -97,6 +97,8 @@ public class VIPolicy implements Policy {
     public void multisweep() {
         int k = 0;
         //int depth = 0;
+        delta = 0;
+        stateactions.clear();
         do {
             delta = 0;
             stateactions.clear();
@@ -124,13 +126,13 @@ public class VIPolicy implements Policy {
     	    		for(int l = 0; l < 11; l++) {
     	    			State currentState = statespace[i][j][k][l];
     	    			v = currentState.getValue();
-    	    			show("current value: "+v+'\n');
+    	    			//show("current value: "+v+'\n');
     	    			vUpdate = updateValue(currentState);
-    	    			show("updated value: "+vUpdate+'\n');
+    	    			//show("updated value: "+vUpdate+'\n');
     	    			currentState.setValue(vUpdate);
     	    			// put the statevalue for currentState in the look up table
     	    	        statevalues.put(currentState.toString(), vUpdate);
-    	    			show("check updated value: "+currentState.getValue()+'\n');
+    	    			//show("check updated value: "+currentState.getValue()+'\n');
     	    			delta = Math.max(delta, Math.abs(v - currentState.getValue()));
     	    		}
             	}
@@ -150,15 +152,16 @@ public class VIPolicy implements Policy {
     	String[] moves = {"north", "south", "east", "west", "wait"};
     	double[] actions = {0,0,0,0,0};
     	Vector nextStates;
+    	int predX, predY, preyX, preyY;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);
-    			int predX = nextState.getPredator().getX();
-    			int predY = nextState.getPredator().getY();
-    			int preyX = nextState.getPrey().getX();
-    			int preyY = nextState.getPrey().getY();
+    			predX = nextState.getPredator().getX();
+    			predY = nextState.getPredator().getY();
+    			preyX = nextState.getPrey().getX();
+    			preyY = nextState.getPrey().getY();
     			actions[i] += getP(nextStates.size(), nextState) *
     					(getReward(nextState) +
     							(gamma * statespace[predX][predY][preyX][preyY].getValue()));
@@ -181,9 +184,9 @@ public class VIPolicy implements Policy {
     */
     public double getP(int nrnextstates, State next) {
 	if(next.getPreyaction().compareTo("wait")==0)
-	    return (0.2);
+	    return (0.8);
 	else
-	    return (0.8/nrnextstates);
+	    return (0.2/nrnextstates);
     }
 
     // implement reward function: only when captured the immediate award=10, else 0
