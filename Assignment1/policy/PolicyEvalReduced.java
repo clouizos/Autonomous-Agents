@@ -51,7 +51,7 @@ public class PolicyEvalReduced implements Policy {
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-    	PolicyEvalReduced p = new PolicyEvalReduced(0.8, 0.00000000001, rPolpred);
+    	PolicyEvalReduced p = new PolicyEvalReduced(0.8, 1.0E-20, rPolpred);
         p.multisweep();
         Position prey = new Position(5,5);
     	p.printList(prey);
