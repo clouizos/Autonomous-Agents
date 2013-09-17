@@ -37,8 +37,8 @@ public class PolicyEval implements Policy {
 	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			action = rpp.getAction(s);
 	    			statespace[i][j][k][l] = s;
-	    			stateactions.put(s.toString(), action);
-					statevalues.put(s.toString(), 0.0);
+	    			stateactions.put((String)s.toString(), (String)action);
+					statevalues.put((String)s.toString(), (Double)0.0);
 	    		}
 	    	}
 
@@ -56,11 +56,13 @@ public class PolicyEval implements Policy {
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
         p.multisweep();
-    	
+        Position prey = new Position(5,5);
+    	p.printList(prey);
+    	p.printTable(prey);
     }
     
-    public int doPolicyEvaluation(){
-        return multisweep();   	
+    public int doPolicyEvaluationIteration(){
+        return multisweep_iteration();   	
     }
 
     public String getAction(State currentState){
@@ -74,6 +76,22 @@ public class PolicyEval implements Policy {
         do {
             delta = 0;
             delta = sweep();
+            //show("delta: " + delta+'\n');
+            //show("theta: " + theta+'\n');
+            k++;
+            //--k;
+        } //while (k>0);
+        while(delta > theta);
+        show("\nnr of iterations: "+k);
+        return k;
+    }
+    
+    public int multisweep_iteration() {
+        int k = 0;
+        //int depth = 0;
+        do {
+            delta = 0;
+            delta = sweep_iteration();
             //show("delta: " + delta+'\n');
             //show("theta: " + theta+'\n');
             k++;
@@ -112,6 +130,31 @@ public class PolicyEval implements Policy {
         //show("booya delta: " + delta);
         return delta;
     }
+    
+    public double sweep_iteration() {
+        double v;
+        double vUpdate;
+        //loop: for every state/node
+        for(int i=0;i<11;i++) {
+            for(int j=0;j<11;j++) {
+            	for(int k = 0; k < 11; k++) {
+    	    		for(int l = 0; l < 11; l++) {
+    	    			State currentState = statespace[i][j][k][l];
+    	    			v = (double) statevalues.get(currentState.toString());
+    	    			//show("current value: "+v+'\n');
+    	    			vUpdate = updateValue_iteration(currentState);
+    	    			//show("updated value: "+vUpdate+'\n');
+    	    			// put the statevalue for currentState in the look up table
+    	    	        statevalues.put(currentState.toString(), vUpdate);
+    	    			//show("check updated value: "+currentState.getValue()+'\n');
+    	    			delta = Math.max(delta, Math.abs(v - vUpdate));
+    	    		}
+            	}
+            }
+        }
+        //show("booya delta: " + delta);
+        return delta;
+    }
     /*
      * Backup operation for policy evaluation 
      * sum_a: p(s,a) * sum_s': Pss'a(Rss'a+gamma V(s'))
@@ -136,10 +179,43 @@ public class PolicyEval implements Policy {
     		}
     	}
     	double valueUpdate = actions[0]*getActionProb();
+    	//double valueUpdate = 0.0;
     	action = moves[0];
     	for(int i=1;i<actions.length;i++) {
     		valueUpdate+=actions[i]*getActionProb();
     	}
+    	//statevalues.put(currentState.toString(), action);
+    	//return max;
+    	return valueUpdate;
+    }
+    
+    public double updateValue_iteration(State cS) {
+    	String action = "wait"; // action
+    	State currentState = cS;
+    	State nextState;
+    	String[] moves = {"north", "south", "east", "west", "wait"};
+    	// records the right part: sum_s': Pss'a(Rss'a+gamma*V(s'))
+    	double[] actions = {0,0,0,0,0};
+    	double nextStateValue;
+    	Vector nextStates;
+    	//for(int i=0;i<moves.length;i++) {
+    		//action = moves[i];
+    		action = (String)stateactions.get(cS.toString());
+    		nextStates = currentState.nextStates(action);
+    		for(int j=0; j<nextStates.size();j++) {
+    			nextState = (State) nextStates.elementAt(j);
+    			nextStateValue = (double)statevalues.get(nextState.toString());
+    			actions[j] += getP(nextStates.size(), nextState) *
+    					(getReward(nextState) + (gamma * nextStateValue));
+    		}
+    	//}
+    	double valueUpdate = actions[0];
+    	//double valueUpdate = 0.0;
+    	//action = moves[0];
+    	for(int i=1;i<actions.length;i++) {
+    		valueUpdate+=actions[i];
+    	}
+    	
     	//statevalues.put(currentState.toString(), action);
     	//return max;
     	return valueUpdate;
@@ -156,9 +232,11 @@ public double getActionProb(){
     /*  Uncertainty in prey action is expressed in P; prey is modeled into the state.
     *	See State.nextStates()
     */
-    public double getP(int nrnextstates, State next) {
-	if(next.getPreyaction().equals("wait"))
-	    return (0.8);
+public double getP(int nrnextstates, State next) {
+    if(next.endState())	
+    	return 1.0;
+    else if(next.getPreyaction().equals("wait"))
+	    return 0.8;
 	else
 	    return (0.2/nrnextstates);
     }

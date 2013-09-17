@@ -25,9 +25,9 @@ public class Testsimulation {
     public static void main(String[] args) {
     // State which policies the simulator is run
     //Policy predPolicy = new RandomPolicyPredator();
-    //VIPolicy predPolicy = new VIPolicy();
+    VIPolicy predPolicy = new VIPolicy();
     //PolicyIter predPolicy = new PolicyIter();
-    VIPolicyReduced predPolicy = new VIPolicyReduced();
+    //VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	// fill look up table if Value iteration Policy is run

@@ -48,13 +48,19 @@ public class State {
 	Position preDnext, preYnext;
 	// the next position of the predator when taken a:predmove
 	preDnext = predator.move(predmove);
+	State nextstate = new State(preDnext, prey);
+	if(nextstate.endState()){
+		succstates.add(nextstate);
+		return succstates;
+	}
+		
 	
 	// preymoves
 	for(int i=0;i<moves.length;i++) {
 	    // the next position of the prey
 		preYnext = prey.move(moves[i]);
 	    //show(preynext2.toString());
-	    State nextstate = new State(preDnext, preYnext, moves[i]);
+	    nextstate = new State(preDnext, preYnext, moves[i]);
 	    // a prey will never move to an occupied position
 	    if(nextstate.endState()&&i!=4)
 		continue;

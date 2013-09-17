@@ -30,7 +30,7 @@ public class VIPolicy implements Policy {
 	    		for(int l = 0; l < 11; l++) {
 	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			statespace[i][j][k][l] = s;
-	    			statevalues.put(s.toString(), 0.0);
+	    			statevalues.put(s.toString(), (Double)0.0);
 	    		}
 	    	}
 
@@ -108,7 +108,7 @@ public class VIPolicy implements Policy {
     	    			vUpdate = updateValue(currentState);
     	    			//show("updated value: "+vUpdate+'\n');
     	    			// put the statevalue for currentState in the look up table
-    	    	        statevalues.put(currentState.toString(), vUpdate);
+    	    	        statevalues.put(currentState.toString(), (Double)vUpdate);
     	    			//show("check updated value: "+currentState.getValue()+'\n');
     	    			delta = Math.max(delta, Math.abs(v - vUpdate));
     	    		}
@@ -140,6 +140,13 @@ public class VIPolicy implements Policy {
     			nextStateValue = (double)statevalues.get(nextState.toString());
     			actions[i] += getP(nextStates.size(), nextState) *
     					(getReward(nextState) + (gamma * nextStateValue));
+    			if(getReward(nextState)==10.0) {
+    			show("\nsize:"+nextStates.size());
+    			show("\nreward given: "+getReward(nextState));
+    			show("\nP: "+getP(nextStates.size(), nextState));
+    			show("\n"+currentState.toString());
+    			show("\n"+nextState.toString());
+    			}
     		}
     	}
     	// get the max
@@ -151,7 +158,7 @@ public class VIPolicy implements Policy {
     			action = moves[i];
     		}
     	}
-    	stateactions.put(currentState.toString(), action);
+    	stateactions.put(currentState.toString(), (String)action);
     	return max;
     }
 
@@ -159,8 +166,10 @@ public class VIPolicy implements Policy {
     *	See State.nextStates()
     */
     public double getP(int nrnextstates, State next) {
-	if(next.getPreyaction().equals("wait"))
-	    return (0.8);
+    if(next.endState())	
+    	return 1.0;
+    else if(next.getPreyaction().equals("wait"))
+	    return 0.8;
 	else
 	    return (0.2/nrnextstates);
     }
