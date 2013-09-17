@@ -141,7 +141,7 @@ public class PolicyIter extends PolicyEval{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PolicyIter PI = new PolicyIter(0.8, 1.0E-20);
+		PolicyIter PI = new PolicyIter(0.9, 1.0E-20);
 		PI.doIteration();
 		//printTable();
 		PI.printTable(new Position(5,5));

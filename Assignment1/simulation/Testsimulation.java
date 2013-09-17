@@ -24,28 +24,28 @@ public class Testsimulation {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    //Policy predPolicy = new RandomPolicyPredator();
+    Policy predPolicy = new RandomPolicyPredator();
     //PolicyIter predPolicy = new PolicyIter();
     //VIPolicy predPolicy = new VIPolicy();
-    PolicyIterReduced predPolicy = new PolicyIterReduced();
+    //PolicyIterReduced predPolicy = new PolicyIterReduced();
     //VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
 	
-	// fill look up table if Value iteration Policy is run
+	/* fill look up table if Value iteration Policy is run
 	File file = new File("policy.data");
 	try {
 		predPolicy.filltable(file);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}
+	}*/
 	 
     test(predPolicy, preyPolicy);
     }
     
     public static void test(Policy predPolicy, Policy preyPolicy) {
     	State currentState = new State(prey, predator);
-    	while(timesRun < 10000) {
+    	while(timesRun < 100) {
     		if(resetGrid){
     			runs = 0;
     			System.out.println("Resetting Grid for the "+timesRun+" run!");
