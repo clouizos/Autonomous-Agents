@@ -27,8 +27,8 @@ public class Testsimulation {
     //Policy predPolicy = new RandomPolicyPredator();
     //PolicyIter predPolicy = new PolicyIter();
     //VIPolicy predPolicy = new VIPolicy();
-    //PolicyIterReduced predPolicy = new PolicyIterReduced();
-    VIPolicyReduced predPolicy = new VIPolicyReduced();
+    PolicyIterReduced predPolicy = new PolicyIterReduced();
+    //VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	// fill look up table if Value iteration Policy is run
