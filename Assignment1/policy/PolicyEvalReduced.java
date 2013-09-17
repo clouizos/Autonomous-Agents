@@ -235,7 +235,7 @@ public double getP(int nrnextstates, State next) {
     else if(next.getPreyaction().equals("wait"))
 	    return 0.8;
 	else
-	    return (0.2/nrnextstates);
+	    return (0.2/(nrnextstates-1));
     }
 
     // implement reward function: only when captured the immediate award=10, else 0

@@ -1,12 +1,16 @@
 package policy;
 
-import statespace.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import java.io.*;
-import java.util.*;
-
-import policy.RandomPolicyPredator;
-import policy.RandomPolicyPredator;
+import statespace.Position;
+import statespace.State;
 
 public class PolicyEval implements Policy {
 	/* max statespace state[i][j][k][l]
@@ -251,7 +255,7 @@ public double getP(int nrnextstates, State next) {
     else if(next.getPreyaction().equals("wait"))
 	    return 0.8;
 	else
-	    return (0.2/nrnextstates);
+	    return (0.2/(nrnextstates-1));
     }
 
     // implement reward function: only when captured the immediate award=10, else 0

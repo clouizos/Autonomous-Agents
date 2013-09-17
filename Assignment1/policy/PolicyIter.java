@@ -152,7 +152,7 @@ public class PolicyIter extends PolicyEval{
 	    else if(next.getPreyaction().equals("wait"))
 		    return 0.8;
 		else
-		    return (0.2/nrnextstates);
+		    return (0.2/(nrnextstates-1));
 	    }
 
 	// implement reward function
