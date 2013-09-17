@@ -54,9 +54,9 @@ public class PolicyEval implements Policy {
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-    	PolicyEval p = new PolicyEval(0.8, 0.00000000001, rPolpred);
+    	PolicyEval p = new PolicyEval(0.8, 1*Math.exp(-20.0), rPolpred);
         p.multisweep();
-        Position prey = new Position(0,0);
+        Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
     }
