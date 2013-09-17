@@ -25,10 +25,8 @@ public class Testsimulation {
     public static void main(String[] args) {
     // State which policies the simulator is run
     //Policy predPolicy = new RandomPolicyPredator();
-    //PolicyEval predPolicy = new PolicyEval();
     //PolicyIter predPolicy = new PolicyIter();
     //VIPolicy predPolicy = new VIPolicy();
-    //PolicyEvalReduced predPolicy = new PolicyEvalReduced();
     //PolicyIterReduced predPolicy = new PolicyIterReduced();
     VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
@@ -47,7 +45,7 @@ public class Testsimulation {
     
     public static void test(Policy predPolicy, Policy preyPolicy) {
     	State currentState = new State(prey, predator);
-    	while(timesRun < 100) {
+    	while(timesRun < 10000) {
     		if(resetGrid){
     			runs = 0;
     			System.out.println("Resetting Grid for the "+timesRun+" run!");

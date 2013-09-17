@@ -28,9 +28,11 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	public PolicyIterReduced() {}
 
 	public String getAction(State currentState) {
-		show("\ninside get action: "+currentState);
-
-		return (String) stateactions.get(currentState.toString());
+    	Position pred = currentState.getPredator();
+    	Position prey = currentState.getPrey();
+    	Position predproj = pred.transformPrey55(prey);
+    	State stateproj = new State(predproj, new Position(5,5));
+    	return (String)stateactions.get(stateproj.toString());
 	}
 	
 

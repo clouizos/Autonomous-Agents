@@ -44,7 +44,7 @@ public class VIPolicy implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
-    	VIPolicy p = new VIPolicy(0.5, 1.0E-20);
+    	VIPolicy p = new VIPolicy(0.9, 1.0E-20);
         p.multisweep();
         Position prey = new Position(5,5);
         p.printList(prey);
@@ -143,11 +143,11 @@ public class VIPolicy implements Policy {
     			actions[i] += getP(nextStates.size(), nextState) *
     					(getReward(nextState) + (gamma * nextStateValue));
     			if(getReward(nextState)==10.0) {
-    			show("\nsize:"+nextStates.size());
-    			show("\nreward given: "+getReward(nextState));
-    			show("\nP: "+getP(nextStates.size(), nextState));
-    			show("\n"+currentState.toString());
-    			show("\n"+nextState.toString());
+//    			show("\nsize:"+nextStates.size());
+//    			show("\nreward given: "+getReward(nextState));
+//    			show("\nP: "+getP(nextStates.size(), nextState));
+//    			show("\n"+currentState.toString());
+//    			show("\n"+nextState.toString());
     			}
     		}
     	}
