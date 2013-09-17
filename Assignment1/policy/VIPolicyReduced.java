@@ -131,6 +131,8 @@ public class VIPolicyReduced implements Policy {
     	Vector nextStates;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
+    		if(cS.endState())
+    			continue;
     		nextStates = currentState.nextStatesReduced(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);

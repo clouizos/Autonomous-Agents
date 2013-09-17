@@ -71,7 +71,7 @@ public class PolicyIter extends PolicyEval{
 		String actions[] = { "north", "south", "east", "west", "wait" };
 		String newPolicyaction;
 		improvement_runs++;
-improvement:for (int i = 0; i < 11; i++) {
+		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
 				for (int k = 0; k < 11; k++) {
 					for (int l = 0; l < 11; l++) {
@@ -85,8 +85,7 @@ improvement:for (int i = 0; i < 11; i++) {
 							//show("found a better action for "+state);
 							noChange = false;
 							stateactions.put(currentState.toString(), newPolicyaction);
-							
-							//break improvement;
+
 						}
 					}
 				}
@@ -123,6 +122,8 @@ improvement:for (int i = 0; i < 11; i++) {
 		Vector nextStates;
 		for (int i = 0; i < moves.length; i++) {
 			action = moves[i];
+			if(cS.endState())
+    			continue;
 			nextStates = currentState.nextStates(action);
 			for (int j = 0; j < nextStates.size(); j++) {
 				nextState = (State) nextStates.elementAt(j);
@@ -163,7 +164,7 @@ improvement:for (int i = 0; i < 11; i++) {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PolicyIter PI = new PolicyIter(0.8, 0.001);
+		PolicyIter PI = new PolicyIter(0.8, 0.0000000001);
 		PI.doIteration();
 		//printTable();
 		PI.printTable(new Position(5,5));

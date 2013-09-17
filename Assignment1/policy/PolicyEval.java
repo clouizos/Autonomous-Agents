@@ -54,9 +54,9 @@ public class PolicyEval implements Policy {
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
-    	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
+    	PolicyEval p = new PolicyEval(0.8, 0.00000000001, rPolpred);
         p.multisweep();
-        Position prey = new Position(5,5);
+        Position prey = new Position(0,0);
     	p.printList(prey);
     	p.printTable(prey);
     }
@@ -170,6 +170,8 @@ public class PolicyEval implements Policy {
     	Vector nextStates;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
+    		if(cS.endState())
+    			continue;
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);
@@ -201,12 +203,14 @@ public class PolicyEval implements Policy {
     	//for(int i=0;i<moves.length;i++) {
     		//action = moves[i];
     		action = (String)stateactions.get(cS.toString());
-    		nextStates = currentState.nextStates(action);
-    		for(int j=0; j<nextStates.size();j++) {
-    			nextState = (State) nextStates.elementAt(j);
-    			nextStateValue = (double)statevalues.get(nextState.toString());
-    			actions[j] += getP(nextStates.size(), nextState) *
+    		if(!cS.endState()){
+    			nextStates = currentState.nextStates(action);
+    			for(int j=0; j<nextStates.size();j++) {
+    				nextState = (State) nextStates.elementAt(j);
+    				nextStateValue = (double)statevalues.get(nextState.toString());
+    				actions[j] += getP(nextStates.size(), nextState) *
     					(getReward(nextState) + (gamma * nextStateValue));
+    			}
     		}
     	//}
     	double valueUpdate = actions[0];
