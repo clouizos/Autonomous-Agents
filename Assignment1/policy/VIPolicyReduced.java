@@ -39,7 +39,7 @@ public class VIPolicyReduced implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
-    	VIPolicyReduced p = new VIPolicyReduced(0.5, 0.001);
+    	VIPolicyReduced p = new VIPolicyReduced(0.5, 1.0E-20);
         p.multisweep();
         Position prey = new Position(5,5);
         p.printList(prey);

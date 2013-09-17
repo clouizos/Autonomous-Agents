@@ -44,7 +44,7 @@ public class VIPolicy implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
-    	VIPolicy p = new VIPolicy(0.5, 0.001);
+    	VIPolicy p = new VIPolicy(0.5, 1.0E-20);
         p.multisweep();
         Position prey = new Position(5,5);
         p.printList(prey);

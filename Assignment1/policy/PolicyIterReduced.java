@@ -159,7 +159,7 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PolicyIterReduced PI = new PolicyIterReduced(0.8, 0.0000000001);
+		PolicyIterReduced PI = new PolicyIterReduced(0.8, 1.0E-20);
 		PI.doIteration();
 		//printTable();
 		PI.printTable(new Position(5,5));
