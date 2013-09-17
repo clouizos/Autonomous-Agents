@@ -163,7 +163,7 @@ public class PolicyEvalReduced implements Policy {
     	Vector nextStates;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
-    		if(cS.endState())
+    		if(currentState.endState())
     			continue;
     		nextStates = currentState.nextStatesReduced(action);
     		for(int j=0; j<nextStates.size();j++) {
@@ -196,7 +196,7 @@ public class PolicyEvalReduced implements Policy {
     	//for(int i=0;i<moves.length;i++) {
     		//action = moves[i];
     		action = (String)stateactions.get(cS.toString());
-    		if(!cS.endState()){
+    		if(!currentState.endState()){
     			nextStates = currentState.nextStatesReduced(action);
     			for(int j=0; j<nextStates.size();j++) {
     				nextState = (State) nextStates.elementAt(j);
