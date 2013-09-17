@@ -27,6 +27,10 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	
 	public PolicyIterReduced() {}
 
+	 /*
+     * Projects the currentState to the one when prey[5][5]
+     * 
+     */
 	public String getAction(State currentState) {
     	Position pred = currentState.getPredator();
     	Position prey = currentState.getPrey();
@@ -36,22 +40,25 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	}
 	
 
-
+	// function that performs the policy iteration
 	public void doIteration() {
 		
-		//show("finished evaluation!");
+		//flag for stopping the while loop for evaluation and improvement
 		boolean stop_while = true;
+		//flag for the improvement, if noChange was true then there was no improvement on the policy
 		boolean noChange;
-		//initPolicy(statespace);
 		while(stop_while){
-			//doPolicyEvaluation(gamma, PolicyIter.statespace);
+			//perform policy evaluation and count the number of times the evaluation runs
 			evaluation_runs+=doPolicyEvaluationIteration();
 			//Position prey = new Position(5,5);
 			//printTable(prey);
-			show("\nBeginning Improvement");
+			//show("\nBeginning Improvement");
+			//perform policy improvement and return if there was improvement or not
 			noChange = doPolicyImprovement();
-			show("\nnoChange: "+noChange);
+			//show("\nnoChange: "+noChange);
 			//System.out.println(stateactions);
+			
+			//if there was no improvement then exit the while loop
 			if(noChange){
 				stop_while = false;
 				show("\nFinished!");
@@ -65,64 +72,74 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 		printList(prey);
 	}
 
-
+	// policy improvement function
 	public boolean doPolicyImprovement() {
+		//flag for determining whether there was improvement or not
 		boolean noChange = true;
+		// old action according to the policy
 		String beta;
-		boolean stop = false;
-		String actions[] = { "north", "south", "east", "west", "wait" };
+		// new action according to the argmax update
 		String newPolicyaction;
+		// increment improvement runs
 		improvement_runs++;
+		// sweep the whole statespace
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
+				//record the state as the current state
 						State currentState = statespace[i][j];
-						//show((String)stateactions.get(PolicyIter.statespace[0][0][0][0]));
+						//get the old action that was assigned on that state from the policy, from the hashmap
 						beta = (String) stateactions.get(currentState.toString());
-						//show("\nold policy action for "+currentState+": "+beta);
+						// find the new action according to the argmax;
 						newPolicyaction = argmaxupdateValue(currentState);
 						//show("new policy action: "+newPolicyaction);
 						if (!beta.equals(newPolicyaction)) {
-							//show("found a better action for "+state);
+							//we found a better action hence we need to denote that there was a change in the policy
 							noChange = false;
+							// put the new action at the hashmap
 							stateactions.put(currentState.toString(), newPolicyaction);
 
 						}
 			}
 		}
-		//show("out of improvement");
-		//if (!noChange) {
-			//show("improvement runs:" + improvement_runs);
-			//doPolicyEvaluation(gamma, statespace);
-			//stop = false;
-		//}else
-			//stop = true;
 		return noChange;
 
 	}
 		
-
+	//function that performs the argmax update
 	public String argmaxupdateValue(State cS) {
-		String action = "wait"; // action
+		// init of action variable
+		String action = "wait";
+		// init current state
 		State currentState = cS;
 		State nextState;
+		// possible moves 
 		String[] moves = { "north", "south", "east", "west", "wait" };
+		// vector that keeps the values for each action
 		double[] actions = { 0, 0, 0, 0, 0 };
 		double nextStateValue;
+		// vector for all possible next states
 		Vector nextStates;
+		// for all possible moves
 		for (int i = 0; i < moves.length; i++) {
+			//get the move
 			action = moves[i];
+			// if it is the end state we don't want to calculate the reward
 			if(currentState.endState())
     			continue;
+			// get the possible next states according to the current state and the action taken
 			nextStates = currentState.nextStatesReduced(action);
+			// for each next state
 			for (int j = 0; j < nextStates.size(); j++) {
 				nextState = (State) nextStates.elementAt(j);
+				// calculate the next state value
 				nextStateValue = (double)statevalues.get(nextState.toString());
+				// and store it in the vector of values
 				actions[i] += getP(nextStates.size(), nextState)
 						* (getReward(nextState) + (gamma * nextStateValue));
 
 			}
 		}
-
+		// find the action that maximizes the value, which is the best action
 		double max = actions[0];
 		action = moves[0];
 		for (int i = 1; i < actions.length; i++) {
@@ -131,6 +148,7 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 				action = moves[i];
 			}
 		}
+		//put the new value in the hashmap and return the best action
 		statevalues.put(currentState.toString(), max);
 		return action;
 	}
@@ -138,7 +156,7 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PolicyIterReduced PI = new PolicyIterReduced(0.8, 1.0E-20);
+		PolicyIterReduced PI = new PolicyIterReduced(0.9, 1.0E-20);
 		PI.doIteration();
 		//printTable();
 		PI.printTable(new Position(5,5));
@@ -152,14 +170,18 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	}
 	
 	public int doPolicyEvaluationIteration(){
+		// init the multisweep for the policy evaluation
         return multisweep_iteration();   	
     }
 	
+	// the outer loop: repreat untill delta is smaller than theta
 	 public int multisweep_iteration() {
 	        int k = 0;
 	        //int depth = 0;
 	        do {
+	        	//init the delta
 	            delta = 0;
+	            // do the sweep
 	            delta = sweep_iteration();
 	            //show("delta: " + delta+'\n');
 	            //show("theta: " + theta+'\n');
@@ -171,19 +193,21 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	        return k;
 	    }
 	 public double sweep_iteration() {
+		 	//old value
 	        double v;
+	        // new value
 	        double vUpdate;
 	        //loop: for every state/node
 	        for(int i=0;i<11;i++) {
 	            for(int j=0;j<11;j++) {
 	    	    			State currentState = statespace[i][j];
 	    	    			v = (double) statevalues.get(currentState.toString());
-	    	    			//show("current value: "+v+'\n');
+	    	    			//get the new value
 	    	    			vUpdate = updateValue_iteration(currentState);
 	    	    			//show("updated value: "+vUpdate+'\n');
 	    	    			// put the statevalue for currentState in the look up table
 	    	    	        statevalues.put(currentState.toString(), vUpdate);
-	    	    			//show("check updated value: "+currentState.getValue()+'\n');
+	    	    	        // set delta as the maximum between the difference of the old and new values and the previous delta
 	    	    			delta = Math.max(delta, Math.abs(v - vUpdate));
 	            }
 	        }
@@ -191,6 +215,7 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	        return delta;
 	    }
 	 
+	// perform the update of values of policy evaluation inside the policy iteration
 	 public double updateValue_iteration(State cS) {
 	    	String action = "wait"; // action
 	    	State currentState = cS;
@@ -200,28 +225,26 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	    	double[] actions = {0,0,0,0,0};
 	    	double nextStateValue;
 	    	Vector nextStates;
-	    	//for(int i=0;i<moves.length;i++) {
-	    		//action = moves[i];
 	    		action = (String)stateactions.get(cS.toString());
+	    		// if we don't have an end state then we want to calculate the value
 	    		if(!currentState.endState()){
 	    			nextStates = currentState.nextStatesReduced(action);
 	    			for(int j=0; j<nextStates.size();j++) {
 	    				nextState = (State) nextStates.elementAt(j);
 	    				nextStateValue = (double)statevalues.get(nextState.toString());
+	    				//insert the value into the vector of values according to actions
 	    				actions[j] += getP(nextStates.size(), nextState) *
 	    					(getReward(nextState) + (gamma * nextStateValue));
 	    			}
 	    		}
-	    	//}
+	    		
+	    		// sum over all those values
 	    	double valueUpdate = actions[0];
-	    	//double valueUpdate = 0.0;
-	    	//action = moves[0];
 	    	for(int i=1;i<actions.length;i++) {
 	    		valueUpdate+=actions[i];
 	    	}
 	    	
-	    	//statevalues.put(currentState.toString(), action);
-	    	//return max;
+	    	//return the new value
 	    	return valueUpdate;
 	    }
 

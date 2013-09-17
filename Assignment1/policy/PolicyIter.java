@@ -181,7 +181,7 @@ public class PolicyIter extends PolicyEval{
         return multisweep_iteration();   	
     }
 	
-	//performs the 2-layer calculation of the formula for policy evaluation
+	// the outer loop: repreat untill delta is smaller than theta
 	public int multisweep_iteration() {
         int k = 0;
         //int depth = 0;

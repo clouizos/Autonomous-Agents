@@ -59,8 +59,10 @@ public class PolicyEvalReduced implements Policy {
 		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     
-    
-
+    /*
+     * Projects the currentState to the one when prey[5][5]
+     * 
+     */
     public String getAction(State currentState){
     	Position pred = currentState.getPredator();
     	Position prey = currentState.getPrey();
