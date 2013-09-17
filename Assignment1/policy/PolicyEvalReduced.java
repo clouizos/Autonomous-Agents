@@ -56,6 +56,15 @@ public class PolicyEvalReduced implements Policy {
         Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
+    	State statePrey = new State(new Position(0,0), new Position(5,5));
+		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
+		statePrey = new State(new Position(2,3), new Position(5,4));
+		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
+		statePrey = new State(new Position(2,10), new Position(10,0));
+		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
+		statePrey = new State(new Position(10,10), new Position(0,0));
+		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
+		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     
     public int doPolicyEvaluationIteration(){
