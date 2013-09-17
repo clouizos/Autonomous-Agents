@@ -28,7 +28,7 @@ public class VIPolicyReduced implements Policy {
 	    for(int j = 0; j < 11; j++) {
 	    			State s = new State(new Position(i, j), new Position(5, 5));
 	    			statespace[i][j] = s;
-	    			statevalues.put(s.toString(), 0.0);
+	    			statevalues.put(s.toString(), (Double)0.0);
 	    		}
 	}
         gamma = g;
