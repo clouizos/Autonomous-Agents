@@ -8,7 +8,6 @@ public class State {
     // State is defined on position prey and predator
     private Position predator;
     private Position prey;
-    private double stateValue;
     
     //private String action;
     private String preyAction;
@@ -22,12 +21,6 @@ public class State {
     predator = pred;
     this.prey = prey;
     preyAction = a;
-	}
-    
-    public State(Position pred, Position prey, int v) {
-	predator = pred;
-    this.prey = prey;
-    stateValue = v;
 	}
 
 	public void updatePosition(Position predator, Position prey){
@@ -56,35 +49,38 @@ public class State {
 	// the next position of the predator when taken a:predmove
 	preDnext = predator.move(predmove);
 	
-	/*SAID ADD HERE, PLEASE CORRECT ME IF I'M WRONG ===================================
-        if After predator move, the state is the terminal state, 
-        then there shouldn't be any next state right? so we don't consider prey can move anymore
-        and just return the terminal state as next state
-        For the transition probability, it will become 1.
-        This change may affect VIPolicy..
-        
-        No, even if one of the possible next state would be the captured state, 
-        it doesn't exclude the possibility of the prey not standing still. So, you have to consider
-        that as possible next states. Remember the prey is modeled into the enviroment, 
-        so you have to express that uncertainty into the possible next states. 
-        See it like a simultaneous move of predator and prey, if you will, to make it clearer; the next state 
-        considers the predator making a move (probabilty 1), but the prey making a move too with probabilities 
-        as documented; you can refer to the latest mail of the TA about this.
-        
-        Besides it will create a nullpointerException :p 
-	 
-	State testState = new State(preDnext, prey);
-	if (testState.endState()){
-		succstates.add(testState);
-		return succstates;
-	}*/
-	
 	// preymoves
 	for(int i=0;i<moves.length;i++) {
 	    // the next position of the prey
 		preYnext = prey.move(moves[i]);
 	    //show(preynext2.toString());
 	    State nextstate = new State(preDnext, preYnext, moves[i]);
+	    // a prey will never move to an occupied position
+	    if(nextstate.endState()&&i!=4)
+		continue;
+	    else
+		succstates.add(nextstate);
+	}
+	return succstates;
+    }
+    
+    /*
+     * nextStates are projected to the prey[5][5]
+     */
+    
+    public Vector nextStatesReduced(String predmove) {
+	Vector succstates = new Vector();
+	String[] moves = {"north", "east", "south", "west", "wait"};
+	Position preDnext, preYnext;
+	// the next position of the predator when taken a:predmove
+	preDnext = predator.move(predmove);
+	
+	// preymoves
+	for(int i=0;i<moves.length;i++) {
+	    // the next position of the prey
+		preYnext = prey.move(moves[i]);
+	    //show(preynext2.toString());
+	    State nextstate = new State(preDnext.transformPrey55(preYnext), new Position(5,5), moves[i]);
 	    // a prey will never move to an occupied position
 	    if(nextstate.endState()&&i!=4)
 		continue;
@@ -136,13 +132,5 @@ public class State {
 
 	public String getPreyaction() {
 		return preyAction;
-	}
-
-	public double getValue() {
-		return stateValue;
-	}
-
-	public void setValue(double v) {
-		stateValue = v;		
 	}
 }

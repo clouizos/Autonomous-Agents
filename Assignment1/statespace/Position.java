@@ -58,13 +58,13 @@ public class Position {
     }
     
     public Position move(String move) {
-	if(move.compareTo("north")==0)
+	if(move.equals("north"))
 	    return new Position(x, y-1);
-	if(move.compareTo("south")==0)
+	if(move.equals("south"))
 	    return new Position(x, y+1);
-	if(move.compareTo("west")==0)
+	if(move.equals("west"))
 	    return new Position(x-1, y);
-	if(move.compareTo("east")==0)
+	if(move.equals("east"))
 	    return new Position(x+1, y);
 	return new Position(x, y);
     }
@@ -81,6 +81,15 @@ public class Position {
 	return new Position(x, y);
     }
     */
+    
+    /* transforms its position(predator) of given actual prey position to
+     * the projected position for prey[5][5]
+     */
+    public Position transformPrey55(Position prey) {
+    	int projx = 5-prey.getX()+this.getX();
+    	int projy = 5-prey.getY()+this.getY();
+    	return new Position(projx, projy);
+    }
     
     public boolean equals(Position p) {
 	if(x==p.getX()&&y==p.getY())

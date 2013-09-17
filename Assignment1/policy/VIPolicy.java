@@ -2,21 +2,15 @@ package policy;
 
 import statespace.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.OutputStreamWriter;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.io.*;
+import java.util.*;
 
 public class VIPolicy implements Policy {
 	/* max statespace state[i][j][k][l]
 	 * where predator[i][j] prey[k][l]
 	 */
 	
-	/* gamma = discount factor (0.8)
+	/* gamma = discount factor
 	 * theta = small positive number; threshold for continueing evaluation
 	 * delta = change in state value  
 	 */
@@ -27,12 +21,16 @@ public class VIPolicy implements Policy {
     public VIPolicy(double g, double t) {
        // statespace init
 	statespace = new State[11][11][11][11];
+    stateactions = new Hashtable<>();
+    statevalues = new Hashtable<>();
+    
 	for(int i = 0; i < 11; i++) {
 	    for(int j = 0; j < 11; j++) {
 	    	for(int k = 0; k < 11; k++) {
 	    		for(int l = 0; l < 11; l++) {
-	    			State s = new State(new Position(i, j), new Position(k, l), 0);
+	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			statespace[i][j][k][l] = s;
+	    			statevalues.put(s.toString(), 0.0);
 	    		}
 	    	}
 
@@ -40,8 +38,6 @@ public class VIPolicy implements Policy {
 	}
         gamma = g;
         theta = t;
-        stateactions = new Hashtable<>();
-        statevalues = new Hashtable<>();
 	}
     
     public VIPolicy() {}
@@ -85,13 +81,13 @@ public class VIPolicy implements Policy {
             delta = 0;
             //stateactions.clear();
             delta = sweep();
-            show("delta: " + delta+'\n');
-            show("theta: " + theta+'\n');
+            show("\ndelta: " + delta);
+            show("\ntheta: " + theta);
             k++;
             //--k;
         } //while (k>0);
         while(delta > theta);
-        show("nr of iterations: "+k+'\n');
+        show("\nnr of iterations: "+k);
     }
 /*
  *     2nd loop: for each state perform the update of state value.
@@ -107,15 +103,14 @@ public class VIPolicy implements Policy {
             	for(int k = 0; k < 11; k++) {
     	    		for(int l = 0; l < 11; l++) {
     	    			State currentState = statespace[i][j][k][l];
-    	    			v = currentState.getValue();
+    	    			v = (double) statevalues.get(currentState.toString());
     	    			//show("current value: "+v+'\n');
     	    			vUpdate = updateValue(currentState);
     	    			//show("updated value: "+vUpdate+'\n');
-    	    			currentState.setValue(vUpdate);
     	    			// put the statevalue for currentState in the look up table
     	    	        statevalues.put(currentState.toString(), vUpdate);
     	    			//show("check updated value: "+currentState.getValue()+'\n');
-    	    			delta = Math.max(delta, Math.abs(v - currentState.getValue()));
+    	    			delta = Math.max(delta, Math.abs(v - vUpdate));
     	    		}
             	}
             }
@@ -126,6 +121,7 @@ public class VIPolicy implements Policy {
     /*
      * Backup operation that combines the policy improvement 
      * and truncated policy evaluation steps.
+     * max_a: sum_s': Pss'a(Rss'a+gamma*V(s')
      */
     public double updateValue(State cS) {
     	String action = "wait"; // action
@@ -133,22 +129,20 @@ public class VIPolicy implements Policy {
     	State nextState;
     	String[] moves = {"north", "south", "east", "west", "wait"};
     	double[] actions = {0,0,0,0,0};
+    	double nextStateValue;
     	Vector nextStates;
-    	int predX, predY, preyX, preyY;
+    	// records the right part: sum_s': Pss'a(Rss'a+gamma*V(s'))
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);
-    			predX = nextState.getPredator().getX();
-    			predY = nextState.getPredator().getY();
-    			preyX = nextState.getPrey().getX();
-    			preyY = nextState.getPrey().getY();
+    			nextStateValue = (double)statevalues.get(nextState.toString());
     			actions[i] += getP(nextStates.size(), nextState) *
-    					(getReward(nextState) +
-    							(gamma * statespace[predX][predY][preyX][preyY].getValue()));
+    					(getReward(nextState) + (gamma * nextStateValue));
     		}
     	}
+    	// get the max
     	double max = actions[0];
     	action = moves[0];
     	for(int i=1;i<actions.length;i++) {
@@ -165,7 +159,7 @@ public class VIPolicy implements Policy {
     *	See State.nextStates()
     */
     public double getP(int nrnextstates, State next) {
-	if(next.getPreyaction().compareTo("wait")==0)
+	if(next.getPreyaction().equals("wait"))
 	    return (0.8);
 	else
 	    return (0.2/nrnextstates);
@@ -216,7 +210,7 @@ public class VIPolicy implements Policy {
 		}
 	    }
 	} else
-	    show("State actions table is empty!!");
+	    show("\nState actions table is empty!!");
     }
     
     // fill the stateactions "look up table" with the values in policy.data
@@ -258,11 +252,10 @@ public class VIPolicy implements Policy {
     }
 
     public void printList(Position prey){
-    	show("\n");
     	for(int i = 0; i < 11; i++) {
     		for(int j = 0; j < 11; j++) {
     			State statePrey = new State(new Position(i,j), prey);
-    			show(statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()) +'\n');
+    			show('\n' +statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()));
     		}
     	}
     }

@@ -2,14 +2,8 @@ package policy;
 
 import statespace.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.OutputStreamWriter;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.io.*;
+import java.util.*;
 
 import policy.RandomPolicyPredator;
 import policy.RandomPolicyPredator;
@@ -40,7 +34,7 @@ public class PolicyEval implements Policy {
 	    for(int j = 0; j < 11; j++) {
 	    	for(int k = 0; k < 11; k++) {
 	    		for(int l = 0; l < 11; l++) {
-	    			State s = new State(new Position(i, j), new Position(k, l), 0);
+	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			action = rpp.getAction(s);
 	    			statespace[i][j][k][l] = s;
 	    			stateactions.put(s.toString(), action);
@@ -62,39 +56,11 @@ public class PolicyEval implements Policy {
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEval p = new PolicyEval(0.8, 0.001, rPolpred);
         p.multisweep();
-        
-        // outputs the values of all states where state:predator[i][j]prey[5][5]
-        Position prey55 = new Position(5,5);
-    	for(int i = 0; i < 11; i++) {
-    	    for(int j = 0; j < 11; j++) {
-    	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	p.show(statePrey55.toString() +  " statevalue: " +(double)p.statevalues.get(statePrey55.toString()) +'\n');
-    	    }
-    	}
-        
-        /* outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-    	p.show("\n======statevalues in grid around prey[5][5]======\n");
-    	int nextline = 0;
-    	for(int i = 0; i < 11; i++) {
-    		if(nextline < i) {p.show("\n");}
-    		for(int j = 0; j < 11; j++) {
-    	    	State statePrey55 = new State(new Position(i,j), prey55);
-    	    	p.show(String.format( "%.2f",(double)statevalues.get(statePrey55.toString())) + " ");
-    	    }
-    	    nextline = i;
-    	}*/
     	
-        //p.show("size statespace tree: " + p.size);
-        try {
-	    p.output();
-	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
     }
     
-    public void doPolicyEvaluation(){
-        multisweep();   	
+    public int doPolicyEvaluation(){
+        return multisweep();   	
     }
 
     public String getAction(State currentState){
@@ -102,7 +68,7 @@ public class PolicyEval implements Policy {
     }
     
     // the outer loop: repreat untill delta is smaller than theta
-    public void multisweep() {
+    public int multisweep() {
         int k = 0;
         //int depth = 0;
         do {
@@ -114,7 +80,8 @@ public class PolicyEval implements Policy {
             //--k;
         } //while (k>0);
         while(delta > theta);
-        show("nr of iterations: "+k+'\n');
+        show("\nnr of iterations: "+k);
+        return k;
     }
 /*
  *     2nd loop: for each state perform the update of state value.
@@ -130,11 +97,10 @@ public class PolicyEval implements Policy {
             	for(int k = 0; k < 11; k++) {
     	    		for(int l = 0; l < 11; l++) {
     	    			State currentState = statespace[i][j][k][l];
-    	    			v = currentState.getValue();
+    	    			v = (double) statevalues.get(currentState.toString());
     	    			//show("current value: "+v+'\n');
     	    			vUpdate = updateValue(currentState);
     	    			//show("updated value: "+vUpdate+'\n');
-    	    			currentState.setValue(vUpdate);
     	    			// put the statevalue for currentState in the look up table
     	    	        statevalues.put(currentState.toString(), vUpdate);
     	    			//show("check updated value: "+currentState.getValue()+'\n');
@@ -147,30 +113,26 @@ public class PolicyEval implements Policy {
         return delta;
     }
     /*
-     * Backup operation that combines the policy improvement 
-     * and truncated policy evaluation steps.
+     * Backup operation for policy evaluation 
+     * sum_a: p(s,a) * sum_s': Pss'a(Rss'a+gamma V(s'))
      */
     public double updateValue(State cS) {
     	String action = "wait"; // action
     	State currentState = cS;
     	State nextState;
     	String[] moves = {"north", "south", "east", "west", "wait"};
-    	// records the right part: sum: Pss'a(Rss'a+gamma V(s'))
+    	// records the right part: sum_s': Pss'a(Rss'a+gamma*V(s'))
     	double[] actions = {0,0,0,0,0};
+    	double nextStateValue;
     	Vector nextStates;
-    	int predX, predY, preyX, preyY;
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
     			nextState = (State) nextStates.elementAt(j);
-    			predX = nextState.getPredator().getX();
-    			predY = nextState.getPredator().getY();
-    			preyX = nextState.getPrey().getX();
-    			preyY = nextState.getPrey().getY();
+    			nextStateValue = (double)statevalues.get(nextState.toString());
     			actions[i] += getP(nextStates.size(), nextState) *
-    					(getReward(nextState) +
-    							(gamma * statespace[predX][predY][preyX][preyY].getValue()));
+    					(getReward(nextState) + (gamma * nextStateValue));
     		}
     	}
     	double valueUpdate = actions[0]*getActionProb();
@@ -195,10 +157,10 @@ public double getActionProb(){
     *	See State.nextStates()
     */
     public double getP(int nrnextstates, State next) {
-	if(next.getPreyaction().compareTo("wait")==0)
-	    return (0.2);
+	if(next.getPreyaction().equals("wait"))
+	    return (0.8);
 	else
-	    return (0.8/nrnextstates);
+	    return (0.2/nrnextstates);
     }
 
     // implement reward function: only when captured the immediate award=10, else 0
@@ -246,7 +208,7 @@ public double getActionProb(){
 		}
 	    }
 	} else
-	    show("State actions table is empty!!");
+	    show("\nState actions table is empty!!");
     }
     
     // fill the stateactions "look up table" with the values in policy.data
@@ -288,11 +250,10 @@ public double getActionProb(){
     }
 
     public void printList(Position prey){
-    	show("\n");
     	for(int i = 0; i < 11; i++) {
     		for(int j = 0; j < 11; j++) {
     			State statePrey = new State(new Position(i,j), prey);
-    			show(statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()) +'\n');
+    			show('\n' + statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()));
     		}
     	}
     }

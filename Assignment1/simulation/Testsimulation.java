@@ -1,7 +1,6 @@
 package simulation;
 
-import io.MyInput;
-
+import java.util.Scanner;
 import java.io.File;
 import java.util.ArrayList;
 import policy.*;
@@ -27,7 +26,8 @@ public class Testsimulation {
     // State which policies the simulator is run
     //Policy predPolicy = new RandomPolicyPredator();
     //VIPolicy predPolicy = new VIPolicy();
-    PolicyIter predPolicy = new PolicyIter();
+    //PolicyIter predPolicy = new PolicyIter();
+    VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	// fill look up table if Value iteration Policy is run
@@ -43,11 +43,8 @@ public class Testsimulation {
     }
     
     public static void test(Policy predPolicy, Policy preyPolicy) {
-    	MyInput input = new MyInput();
-    	char q = ' ';
-
     	State currentState = new State(prey, predator);
-    	while(q!='q' && timesRun < 100) {
+    	while(timesRun < 100) {
     		if(resetGrid){
     			runs = 0;
     			System.out.println("Resetting Grid for the "+timesRun+" run!");
@@ -90,9 +87,7 @@ public class Testsimulation {
     		}else{
     			runs++;
     		}
-    		//show("Enter q to quit, c to continue:");
-    		//q = input.readChar();
-
+    		//pauseProg();
     	}
 	
 	System.out.println("\nAll runs overview:");
@@ -134,5 +129,11 @@ public class Testsimulation {
 
     public static void show(String s) {
         System.out.println(s);
+    }
+    
+    public static void pauseProg(){
+    	System.out.println("Press enter to continue...");
+    	Scanner keyboard = new Scanner(System.in);
+    	keyboard.nextLine();
     }
 }

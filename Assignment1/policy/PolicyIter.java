@@ -1,17 +1,13 @@
 package policy;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Random;
-
+import java.util.*;
 import statespace.*;
-import policy.PolicyEval;
 import policy.RandomPolicyPredator;
 
 public class PolicyIter extends PolicyEval{
 
 	/*
+	 * Inherited from superclass PolicyEval
 	 * max statespace state[i][j][k][l] where predator[i][j] prey[k][l]
 	 */
 	//private static State[][][][] statespace;
@@ -23,37 +19,15 @@ public class PolicyIter extends PolicyEval{
 	//private double gamma, delta, theta;
 	private int evaluation_runs = 0;
 	private int improvement_runs = 0;
-	//private static PolicyEval polEval;
 
 	public PolicyIter(double g, double t) {
 		super(g, t, new RandomPolicyPredator());
-		// statespace init
-		//polEval = new PolicyEval(g, t, rPolpred);
-//		statespace = new State[11][11][11][11];
-//		for (int i = 0; i < 11; i++) {
-//			for (int j = 0; j < 11; j++) {
-//				for (int k = 0; k < 11; k++) {
-//					for (int l = 0; l < 11; l++) {
-//						State s = new State(new Position(i, j), new Position(k,
-//								l), 0);
-//						statespace[i][j][k][l] = s;
-//					}
-//				}
-//
-//			}
-//		}
-//		statespace = polEval.getStatespace();
-//		gamma = polEval.getGamma();
-//		theta = polEval.getTheta();
-//		stateactions = polEval.getStateactions();
-//		statevalues = polEval.getStatevalues();
-
 	}
 	
 	public PolicyIter() {}
 
 	public String getAction(State currentState) {
-		show("inside get action: "+currentState);
+		show("\ninside get action: "+currentState);
 
 		return (String) stateactions.get(currentState.toString());
 	}
@@ -68,16 +42,16 @@ public class PolicyIter extends PolicyEval{
 		//initPolicy(statespace);
 		while(stop_while){
 			//doPolicyEvaluation(gamma, PolicyIter.statespace);
-			doPolicyEvaluation();
-			show("Beginning Improvement");
+			evaluation_runs+=doPolicyEvaluation();
+			show("\nBeginning Improvement");
 			noChange = doPolicyImprovement();
-			System.out.println("noChange: "+noChange);
+			show("\nnoChange: "+noChange);
 			//System.out.println(stateactions);
 			if(noChange){
 				stop_while = false;
-				show("Finished!");
-				show("Evaluation runs:" + evaluation_runs);
-				show("Improvement runs:" + improvement_runs);
+				show("\nFinished!");
+				show("\nEvaluation runs:" + evaluation_runs);
+				show("\nImprovement runs:" + improvement_runs);
 			}
 			//System.out.println(stop);
 		}
@@ -139,21 +113,16 @@ improvement:for (int i = 0; i < 11; i++) {
 		State nextState;
 		String[] moves = { "north", "south", "east", "west", "wait" };
 		double[] actions = { 0, 0, 0, 0, 0 };
+		double nextStateValue;
 		Vector nextStates;
-		int predX, predY, preyX, preyY;
 		for (int i = 0; i < moves.length; i++) {
 			action = moves[i];
 			nextStates = currentState.nextStates(action);
 			for (int j = 0; j < nextStates.size(); j++) {
 				nextState = (State) nextStates.elementAt(j);
-
-				predX = nextState.getPredator().getX();
-				predY = nextState.getPredator().getY();
-				preyX = nextState.getPrey().getX();
-				preyY = nextState.getPrey().getY();
+				nextStateValue = (double)statevalues.get(nextState.toString());
 				actions[i] += getP(nextStates.size(), nextState)
-						* (getReward(nextState) + (gamma * statespace[predX][predY][preyX][preyY]
-								.getValue()));
+						* (getReward(nextState) + (gamma * nextStateValue));
 
 			}
 		}
@@ -171,7 +140,7 @@ improvement:for (int i = 0; i < 11; i++) {
 	}
 
 	public double getP(int nrnextstates, State next) {
-		if (next.getPreyaction().compareTo("wait") == 0)
+		if (next.getPreyaction().equals("wait"))
 			return (0.8);
 		else
 			return (0.2 / nrnextstates);

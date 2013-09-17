@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import statespace.*;
 
-public class PolicyEvalAlt {
+public class PolicyEvalAlt {/*
 	private static State[][][][] statespace;
 	public PolicyEvalAlt(){
 		statespace = new State[11][11][11][11];
@@ -23,14 +23,7 @@ public class PolicyEvalAlt {
 		}
 	}
 	
-	/* max statespace state[i][j][k][l]
-	 * where predator[i][j] prey[k][l]
-	 */
-	
-	/* gamma = discount factor (0.8)
-	 * theta = small positive number; threshold for continueing evaluation
-	 * delta = change in state value  
-	 */
+
 	private double gamma, delta, theta;
 	//dfsf
 	//Dummy method getActionList
@@ -142,6 +135,6 @@ public class PolicyEvalAlt {
 		// TODO Auto-generated method stub
 		PolicyEvalAlt PE = new PolicyEvalAlt();
 		PE.doEvaluation(0.8, statespace);		
-	}
+	}*/
 
 }
