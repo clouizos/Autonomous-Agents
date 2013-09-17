@@ -134,7 +134,7 @@ public class VIPolicy implements Policy {
     	// records the right part: sum_s': Pss'a(Rss'a+gamma*V(s'))
     	for(int i=0;i<moves.length;i++) {
     		action = moves[i];
-    		if(cS.endState())
+    		if(currentState.endState())
     			continue;
     		nextStates = currentState.nextStates(action);
     		for(int j=0; j<nextStates.size();j++) {
