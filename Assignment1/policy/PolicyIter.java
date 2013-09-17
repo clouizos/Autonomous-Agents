@@ -103,14 +103,6 @@ public class PolicyIter extends PolicyEval{
 
 	}
 	
-	
-	//Dummy method to get probability taking action a in current state
-	//based on current policy
-	public double getActionProb(State cs, String a){
-		return 0.2;
-	}
-		
-	
 
 	public String argmaxupdateValue(State cS) {
 		String action = "wait"; // action
@@ -146,21 +138,6 @@ public class PolicyIter extends PolicyEval{
 		return action;
 	}
 
-	public double getP(int nrnextstates, State next) {
-	    if(next.endState())	
-	    	return 1.0;
-	    else if(next.getPreyaction().equals("wait"))
-		    return 0.8;
-		else
-		    return (0.2/(nrnextstates-1));
-	    }
-
-	// implement reward function
-	public double getReward(State s) {
-		if (s.endState())
-			return 10.0;
-		return 0.0;
-	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -177,29 +154,84 @@ public class PolicyIter extends PolicyEval{
         }
 	}
 	
-	public void printTable(Position prey){
-
-    	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-    	show("\n======statevalues in grid around prey[5][5]======\n");
-    	int nextline = 0;
-    	for(int i = 0; i < 11; i++) {
-    		if(nextline < i) {show("\n");}
-    		for(int j = 0; j < 11; j++) {
-    			State statePrey = new State(new Position(i,j), prey);
-    			//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
-    			show(String.format( "%.3f",(double) statevalues.get(statePrey.toString())) + " ");
-    		}
-    		nextline = i;
-    	}
+	
+	public int doPolicyEvaluationIteration(){
+        return multisweep_iteration();   	
     }
 	
-	public void printList(Position prey){
-    	for(int i = 0; i < 11; i++) {
-    		for(int j = 0; j < 11; j++) {
-    			State statePrey = new State(new Position(i,j), prey);
-    			show('\n' + statePrey.toString() +  " statevalue: " +(double)statevalues.get(statePrey.toString()));
-    		}
-    	}
+	public int multisweep_iteration() {
+        int k = 0;
+        //int depth = 0;
+        do {
+            delta = 0;
+            delta = sweep_iteration();
+            //show("delta: " + delta+'\n');
+            //show("theta: " + theta+'\n');
+            k++;
+            //--k;
+        } //while (k>0);
+        while(delta > theta);
+        show("\nnr of iterations: "+k);
+        return k;
     }
+	
+	public double sweep_iteration() {
+        double v;
+        double vUpdate;
+        //loop: for every state/node
+        for(int i=0;i<11;i++) {
+            for(int j=0;j<11;j++) {
+            	for(int k = 0; k < 11; k++) {
+    	    		for(int l = 0; l < 11; l++) {
+    	    			State currentState = statespace[i][j][k][l];
+    	    			v = (double) statevalues.get(currentState.toString());
+    	    			//show("current value: "+v+'\n');
+    	    			vUpdate = updateValue_iteration(currentState);
+    	    			//show("updated value: "+vUpdate+'\n');
+    	    			// put the statevalue for currentState in the look up table
+    	    	        statevalues.put(currentState.toString(), vUpdate);
+    	    			//show("check updated value: "+currentState.getValue()+'\n');
+    	    			delta = Math.max(delta, Math.abs(v - vUpdate));
+    	    		}
+            	}
+            }
+        }
+        //show("booya delta: " + delta);
+        return delta;
+    }
+	
+	 public double updateValue_iteration(State cS) {
+	    	String action = "wait"; // action
+	    	State currentState = cS;
+	    	State nextState;
+	    	String[] moves = {"north", "south", "east", "west", "wait"};
+	    	// records the right part: sum_s': Pss'a(Rss'a+gamma*V(s'))
+	    	double[] actions = {0,0,0,0,0};
+	    	double nextStateValue;
+	    	Vector nextStates;
+	    	//for(int i=0;i<moves.length;i++) {
+	    		//action = moves[i];
+	    		action = (String)stateactions.get(cS.toString());
+	    		if(!cS.endState()){
+	    			nextStates = currentState.nextStates(action);
+	    			for(int j=0; j<nextStates.size();j++) {
+	    				nextState = (State) nextStates.elementAt(j);
+	    				nextStateValue = (double)statevalues.get(nextState.toString());
+	    				actions[j] += getP(nextStates.size(), nextState) *
+	    					(getReward(nextState) + (gamma * nextStateValue));
+	    			}
+	    		}
+	    	//}
+	    	double valueUpdate = actions[0];
+	    	//double valueUpdate = 0.0;
+	    	//action = moves[0];
+	    	for(int i=1;i<actions.length;i++) {
+	    		valueUpdate+=actions[i];
+	    	}
+	    	
+	    	//statevalues.put(currentState.toString(), action);
+	    	//return max;
+	    	return valueUpdate;
+	    }
     
 }

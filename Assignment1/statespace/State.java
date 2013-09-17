@@ -61,7 +61,7 @@ public class State {
 	    //show(preynext2.toString());
 	    nextstate = new State(preDnext, preYnext, moves[i]);
 	    // a prey will never move to an occupied position
-	    if(nextstate.endState()&&i!=4)
+	    if(nextstate.endState())
 		continue;
 	    else
 		succstates.add(nextstate);
@@ -92,7 +92,7 @@ public class State {
 	    //show(preynext2.toString());
 	    nextstate = new State(preDnext.transformPrey55(preYnext), new Position(5,5), moves[i]);
 	    // a prey will never move to an occupied position
-	    if(nextstate.endState()&&i!=4)
+	    if(nextstate.endState())
 		continue;
 	    else
 		succstates.add(nextstate);
