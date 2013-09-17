@@ -119,7 +119,7 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 			action = moves[i];
 			if(cS.endState())
     			continue;
-			nextStates = currentState.nextStates(action);
+			nextStates = currentState.nextStatesReduced(action);
 			for (int j = 0; j < nextStates.size(); j++) {
 				nextState = (State) nextStates.elementAt(j);
 				nextStateValue = (double)statevalues.get(nextState.toString());
