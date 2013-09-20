@@ -123,7 +123,7 @@ The environment is a 11x11 grid which is toroidal, and each state is encoded as 
 The simulator is defined through a while-loop of a hundred runs where the initial position of the predator is (0,0) and that of the prey (5,5). In each transition, the predator will make a move first and then the prey, according to their respective policies. Each run is composed of an episode where the goal of the predator is to capture the prey, which can be interpreted as the end state of this particular episode. 
 
 Both the predator and the prey are initialized with a random policy in the beginning where for the predator it is equiprobable to choose any of the possible actions %$\alpha \in A\{\textit{north, south, east, west, wait}\}$ 
-in any state. The prey has a steady policy and hence it can be modelled as part of the environment. It has 0.8 probability of waiting and 0.2 probability of moving to any of the adjacent squares.
+in any state. The prey has a fixed policy and hence it can be modelled as part of the environment. It has 0.8 probability of waiting and 0.2 probability of moving to any of the adjacent squares.
 
 \section{Methods and Procedures}
 \label{methods}
