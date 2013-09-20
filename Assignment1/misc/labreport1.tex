@@ -1,7 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LaTeX Example: Project Report
 %
-% Source: http://www.howtotex.com
+% Source: 
+%tp://www.howtotex.com
 %
 % Feel free to distribute this example, but please keep the referral
 % to howtotex.com
@@ -37,6 +38,7 @@
 \usepackage[pdftex]{graphicx}	
 \usepackage{url}
 \usepackage{float}
+\restylefloat{table}
 
 
 %%% Custom sectioning
@@ -94,28 +96,39 @@
 \bigskip
 \begin{abstract}
 %change first sentence
-The aim of this assignment is to make a research according to the planning scenario in which the main goal of the predator is to capture the prey.\\ 
-The report comprises the methods that have been implemented by using the Dynamic Programming paradigm, namely policy evaluation, policy iteration and value iteration. Our contribution on Single Agent Planning reveals the comparison between the implemented methods in terms of convergence time and results. \\ +Conclusion
+The aim of this assignment is to make a research according to the planning scenario in which the main goal of the predator is to capture the prey. The report comprises methods that have been implemented by using the Dynamic Programming paradigm, namely policy evaluation, policy iteration and value iteration. Our contribution on Single Agent Planning reveals the comparison between the implemented methods in terms of convergence time and results. After testing the required methods, we have concluded that the best implemented algorithm in our research related to the convergence speed is value iteration. Additionally reducing the state space helped in improving the runtime of all the implemented algorithms.
 \end{abstract}
-\newpage
-\tableofcontents 
-\newpage
+%\newpage
+%\tableofcontents 
+%\newpage
 
 \section{Introduction}
-We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards we present in section~\ref{methods} the various methods that were implemented in the afforementioned environment. The results that derived from each of these methods are displayed in detail in section~\ref{results} and finally there is a discussion as well as a comparison between them in section~\ref{discussion}
+%general overview of dynammic programming and RL
+The general idea of reinforcement learning is to acquire knowledge through experience, specifically interacting with the environment, getting feedback from it in the form of rewards in order to achieve a goal. To perform this kind of task it is required to have a policy, which basically summarizes the course of action that an agent should take at any specific state of the environment. The agent always seeks to maximize the amount of reward it receives, either immediately or in the long run. 
+
+In order to be able to get an optimal policy given the environment, the agent should evaluate the current policy and then improve it whether it is not the optimal one. The whole loop can be summed up pretty well in figure~\ref{GPI}. If we already have a complete model of the environment which satisfies the Markov property, namely it is only dependent on the current state, we can solve this problem by using one of programming methods called Dynamic Programming (DP) which evaluates and improves the policy at hand. There is a variety of methods in DP that guarantees to find the optimal policy for us, namely policy iteration(~\ref{PIter}) and value iteration(~\ref{VIter}). Where policy iteration(~\ref{PIter}), consist of policy evaluation(~\ref{PEval}), which gives us the true value function for the policy at hand.
+\begin{figure}[H] \centering
+\fbox{\includegraphics[scale=0.5]{figtmp18.png}}
+\caption{Generalized Policy Iteration\cite{suttonBarto}} 
+\label{GPI}
+\end{figure}
+
+%overview of what will follow
+We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards, we present in section~\ref{methods} the methods that were implemented in the aforementioned environment. The results according to each of these methods as well as the comparison between them are displayed in detail in section~\ref{results} and the brief conclusion is indicated in section~\ref{discussion}.
 
 \subsection{Environment}
 \label{environment}
-The environment is encoded as a state of two positions, the one of the predator and the prey. 
+The environment is a 11x11 grid which is toroidal and each state is encoded as the positions of the two agents, predator and prey.
 %insert later dataflow diagram
-The simulator is defined through a while-loop of a hundred runs where the initial position of the predator is (0,0) and that of the prey (5,5). In each transition, the predator will make a move first and then the prey, according to their respective policies. Each run can be "seen" as an episode where the goal of the predator is to capture the prey, which can be interpreted as the end state of this particular episode. 
+The simulator is defined through a while-loop of a hundred runs where the initial position of the predator is (0,0) and that of the prey (5,5). In each transition, the predator will make a move first and then the prey, according to their respective policies. Each run is composed of an episode where the goal of the predator is to capture the prey, which can be interpreted as the end state of this particular episode. 
 
 Both the predator and the prey are initialized with a random policy in the beginning where for the predator it is equiprobable to choose any of the possible actions %$\alpha \in A\{\textit{north, south, east, west, wait}\}$ 
-in any state. The prey has a steady policy and hence it can be modeled as part of the environment. It has 0.8 probability of waiting at any given state and 0.2 probability of moving to any of the adjacent squares.
+in any state. The prey has a fixed policy and hence it can be modelled as part of the environment. It has 0.8 probability of waiting and 0.2 probability of moving to any of the adjacent squares, unless this square is occupied, hereby changing the probability distribution.
 
 \section{Methods and Procedures}
 \label{methods}
 \subsection{Implementation overview}
+In our implementation, the agents are encoded as positions through the position class: each entity consists of an x,y coordinate denoting its position in the 11x11 grid. A wrapper method takes care of the grid being toroidal and aformented movements herein by the agent. A state consists of two positions that of the prey and of the predator. Herein we have encoded the end state and methods for giving the conditional next state(s). Policies are encapsulated into the policy interface which ensures each implemented policy to have a getAction() method. In each implemented policy, the statespace is defined by a hashtable of all possible states; visualized as statespace[predator(x,y), prey(x,y)].
 \begin{figure}[H] \centering
 \includegraphics[scale=0.6]{uml_general.pdf}
 \caption{Predator-prey domain framework} \label{Predator-prey domain framework}
@@ -134,68 +147,116 @@ in any state. The prey has a steady policy and hence it can be modeled as part o
 \end{figure}
 
 \subsection{Iterative Policy Evaluation}
-In Marcov Decision Processes, one of the important steps is evaluation step, which is to find the state-value functions $V^\pi$ for an arbitrary policy, $\pi$. The state-value functions estimate value of a state in terms of expected return that can be obtained from that state. Below is the equation for calculating $V^\pi$.
+\label{PEval}
+In Markov Decision Processes, one of the important steps can be represented by the evaluation which consists of finding the state-value functions $V^\pi$ for an arbitrary policy, $\pi$. The state-value functions estimate the value of a state in terms of an expected return that can be obtained from that state. The equation for calculating $V^\pi$ is corresponding to ~\ref{oriV}:
 \begin{align}
 V^\pi(s)&=E_\pi\left\lbrace r_{t+1}+\gamma V^\pi(s_{s+1})\mid s_t=s \right\rbrace\notag\\
 &=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a[R_{ss'}^a+\gamma V^\pi(s')] \label{oriV}
 \end{align}
-where $\mathbf{\pi(s,a)}$ is probability of taking action $\mathbf{a}$ in state $\mathbf{s}$ under policy $\mathbf{\pi}$, $P_{ss'}^a$ is probability of end up at state $\mathbf{s'}$ after taking action $\mathbf{a}$ in state $\mathbf{s}$, $R_{ss'}^a$ is expected immediate reward on transition from $\mathbf{s}$ to $\mathbf{s'}$ under action $\mathbf{a}$, and $\mathbf{\gamma}$ is a discount factor.\\
-\\
-Since in our test environment the dinamics are completely known, then  equation $\eqref{oriV}$ can be solved using iterative solution methods. By iterative solution methods, we can consider there is a sequence of $V$, $V_0, V_1, V_2, \dots$, each mapping all states in $S^+$ to $\Re$. The initial values of $V^\pi$ are chosen arbitrarily, and the update rule for each successive state-values are gained by following the Bellman equation :
+where $\mathbf{\pi(s,a)}$ is the probability of taking action $\mathbf{a}$ in state $\mathbf{s}$ under policy $\mathbf{\pi}$, $P_{ss'}^a$ is the probability of ending up at state $\mathbf{s'}$ after taking action $\mathbf{a}$ in state $\mathbf{s}$, $R_{ss'}^a$ is expected immediate reward on transition from $\mathbf{s}$ to $\mathbf{s'}$ under action $\mathbf{a}$, and $\mathbf{\gamma}$ is a discount factor.\\
+
+Since the model of the environment is completely known, the equation $\eqref{oriV}$ can be solved using iterative solution methods. According to those methods, we can consider a sequence of $V$, $V_0, V_1, V_2, \dots$, each mapping all states in $S^+$ to $\Re$. The initial values of $V^\pi$ are chosen arbitrarily and the update rule for each successive state-values is gained by following the Bellman equation from ~\ref{iterV} :
 \begin{align}
 V_{k+1}(s) &= E_\pi\left\lbrace r_{t+1}+\gamma V_{k}(s_{t+1}\mid s_t=s) \right\rbrace\notag\\
 &=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a [R_{ss'}^a+\gamma V_k(s')] \label{iterV}
 \end{align}
-For the technical implementation, we used one array to save state-values and updated the values in place. This implementation is slightly different from $\eqref{iterV}$, because there is a possibility that $V_k(s')$ uses new values  instead of old ones, but this implementation still guarantees to converge to $V^\pi$. Another technical implementation to be considered is the stopping criteria. In formal, iterative policy iteration will converge only in the limit, but for practical purposes stopping condition is necessary. One of common criteria to stop the sweep is when there is no any single state managed to make a significant changes to their values. A complete pseudocode of the whole processes of the iterative policy evaluation is shown in figure $\ref{Iterative Policy Evaluation Pseudo}$.
+Considering the technical implementation, we have used one array to save state-values and have updated the values in place. This implementation is slightly different from $\eqref{iterV}$, because there is a possibility that $V_k(s')$ uses new values  instead of old ones, but this implementation still guarantees to converge to $V^\pi$. Another technical implementation to be considered is the stopping criteria. In formal, iterative policy evaluation will converge only in the limit, but for practical purposes a stopping condition is necessary. One of the common criteria to stop the sweep is when the value $\Delta$, which denotes the difference between the old and the new value, is smaller than $\theta$, a small positive number. A complete pseudo code of the whole processes of the iterative policy evaluation is shown in figure $\ref{Iterative Policy Evaluation Pseudo}$.
 \begin{figure}[H] \centering
-\fbox{\includegraphics[scale=0.6]{policyIterPseudo.png}}
-\caption{Iterative Policy Evaluation} \label{Iterative Policy Evaluation Pseudo}
+\fbox{\includegraphics[scale=0.55]{policyIterPseudo.png}}
+\caption{Iterative Policy Evaluation ~\cite{suttonBarto}} \label{Iterative Policy Evaluation Pseudo}
 \end{figure}
 
 \subsection{Policy Iteration}
-Policy iteration is composed by two steps, the policy evaluation, which was explained above, and the policy improvement. The main reason for calculating the value function for a policy is to use it in order to find better policies. Consequently if we have determined the value function $V^{\pi}$ for a deterministic policy $\pi$ we can then select a different action $\alpha$ for one state $s$ and afterwards keep on using that specific action for that state, and then continue following the existing policy. Therefore we can determine if the change improved the policy by calculating the following formula:
+\label{PIter}
+Policy iteration is composed of two steps, the policy evaluation, which was explained above, and the policy improvement. The main reason for calculating the value function for a policy is to use it in order to find better policies. Consequently, if we have determined the value function $V^{\pi}$ for a deterministic policy $\pi$, we can then select a different action $\alpha$ for one state $s$ and afterwards keep on using that specific action for that state. Therefore, we can determine whether the change improved the policy or not by computing the following formula:
 \begin{align}
 Q^\pi(s,\alpha) & = E_\pi \{r_{t+1} + \gamma V^{\pi} (s_{t+1})| s_t = s, \alpha_t = \alpha\}\notag\\
 & = \sum_{s'}^{}P_{ss'}^{\alpha}[R_{ss'}^{\alpha}+\gamma V^\pi(s')]
 \end{align}
-if this is greater than the value of the existing policy in that state $V^\pi(s)$ then it would be better to continue taking action $\alpha$ everytime we encounter state $s$, which results in a new policy $\pi'$. This is true because it derives from the policy improvement theorem where if we have two deterministic policies $\pi$ and $\pi'$ such that for all states $s \in \mathbf{S}$ the $Q^\pi(s,\pi'(s)) >= V^\pi(s)$ then the policy $\pi'$ must be equal to or better than policy $\pi$ meaning that it will yield equal or higher values for all state $s$. Thus if $Q^\pi(s,\alpha) > V^\pi(s)$ then the changed policy $\pi'$ is indeed better than $\pi$. There is one more step needed in order to finish the policy improvement. Since we can acquire a better reward by doing a different action than the one the policy provide at a given state, then it makes sense to choose the action that maximizes that reward and incorporate it to the new policy $\pi'$. Then the formula resulting from this step is:
+if this is greater than the value of the existing policy in that state $V^\pi(s)$ then it would be better to continue taking action $\alpha$ every time we encounter state $s$, which results in a new policy $\pi'$. This is true, because it derives from the policy improvement theorem where if we have two deterministic policies $\pi$ and $\pi'$ such that for all states $s \in \mathbf{S}$ the $Q^\pi(s,\pi'(s)) >= V^\pi(s)$ then the policy $\pi'$ must be equal to or better than policy $\pi$ meaning that it will yield equal or higher values for all state $s$. Thus, if $Q^\pi(s,\alpha) > V^\pi(s)$ then the changed policy $\pi'$ is indeed better than $\pi$. There is one more step needed in order to finish the policy improvement. Since we can acquire a better reward by doing a different action than the one that the policy provide at a given state, then it makes sense to choose the action that maximizes that reward and which is incorporated into the new policy $\pi'$. The formula resulting from this step is:
 \begin{align}
 \pi'(s) &= arg\max_\alpha Q^\pi(s,\alpha)\notag\\
 &= arg\max_\alpha E{r_{t+1} + \gamma V^\pi(s_{t+1})|s_t=s,\alpha_t=\alpha}\notag\\
 &= arg\max_\alpha \sum_{s'}P_{ss'}{\alpha}[R_{ss'}^{\alpha} + \gamma V^\pi(s')]
 \end{align}
-where $arg\max_\alpha$ denotes the action that maximizes the term that is following. Taking all the above into consideration we can say that the process of making a new policy that improves the existing one by being greedy on the value function of the original policy, is called policy improvement.
+where $arg\max_\alpha$ denotes the action that maximizes the term that is following. Taking all the above into consideration, we can say that the process of making a new policy that improves the existing one by being greedy on the value function of the original policy, is called policy improvement.
 
-The whole pseudocode loop of iterative evaluation of the current policy and improvement of the current policy in order to produce a better policy $\pi'$ untill we converge to the optimal policy is illustrated in figure \ref{Policy Iteration}.
+The whole pseudo code loop of iterative evaluation and improvement of the current policy in order to produce a better policy $\pi'$ until we converge to the optimal policy is illustrated in figure \ref{Policy Iteration}.
 
 \begin{figure}[H] \centering
 \includegraphics[scale=0.55]{pseudotmp1.png}
-\caption{Policy Iteration} \label{Policy Iteration}
+\caption{Policy Iteration ~\cite{suttonBarto}} \label{Policy Iteration}
 \end{figure}
 
-We begin by initializing the values and actions for the policy arbitrarily and afterwards we perform policy evaluation untill the difference in the values are smaller than a certain small threshold $\theta$. After this step we begin the policy improvement step where we find the best possible action for each possible state, with respect to maximizing the value. If the resulting actions are the same as the current policy then we have reached the optimal policy, otherwise we perform policy evaluation again on the new policy and keep on the same procedure untill we converge to the optimal one.
+We begin by initializing the values and actions for the policy arbitrarily and afterwards we perform policy evaluation until the difference in the values are smaller than a certain small threshold $\theta$. After this step, we begin the policy improvement step where we find the best possible action for each possible state with respect to maximizing the value. If the resulting actions are the same as the current policy then we have reached the optimal policy, otherwise we perform policy evaluation again on the new policy and keep on the same procedure until we converge to the optimal one. 
 
 \subsection{Value Iteration}
+\label{VIter}
 Value iteration extends on Policy iteration in which the policy evaluation step of policy evaluation is stopped after just one sweep, ie there's one backup of each state. It consists of a backup operation that combines the policy improvement and truncated policy evaluation steps:
 \begin{align}
 V_{k+1}(s) &= \max_{a} E{r_{t+1} + \gamma V_k(s_{t+1}) | s_t=s, a_t=a}\notag\\
 & = \max_{a} \sum_{s'} P_{ss'}^a [R_{ss'}^a + \gamma V_k(s')]
 \end{align}
-From this we can see it's identical to the Policy evaluation except that it requires the maximum to be taken over all actions. The algorithm, as previous algorithms converge to an optimal policy for discounted finite MPDs. Formally, convergent to $V^{*}$ is only reached when the number of iterations is taken to infinity. In practice we consider $\theta$ as the termination condition of the loop, which keeps track of the change in value funtion. The pseudocode for value iteration is shown in the following figure:
+From this we can see it is identical to the Policy evaluation except that it requires the maximum to be taken over all actions. The algorithm, as previous algorithms converge to an optimal policy for discounted finite MPDs. Formally, convergence to $V^{*}$ is only reached when the number of iterations is taken to infinity. In practice we consider $\theta$ as the termination condition of the loop, which keeps track of the changes in value function. The pseudo code for value iteration is shown in the following figure:
 \begin{figure}[H] \centering
-\includegraphics[scale=0.6]{sutton4_5valueiteration.png}
-\caption{Value Iteration} \label{Value Iteration}
+\includegraphics[scale=0.55]{sutton4_5valueiteration.png}
+\caption{Value Iteration ~\cite{suttonBarto}} \label{Value Iteration}
 \end{figure}
-As in our implementation of policy evaluation and policy iteration, the backup operation is done "in-place", thus faster convergent is reached. The rate of convergent hereby is very much dependant on the order in which states are backed up during the sweep. In our implementation the order is straightforward; it's aligned with the array[i][j], starting with the x-coordinate $x_i$. From the second row forward the benefit hereby is valued at most $3V_{k}$, leaving at minimum $2V_{k-1}$ still containing the old values, where $k$ denotes the current sweep.
+As in our implementation of policy evaluation and policy iteration, the backup operation is done "in-place", thus faster convergence is reached. The rate of convergence hereby is very much dependant on the order in which states are backed up during the sweep. In our implementation the order is straightforward; it's aligned with the array[i][j], starting with the x-coordinate $x_i$. From the second row forward the benefit hereby is valued at most $3V_{k}$, leaving at minimum $2V_{k-1}$ still containing the old values, where $k$ denotes the current sweep.
 
 \subsection{Reducing the state space}
 \label{reduce}
+From the values of the table of policy and value iteration when the prey was located at prey(5,5) and the tables from when the prey was at prey(2,3), displayed in table $\ref{rVIt}$, we can see that those are the same values only proportional to the distance of the predator and the prey, translated to a different position. From this observation we could reduce the state space from $11^4$  to $11^2$ by creating a transform function which translates the actual positions of the agents to the positions displayed in table~\ref{pitS}, hereby eliminating the need to represent the prey in all it's possible positions. The transformation taking place can be illustrated in formula ~\ref{trans}, which in the implemented form also takes into consideration that the grid is toroidal.
+%make a formula
+\begin{align}
+\text{projectedPredatorPosition} & = \text{projectedPreyPosition} - \notag\\
+&(\text{actualPreyPosition} + \text{actualPredatorPosition})\label{trans}
+\end{align}
+The reduced state space results in a lot less memory requirements as well as less computation, which leads us to a faster runtime as seen in table~\ref{runtime}. 
+
+\begin{table}[H]
+\caption{Runtime of normal and reduced statespace in seconds}
+\centering
+    \begin{tabular}{|l || l || l |}
+    \hline
+    Policy & Normal & Reduced \\ \hline
+    Policy Evaluation & 13.04 & 0.35\\ \hline
+    Policy Iteration & 28.27 & 0.28 \\ \hline
+    Value Iteration & 4.13 & 0.27 \\
+    \hline
+    \end{tabular}
+    \label{runtime}
+\end{table}
+
+\begin{table}[H]
+\caption{Values from value iteration when the prey is at [2][3]}
+\centering
+\begin{tabular}{l|l*{9}{c}r}
+  \hline
+ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline 
+0 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 & 5.237 & 5.802 \\
+1 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 & 5.792 & 6.436 \\
+2 & 7.839 & 8.780 & 10.000 & 0.000 & 10.000 & 8.780 & 7.839 & 6.997 & 6.251 & 6.251 & 6.997 \\
+3 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 & 5.792 & 6.436 \\
+4 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 & 5.237 & 5.802 \\
+5 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 & 4.742 & 5.228 \\
+6 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 & 4.291 & 4.712 \\
+7 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883 & 3.883 & 4.291 \\
+8 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883 & 3.883 & 4.291 \\
+9 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 & 4.291 & 4.712 \\
+10&5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 & 4.742 & 5.228
+\end{tabular}
+\label{rVIt}
+\end{table}
+%\label{trans}
 
 \section{Results}
 \label{results}
 
 \subsection{Random Policy}
-\begin{table} [ht]
+The random policy of the predator is set such as that every action has an equal probability of happening. The set of actions is composed by the $\text{Set}(\alpha) = [\text{north},\text{south},\text{east},\text{west},\text{wait}]$ and the average time in table~\ref{random} is calculated in iterations.
+
+\begin{table}[H]
 \caption{Random policy results}
 \centering
     \begin{tabular}{| l || l |}
@@ -205,27 +266,30 @@ As in our implementation of policy evaluation and policy iteration, the backup o
     Standard deviation & 285.66324859876534 \\
     \hline
     \end{tabular}
+    \label{random}
 \end{table}
 
 \subsection{Iterative Policy Evaluation}
-The goal of the experiment in this algorithm was to evaluate the arbitrary policy, and to measure the number of iteration it took to converge. There were two parameters should be defined, discount factor $\mathbf{\gamma}$ and a threshold value for stopping condition $\mathbf{\theta}$. The values of the parameters along with some results are shown in the following table.
-\begin{table} [ht]
+The goal of the experiment in this algorithm was to evaluate the arbitrary policy, and to measure the number of iterations it took to converge. There were two parameters that should be defined, the discount factor $\mathbf{\gamma}$ and a threshold value for the stopping condition $\mathbf{\theta}$. The values of the parameters along with some results are shown in the following table.
+\begin{table}[H]
 \caption{Policy evaluation results}
+\label{PE parameter}
 \centering
     \begin{tabular}{| l || l |}
     \hline
       & Summary \\ \hline
     $\gamma$ & 0.8 \\ \hline
     $\theta$ & 1.0E-20 \\ \hline
-    runtime & 12248712457 ns \\ \hline
+    %runtime & 12248712457 ns \\ \hline
     Number of iterations & 106 \\
     \hline
-    \end{tabular} \\
+    \end{tabular} 
 \end{table}
-Runtime is time that the algorithm took to converge, and it was measured in nanosecond. While the number of iterations is the number of sweep (sweep is backup operation for all states) until it converged.
-
-\begin{table}[ht]
+%Runtime is time that the algorithm took to converge, and it was measured in nanosecond. While 
+The number of iterations is the number of sweeps (sweep is a backup operation for all states) until it achieved convergence.
+\begin{table}[H]
 \caption{State values for the following states}
+\label{PE states values}
 \centering
 \begin{tabular}{| l  |  l || c | r |}
   \hline
@@ -233,20 +297,21 @@ Runtime is time that the algorithm took to converge, and it was measured in nano
   (0,0) & (5,5) & 0.005724141401102873 \\ \hline
   (2,3) & (5,4) & 0.18195076385152237 \\ \hline
   (2,10) & (10,10) & 0.18195076385152237 \\ \hline
-  (10,10) & (10,10) & 1.1945854778368172 \\
+  (10,10) & (0,0) & 1.1945854778368172 \\
   \hline  
 \end{tabular}
 \end{table}
+In our test environment, the goal of the planning is to make the predator catch the prey as fast as possible. So state-value functions in this case represent how close the predator is from the prey in a given state. The closer the predator is from the prey, the higher the state-value function should be for that state. Table $\ref{PE states values}$ shows the state-value functions for four different states after performing iterative policy evaluation with parameters given in table $\ref{PE parameter}$.
 
+The results make sense because the state value is proportional to the Manhattan distance between the predator and the prey. Intuitively the predator has a higher chance of catching the prey when it's closer.
 
-reduced
-nr iteration = 19
-Time : 179385026
+%Based on the definition of the state-value function mentioned above, we will try to interpret the results and analyse whether they match the definition or not. We start with the first result where the predator's position is (0,0) and the prey's is (5,5). The shortest path of the predator in order to catch the prey is 10 steps. For now we can not say much about it's value except it is the smallest value among the others, but we will know it in a moment. Now we go to the second ones, where the predator is in cube (2,3) and the prey is in (5,4). The minimum steps from the predator's position to the prey's is 4 steps. It can be seen from the table that the $V(s)$ of the second result is higher than that in the first one, we consider these as a reasonable result respect to the number of minimum steps separated the predator from the prey. From the third result, we got the same $V(s)$ from the previous one, but at the first glance it seems that the distance from the predator to the prey are longer than that in the previous one. One thing to remember is that the grid of the environment is toroidal, so the minimum steps from (2,10) to (10,10) is actually 4 steps, so it is again make sense to have the same value of $V(s)$ with the previous one. The last result has the biggest $V(s)$ value, since it is the closest position of the predator from the prey. The number of minimum steps is only 2 due to toroidal grid. So, with all of these reasonable result, we can say that the algorithm performed correctly as intended.
+
 
 \subsection{Policy Iteration}
-For all the experiments with policy Iterations theta was defined heuristically as $\theta = \exp(-20)$.
+For all the experiments with policy iteration theta was defined as $\theta = 1.0E^{-20}$, in order to perform a thorough sanity check, as it was suggested. As far as convergence is concerned it is presented in table~\ref{convPIter}, and as we can see for larger values of $\gamma$ convergence is slower since more iterations are needed because $\Delta$ is smaller and it takes longer to reach $\theta$.
 
-\begin{table}[ht]
+\begin{table}[H]
 \caption{Convergence in iterations for different $\gamma$}
 \centering
 \begin{tabular}{|l||c|c|}
@@ -265,30 +330,33 @@ $\gamma$&Evaluation runs&Improvement runs\\
 \label{convPIter}
 \end{table}
 
-The values for for every possible state when the prey is at [5][5] are illustrated in table~\ref{pitS}
-\begin{table}[ht]
+
+Following a similar notion as in policy evaluation we present the state-value table in ~\ref{pitS} for the states that are composed from the prey being at position prey(5,5). As in the case of policy evaluation the state values are proportional to the distance between the predator and the prey. The closer to the prey the higher the value. As we can also see the position of the prey is defined as the goal to be reached, hence the value will be 0 since there aren't any successor states and the episode ends.
+
+\begin{table}[H]
 \caption{Values from policy iteration when the prey is at [5][5]}
 \centering
-\begin{tabular}{l*{9}{c}r}
+\begin{tabular}{l|l*{9}{c}r}
   \hline
-3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883  \\
-4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291  \\
-4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742  \\
-5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237  \\
-5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792  \\
-6.251 & 6.997 & 7.839 & 8.780 & 10.000 & 0.000 & 10.000 & 8.780 & 7.839 & 6.997 & 6.251  \\
-5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792  \\
-5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237  \\
-4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742  \\
-4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291  \\
-3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883
+   & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline 
+0 & 3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883  \\
+1 & 4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291  \\
+2 & 4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742  \\
+3 & 5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237  \\
+4 & 5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792  \\
+5 & 6.251 & 6.997 & 7.839 & 8.780 & 10.000 & 0.000 & 10.000 & 8.780 & 7.839 & 6.997 & 6.251  \\
+6 & 5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792  \\
+7 & 5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237  \\
+8 & 4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742  \\
+9 & 4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291  \\
+10&3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883
 \end{tabular}
 \label{pitS}
 \end{table}
 
 \subsection{Value Iteration}
-
-\begin{table}[ht]
+As in policy iteration, similar tables, namely ~\ref{convVIter}, ~\ref{vitS}, for value iteration are presented, with $theta = 1.0E^{-20}$. 
+\begin{table}[H]
 \caption{Convergence in iterations for different $\gamma$}
 \centering
 \begin{tabular}{|l||r|}
@@ -307,29 +375,45 @@ $\gamma$ & Nr. of iterations\\
 \label{convVIter}
 \end{table}
 
-The values for for every possible state when the prey is at [5][5] are illustrated in table~\ref{pitS}
-\begin{table}[ht]
+\begin{table}[H]
 \caption{Values from value iteration when the prey is at [5][5]}
 \centering
-\begin{tabular}{l*{9}{c}r}
+\begin{tabular}{l|l*{9}{c}r}
   \hline
-3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883 \\
-4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 \\
-4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 \\
-5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 \\
-5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 \\
-6.251 & 6.997 & 7.839 & 8.780 & 10.000 & 0.000 & 10.000 & 8.780 & 7.839 & 6.997 & 6.251 \\
-5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 \\
-5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 \\
-4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 \\
-4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 \\
-3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883
+ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline 
+0 & 3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883 \\
+1 & 4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 \\
+2 & 4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 \\
+3 & 5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 \\
+4 & 5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 \\
+5 & 6.251 & 6.997 & 7.839 & 8.780 & 10.000 & 0.000 & 10.000 & 8.780 & 7.839 & 6.997 & 6.251 \\
+6 & 5.792 & 6.436 & 7.148 & 7.936 & 8.780 & 10.000 & 8.780 & 7.936 & 7.148 & 6.436 & 5.792 \\
+7 & 5.237 & 5.802 & 6.440 & 7.148 & 7.936 & 8.780 & 7.936 & 7.148 & 6.440 & 5.802 & 5.237 \\
+8 & 4.742 & 5.228 & 5.802 & 6.440 & 7.148 & 7.839 & 7.148 & 6.440 & 5.802 & 5.228 & 4.742 \\
+9& 4.291 & 4.712 & 5.228 & 5.802 & 6.436 & 6.997 & 6.436 & 5.802 & 5.228 & 4.712 & 4.291 \\
+10& 3.883 & 4.291 & 4.742 & 5.237 & 5.792 & 6.251 & 5.792 & 5.237 & 4.742 & 4.291 & 3.883
 \end{tabular}
-\label{pitS}
+\label{vitS}
 \end{table}
 
-\section{Discussion}
+\subsection{Comparison of Policy and Value iteration}
+We can see that tables ~\ref{pitS}  and ~\ref{vitS} have the same values, and that can be explained because both methods converge to the optimal policy. The only difference can be the number of iterations it takes to converge to that optimal policy. Value iteration has only one backup operation for each state and reduces the policy evaluation to one step, whereas policy iteration performs multiple evaluations until it reaches the improvement part. That's why it will converge much faster than policy iteration which can be shown in graph~\ref{converge}. 
+
+\begin{figure}[H] \centering
+\fbox{\includegraphics[scale=0.5]{convergence.pdf}}
+\caption{Comparative graph of convergence for policy and value iteration} \label{converge}
+\end{figure}
+
+\section{conclusion}
 \label{discussion}
+To conclude we presented the algorithms of policy evaluation, policy iteration, value iteration as well as their results on a predator-prey environment which consists of a toroidal grid. Through the presentation of those results we gained better insights on the advantages and disadvantages of using a specific algorithm. In our assignment value iteration converges faster to the optimal policy than policy iteration, and seems to be better in that regard. However maybe in some specific problems we need a decoupling of policy evaluation from improvement, because further evaluation is not needed. This can only be done with policy iteration.
+
+Additionally, we reduced the statespace from $11^4$ states to $11^2$ states and we can actually reduce it even more, and we plan to try it for assignment 2, ie a quarter of that same statespace by employing mirroring. The idea came from the visualization of the distribution of values of the states around the projected prey. It is not as straightforward as the transformation used in the initial reduction because state actions need to be mirrored as well.
+
+%we are relied to a complete and finite MDP
+%see the big picture of GPI loop 
+
+
 
 \begin{thebibliography}{9}
 

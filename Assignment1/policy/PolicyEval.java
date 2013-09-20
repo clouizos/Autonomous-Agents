@@ -43,7 +43,7 @@ public class PolicyEval implements Policy {
 	    		for(int l = 0; l < 11; l++) {
 	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			action = rpp.getAction(s);
-	    			//statespace[i][j][k][l] = s;
+	    			statespace[i][j][k][l] = s;
 	    			stateactions.put((String)s.toString(), (String)action);
 					statevalues.put((String)s.toString(), (Double)0.0);
 	    		}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  20 SEP 2013 02:27
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  21 SEP 2013 01:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -447,6 +447,8 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks28
 \@floatcapt=\box30
 )
+\@float@every@table=\toks29
+
 (/usr/share/texmf-dist/tex/latex/sectsty/sectsty.sty
 Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
 les
@@ -461,58 +463,58 @@ les
 \f@ncyO@erf=\skip65
 \f@ncyO@olf=\skip66
 \f@ncyO@orf=\skip67
-)
-No file labreport1.aux.
+) (./labreport1.aux)
 \openout1 = `labreport1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 89.
-LaTeX Font Info:    Try loading font information for FML+futm on input line 89.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 91.
+LaTeX Font Info:    Try loading font information for FML+futm on input line 91.
+
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmlfutm.fd
 File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
 )
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 89.
-LaTeX Font Info:    Try loading font information for FMS+futm on input line 89.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 91.
+LaTeX Font Info:    Try loading font information for FMS+futm on input line 91.
 
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmsfutm.fd
 File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
 )
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 89.
-LaTeX Font Info:    Try loading font information for FMX+futm on input line 89.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 91.
+LaTeX Font Info:    Try loading font information for FMX+futm on input line 91.
 
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmxfutm.fd
 File: fmxfutm.fd futm-extension
 )
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 89.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 89.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 91.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 91.
 
 (/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Try loading font information for T1+futs on input line 89.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Try loading font information for T1+futs on input line 91.
 
 (/usr/share/texmf-dist/tex/latex/fourier/t1futs.fd
 File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
 )
-LaTeX Info: Redefining \microtypecontext on input line 89.
+LaTeX Info: Redefining \microtypecontext on input line 91.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -534,12 +536,12 @@ Package microtype Info: Loading generic settings for font family
 \scratchbox=\box31
 \nofMPsegments=\count106
 \nofMParguments=\count107
-\everyMPshowfont=\toks29
+\everyMPshowfont=\toks30
 \MPscratchCnt=\count108
 \MPscratchDim=\dimen117
 \MPnumerator=\count109
 \makeMPintoPDFobject=\count110
-\everyMPtoPDFconversion=\toks30
+\everyMPtoPDFconversion=\toks31
 ) (/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -588,7 +590,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 91.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 93.
 
 (/usr/share/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
@@ -597,7 +599,7 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `cmss' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for OT1+bch on input line 91.
+LaTeX Font Info:    Try loading font information for OT1+bch on input line 93.
 
 (/usr/share/texmf-dist/tex/latex/psnfss/ot1bch.fd
 File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
@@ -606,25 +608,25 @@ File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
 File: mt-bch.cfg 2007/03/03 v1.5 microtype config. file: Bitstream Charter (RS)
 
 )
-LaTeX Font Info:    Try loading font information for FML+futmi on input line 91
+LaTeX Font Info:    Try loading font information for FML+futmi on input line 93
 .
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmlfutmi.fd
 File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
 )
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 91.
+(Font)              scaled to size 13.24796pt on input line 93.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 91.
+(Font)              scaled to size 9.19998pt on input line 93.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 91.
+(Font)              scaled to size 7.35999pt on input line 93.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 91.
+(Font)              scaled to size 13.24796pt on input line 93.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 91.
+(Font)              scaled to size 9.19998pt on input line 93.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 91.
-LaTeX Font Info:    Try loading font information for U+msa on input line 91.
+(Font)              scaled to size 7.35999pt on input line 93.
+LaTeX Font Info:    Try loading font information for U+msa on input line 93.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -632,7 +634,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 91.
+LaTeX Font Info:    Try loading font information for U+msb on input line 93.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -641,197 +643,134 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 95.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 97.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 95.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 97.
+
+<figtmp18.png, id=1, 255.95625pt x 367.3725pt>
+File: figtmp18.png Graphic file (type png)
+ <use figtmp18.png>
+Package pdftex.def Info: figtmp18.png used on input line 111.
+(pdftex.def)             Requested size: 127.9778pt x 183.68579pt.
  [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Package tocbasic Info: character protrusion at toc deactivated on input line 10
-1.
-
-No file labreport1.toc.
-\tf@toc=\write3
-\openout3 = `labreport1.toc'.
-
-[2]
-
-LaTeX Warning: Reference `environment' on page 3 undefined on input line 105.
-
-
-LaTeX Warning: Reference `methods' on page 3 undefined on input line 105.
-
-
-LaTeX Warning: Reference `results' on page 3 undefined on input line 105.
-
-
-LaTeX Warning: Reference `discussion' on page 3 undefined on input line 105.
-
-<uml_general.pdf, id=11, 782.925pt x 511.9125pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2 <./figtmp18.png>]
+<uml_general.pdf, id=13, 782.925pt x 511.9125pt>
 File: uml_general.pdf Graphic file (type pdf)
  <use uml_general.pdf>
-Package pdftex.def Info: uml_general.pdf used on input line 120.
+Package pdftex.def Info: uml_general.pdf used on input line 133.
 (pdftex.def)             Requested size: 469.75862pt x 307.14987pt.
 
-Overfull \hbox (51.50307pt too wide) in paragraph at lines 120--121
+Overfull \hbox (51.50307pt too wide) in paragraph at lines 133--134
  [][] 
  []
 
-<uml_policies1.pdf, id=12, 501.875pt x 130.4875pt>
+<uml_policies1.pdf, id=14, 501.875pt x 130.4875pt>
 File: uml_policies1.pdf Graphic file (type pdf)
  <use uml_policies1.pdf>
-Package pdftex.def Info: uml_policies1.pdf used on input line 124.
+Package pdftex.def Info: uml_policies1.pdf used on input line 137.
 (pdftex.def)             Requested size: 301.12732pt x 78.29309pt.
 
-[3] <uml_policies2.pdf, id=16, 762.85pt x 451.6875pt>
+<uml_policies2.pdf, id=15, 762.85pt x 451.6875pt>
 File: uml_policies2.pdf Graphic file (type pdf)
  <use uml_policies2.pdf>
-Package pdftex.def Info: uml_policies2.pdf used on input line 128.
+Package pdftex.def Info: uml_policies2.pdf used on input line 141.
 (pdftex.def)             Requested size: 457.71353pt x 271.01459pt.
 
-Overfull \hbox (39.45798pt too wide) in paragraph at lines 128--129
+Overfull \hbox (39.45798pt too wide) in paragraph at lines 141--142
  [][] 
  []
 
-<uml_policies3.pdf, id=17, 371.3875pt x 421.575pt>
+[3 <./uml_general.pdf>] <uml_policies3.pdf, id=23, 371.3875pt x 421.575pt>
 File: uml_policies3.pdf Graphic file (type pdf)
- <use uml_policies3.pdf>
-Package pdftex.def Info: uml_policies3.pdf used on input line 132.
+
+<use uml_policies3.pdf>
+Package pdftex.def Info: uml_policies3.pdf used on input line 145.
 (pdftex.def)             Requested size: 215.40489pt x 244.51366pt.
-
-[4 <./uml_general.pdf> <./uml_policies1.pdf>]
+ [4 <./uml_policies1.pdf> <./uml_policies2.pdf>]
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 137.
+(Font)              scaled to size 10.07397pt on input line 151.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 137.
+(Font)              scaled to size 7.63599pt on input line 151.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 137.
+(Font)              scaled to size 5.51999pt on input line 151.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 137.
+(Font)              scaled to size 10.07397pt on input line 151.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 137.
+(Font)              scaled to size 7.63599pt on input line 151.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 137.
- [5 <./uml_policies2.pdf> <./uml_policies3.pdf>]
+(Font)              scaled to size 5.51999pt on input line 151.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <8.3> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 142.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 156.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <6> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 142.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 156.
 
-
-LaTeX Warning: Reference `oriV' on page 6 undefined on input line 144.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 141--145
+Underfull \hbox (badness 10000) in paragraph at lines 155--157
 
  []
 
+<policyIterPseudo.png, id=35, 560.8453pt x 344.03531pt>
+File: policyIterPseudo.png Graphic file (type png)
 
-LaTeX Warning: Reference `iterV' on page 6 undefined on input line 149.
+<use policyIterPseudo.png>
+Package pdftex.def Info: policyIterPseudo.png used on input line 165.
+(pdftex.def)             Requested size: 308.46587pt x 189.22pt.
+ [5 <./uml_policies3.pdf>] [6 <./policyIterPseudo.png>] <pseudotmp1.png, id=51,
+ 463.7325pt x 258.9675pt>
+File: pseudotmp1.png Graphic file (type png)
+ <use pseudotmp1.png>
+Package pdftex.def Info: pseudotmp1.png used on input line 187.
+(pdftex.def)             Requested size: 255.05365pt x 142.43254pt.
 
+[7 <./pseudotmp1.png>]
+<sutton4_5valueiteration.png, id=57, 484.81125pt x 321.2pt>
+File: sutton4_5valueiteration.png Graphic file (type png)
 
-LaTeX Warning: Reference `Iterative Policy Evaluation Pseudo' on page 6 undefin
-ed on input line 149.
+<use sutton4_5valueiteration.png>
+Package pdftex.def Info: sutton4_5valueiteration.png used on input line 202.
+(pdftex.def)             Requested size: 266.647pt x 176.66054pt.
+ [8 <./sutton4_5valueiteration.png>]
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 234--250
+ [][] 
+ []
 
-
-LaTeX Warning: File `policyIterPseudo.png' not found on input line 151.
-
-
-! Package pdftex.def Error: File `policyIterPseudo.png' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.151 ...raphics[scale=0.6]{policyIterPseudo.png}}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 151.
-
-(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-Package microtype Info: Loading generic settings for font family
-(microtype)             `cmtt' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
- [6]
-
-LaTeX Warning: Reference `Policy Iteration' on page 7 undefined on input line 1
-69.
+[9] [10]
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 339--355
+ [][] 
+ []
 
 
-LaTeX Warning: File `pseudotmp1.png' not found on input line 172.
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 381--397
+ [][] 
+ []
 
+[11] <convergence.pdf, id=71, 578.16pt x 433.62pt>
+File: convergence.pdf Graphic file (type pdf)
+ <use convergence.pdf>
+Package pdftex.def Info: convergence.pdf used on input line 403.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
-! Package pdftex.def Error: File `pseudotmp1.png' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.172 \includegraphics[scale=0.55]{pseudotmp1.png}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[7]
-
-LaTeX Warning: File `sutton4_5valueiteration.png' not found on input line 186.
-
-
-! Package pdftex.def Error: File `sutton4_5valueiteration.png' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.186 ...s[scale=0.6]{sutton4_5valueiteration.png}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[8]
-
-LaTeX Warning: Reference `pitS' on page 9 undefined on input line 268.
-
-
-LaTeX Warning: Reference `pitS' on page 9 undefined on input line 310.
-
-[9] [10] [11] (./labreport1.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[12 <./convergence.pdf>] [13] (./labreport1.aux) ) 
 Here is how much of TeX's memory you used:
- 6974 strings out of 493311
- 104303 string characters out of 6143651
- 224183 words of memory out of 5000000
- 10054 multiletter control sequences out of 15000+600000
- 124381 words of font info for 238 fonts, out of 8000000 for 9000
+ 7001 strings out of 493311
+ 104233 string characters out of 6143651
+ 222499 words of memory out of 5000000
+ 10055 multiletter control sequences out of 15000+600000
+ 125957 words of font info for 258 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 47i,11n,47p,1023b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/t
-exmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public
-/fourier/fourier-mex.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/four
-ier-mlit.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/fourier-ms.pfb><
-/usr/share/texmf-dist/fonts/type1/adobe/utopia/putb8a.pfb></usr/share/texmf-dis
-t/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-dist/fonts/type1/adobe/
-utopia/putri8a.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1095.
-pfb>
-Output written on labreport1.pdf (11 pages, 112025 bytes).
+ 47i,11n,47p,1546b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/
+enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/fourier/fourier
+-mex.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/fourier-ml.pfb></usr
+/share/texmf-dist/fonts/type1/public/fourier/fourier-mlit.pfb></usr/share/texmf
+-dist/fonts/type1/public/fourier/fourier-ms.pfb></usr/share/texmf-dist/fonts/ty
+pe1/adobe/utopia/putb8a.pfb></usr/share/texmf-dist/fonts/type1/adobe/utopia/put
+r8a.pfb></usr/share/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on labreport1.pdf (13 pages, 199841 bytes).
 PDF statistics:
- 90 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
+ 139 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 45589 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 45102 words of extra memory for PDF output out of 51595 (max. 10000000)
 
