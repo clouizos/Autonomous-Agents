@@ -50,12 +50,15 @@ public class PolicyEvalReduced implements Policy {
     
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
+    	long startTime = System.nanoTime();
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEvalReduced p = new PolicyEvalReduced(0.8, 1.0E-20, rPolpred);
         p.multisweep();
         Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
+    	long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("time:"+estimatedTime);
 		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     

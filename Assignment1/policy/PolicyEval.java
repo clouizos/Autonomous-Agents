@@ -57,12 +57,15 @@ public class PolicyEval implements Policy {
     
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
+    	long startTime = System.nanoTime();
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEval p = new PolicyEval(0.8, 1.0E-20, rPolpred);
         p.multisweep();
         Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
+    	long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("time:"+estimatedTime);
 		State statePrey = new State(new Position(0,0), new Position(5,5));
 		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
 		statePrey = new State(new Position(2,3), new Position(5,4));

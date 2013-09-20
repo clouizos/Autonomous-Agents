@@ -44,12 +44,14 @@ public class VIPolicy implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
+    	long startTime = System.nanoTime(); 
     	VIPolicy p = new VIPolicy(0.9, 1.0E-20);
         p.multisweep();
-        Position prey = new Position(5,5);
+        Position prey = new Position(2,3);
         p.printList(prey);
         p.printTable(prey);
-        
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("time:"+estimatedTime);
         //p.show("size statespace tree: " + p.size);
         try {
 	    p.output();

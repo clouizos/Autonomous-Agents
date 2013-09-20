@@ -156,10 +156,13 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		long startTime = System.nanoTime();
 		PolicyIterReduced PI = new PolicyIterReduced(0.9, 1.0E-20);
 		PI.doIteration();
 		//printTable();
 		PI.printTable(new Position(5,5));
+		long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("time:"+estimatedTime);
 		
         try {
 	    PI.output();
