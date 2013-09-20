@@ -51,7 +51,8 @@ public class VIPolicy implements Policy {
         p.printList(prey);
         p.printTable(prey);
         long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time:"+estimatedTime);
+        System.out.println();
+        System.out.println("time:"+estimatedTime+"ns");
         //p.show("size statespace tree: " + p.size);
         try {
 	    p.output();

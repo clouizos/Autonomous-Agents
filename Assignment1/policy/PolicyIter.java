@@ -168,7 +168,8 @@ public class PolicyIter extends PolicyEval{
 		//printTable();
 		PI.printTable(new Position(5,5));
 		long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time:"+estimatedTime);
+		System.out.println();
+        System.out.println("time:"+estimatedTime+"ns");
 		
         try {
 	    PI.output();

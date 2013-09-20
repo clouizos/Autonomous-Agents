@@ -58,7 +58,8 @@ public class PolicyEvalReduced implements Policy {
     	p.printList(prey);
     	p.printTable(prey);
     	long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time:"+estimatedTime);
+    	System.out.println();
+        System.out.println("time:"+estimatedTime+"ns");
 		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     

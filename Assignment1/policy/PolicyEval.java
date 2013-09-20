@@ -65,7 +65,8 @@ public class PolicyEval implements Policy {
     	p.printList(prey);
     	p.printTable(prey);
     	long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time:"+estimatedTime);
+    	System.out.println();
+        System.out.println("time:"+estimatedTime+"ns");
 		State statePrey = new State(new Position(0,0), new Position(5,5));
 		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
 		statePrey = new State(new Position(2,3), new Position(5,4));
