@@ -206,6 +206,12 @@ As in our implementation of policy evaluation and policy iteration, the backup o
 
 \subsection{Reducing the state space}
 \label{reduce}
+From the values of the table of policy and value iteration when the prey was located at prey(5,5) and the tables from when the prey was at prey(2,3), we can see that those are the same values only proportional to the distance of the predator and the prey, translated to a different position. From this observation we could reduce the state space from $11^4$  to $11^2$ by creating a transform function which translates the actual positions of the agents to the positions displayed in table~\ref{pitS}. The transformation taking place can be illustrated in formula ~\ref{trans}, which also takes into consideration that the grid is toroidal.
+%make a formula
+projectedPredatorPosition = projectedPreyPosition - (actualPreyPosition + actualPredatorPosition)
+The reduced state space results in a lot less memory requirements as well as less computation, which leads us to a faster runtime. 
+
+%\label{trans}
 
 \section{Results}
 \label{results}
@@ -346,9 +352,24 @@ $\gamma$ & Nr. of iterations\\
 \end{tabular}
 \label{vitS}
 \end{table}
+\subsection{Comparison of Policy and Value iteration}
+We can see that tables ~\ref{pitS}  and ~\ref{vitS} have the same values, and that can be explained because both methods converge to the optimal policy. The only difference can be the number of iterations it takes to converge to that optimal policy. Value iteration has only one backup operation for each state and reduces the policy evaluation to one step, whereas policy iteration performs multiple evaluations until it reaches the improvement part. That's why it will converge much faster than policy iteration which can be shown in graph~\ref{converge}. 
+
+\begin{figure}[H] \centering
+\fbox{\includegraphics[scale=0.5]{convergence.pdf}}
+\caption{Comparative graph of convergence for policy and value iteration} \label{converge}
+\end{figure}
 
 \section{conclusion}
 \label{discussion}
+To conclude we presented the algorithms of policy evaluation, policy iteration, value iteration as well as their results on a predator-prey environment which consists of a toroidal grid. Through the presentation of those results we gained better insights on the advantages and disadvantages of using a specific algorithm. In our assignment value iteration converges faster to the optimal policy than policy iteration, and seems to be better in that regard. However maybe in some specific problems we need a decoupling of policy evaluation from improvement, because further evaluation is not needed. This can only be done with policy iteration.
+
+Additionally, we reduced the statespace from $11^4$ states to $11^2$ states and we can actually reduce it even more, ie a quarter of that same statespace by employing mirroring. The idea came from the visualization of the distribution of values of the states around the projected prey. It is not as straightforward as the transformation used in the initial reduction because state actions need to be mirrored as well.
+
+we are relied to a complete and finite MDP
+see the big picture of GPI loop 
+
+
 
 \begin{thebibliography}{9}
 

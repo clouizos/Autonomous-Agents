@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.5.20)  20 SEP 2013 14:49
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.5.20)  20 SEP 2013 17:51
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -625,26 +625,36 @@ File: pseudotmp1.png Graphic file (type png)
 <sutton4_5valueiteration.png, id=56, 484.81125pt x 321.2pt>
 File: sutton4_5valueiteration.png Graphic file (type png)
 
-<use sutton4_5valueiteration.png> [8 <./sutton4_5valueiteration.png>] [9]
-[10] [11] (./main.aux) ) 
+<use sutton4_5valueiteration.png> [8 <./sutton4_5valueiteration.png>]
+
+LaTeX Warning: Reference `trans' on page 9 undefined on input line 209.
+
+[9] [10] [11] <convergence.pdf, id=71, 578.16pt x 433.62pt>
+File: convergence.pdf Graphic file (type pdf)
+
+<use convergence.pdf> [12 <./convergence.pdf>] (./main.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6014 strings out of 495061
- 87840 string characters out of 1182621
- 182271 words of memory out of 3000000
- 8841 multiletter control sequences out of 15000+50000
- 125417 words of font info for 252 fonts, out of 3000000 for 9000
+ 6025 strings out of 495061
+ 87992 string characters out of 1182621
+ 184283 words of memory out of 3000000
+ 8847 multiletter control sequences out of 15000+50000
+ 125687 words of font info for 255 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  35i,11n,43p,1540b,263s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}<
-/usr/share/texmf-texlive/fonts/type1/public/fourier/fourier-mex.pfb></usr/share
-/texmf-texlive/fonts/type1/public/fourier/fourier-ml.pfb></usr/share/texmf-texl
-ive/fonts/type1/public/fourier/fourier-mlit.pfb></usr/share/texmf-texlive/fonts
-/type1/public/fourier/fourier-ms.pfb></usr/share/texmf-texlive/fonts/type1/adob
-e/utopia/putb8a.pfb></usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr8a.p
-fb></usr/share/texmf-texlive/fonts/type1/adobe/utopia/putri8a.pfb>
-Output written on main.pdf (11 pages, 217769 bytes).
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/public/fourier/fourier-mex.pfb></usr/share/texmf-texlive/fonts/t
+ype1/public/fourier/fourier-ml.pfb></usr/share/texmf-texlive/fonts/type1/public
+/fourier/fourier-mlit.pfb></usr/share/texmf-texlive/fonts/type1/public/fourier/
+fourier-ms.pfb></usr/share/texmf-texlive/fonts/type1/adobe/utopia/putb8a.pfb></
+usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-t
+exlive/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on main.pdf (12 pages, 233759 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
+ 134 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 45097 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 45102 words of extra memory for PDF output out of 51595 (max. 10000000)
 
