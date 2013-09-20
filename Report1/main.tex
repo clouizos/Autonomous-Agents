@@ -148,14 +148,14 @@ In our implementation the agents are encoded as positions by the position class:
 
 \subsection{Iterative Policy Evaluation}
 \label{PEval}
-In Markov Decision Processes, one of the important steps is evaluation step, which is to find the state-value functions $V^\pi$ for an arbitrary policy, $\pi$. The state-value functions estimate value of a state in terms of expected return that can be obtained from that state. Below is the equation for calculating $V^\pi$.
+In Markov Decision Processes, one of the important steps is the evaluation step, which is to find the state-value functions $V^\pi$ for an arbitrary policy, $\pi$. The state-value functions estimate the value of a state in terms of the expected return that can be obtained from that state. The equation for calculating $V^\pi$ can be seen at ~\ref{oriV}:
 \begin{align}
 V^\pi(s)&=E_\pi\left\lbrace r_{t+1}+\gamma V^\pi(s_{s+1})\mid s_t=s \right\rbrace\notag\\
 &=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a[R_{ss'}^a+\gamma V^\pi(s')] \label{oriV}
 \end{align}
-where $\mathbf{\pi(s,a)}$ is probability of taking action $\mathbf{a}$ in state $\mathbf{s}$ under policy $\mathbf{\pi}$, $P_{ss'}^a$ is probability of end up at state $\mathbf{s'}$ after taking action $\mathbf{a}$ in state $\mathbf{s}$, $R_{ss'}^a$ is expected immediate reward on transition from $\mathbf{s}$ to $\mathbf{s'}$ under action $\mathbf{a}$, and $\mathbf{\gamma}$ is a discount factor.\\
-\\
-Since in our test environment the dinamics are completely known, then  equation $\eqref{oriV}$ can be solved using iterative solution methods. By iterative solution methods, we can consider there is a sequence of $V$, $V_0, V_1, V_2, \dots$, each mapping all states in $S^+$ to $\Re$. The initial values of $V^\pi$ are chosen arbitrarily, and the update rule for each successive state-values are gained by following the Bellman equation :
+where $\mathbf{\pi(s,a)}$ is the probability of taking action $\mathbf{a}$ in state $\mathbf{s}$ under policy $\mathbf{\pi}$, $P_{ss'}^a$ is the probability of ending up at state $\mathbf{s'}$ after taking action $\mathbf{a}$ in state $\mathbf{s}$, $R_{ss'}^a$ is expected immediate reward on transition from $\mathbf{s}$ to $\mathbf{s'}$ under action $\mathbf{a}$, and $\mathbf{\gamma}$ is a discount factor.\\
+
+Since the model of the environment is completely known, the equation $\eqref{oriV}$ can be solved using iterative solution methods. With iterative solution methods, we can consider there is a sequence of $V$, $V_0, V_1, V_2, \dots$, each mapping all states in $S^+$ to $\Re$. The initial values of $V^\pi$ are chosen arbitrarily, and the update rule for each successive state-values is gained by following the Bellman equation~\ref{iterV} :
 \begin{align}
 V_{k+1}(s) &= E_\pi\left\lbrace r_{t+1}+\gamma V_{k}(s_{t+1}\mid s_t=s) \right\rbrace\notag\\
 &=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a [R_{ss'}^a+\gamma V_k(s')] \label{iterV}

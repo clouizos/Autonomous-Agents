@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.5.20)  20 SEP 2013 17:51
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.5.20)  20 SEP 2013 19:59
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -610,7 +610,7 @@ LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <8.3> not available
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <6> not available
 (Font)              Font shape `T1/futs/b/n' tried instead on input line 156.
 
-Underfull \hbox (badness 10000) in paragraph at lines 155--159
+Underfull \hbox (badness 10000) in paragraph at lines 155--157
 
  []
 
@@ -638,11 +638,11 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 6025 strings out of 495061
- 87992 string characters out of 1182621
+ 6033 strings out of 495061
+ 88066 string characters out of 1182621
  184283 words of memory out of 3000000
  8847 multiletter control sequences out of 15000+50000
- 125687 words of font info for 255 fonts, out of 3000000 for 9000
+ 126227 words of font info for 261 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  35i,11n,43p,1540b,263s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
@@ -652,7 +652,7 @@ ype1/public/fourier/fourier-ml.pfb></usr/share/texmf-texlive/fonts/type1/public
 fourier-ms.pfb></usr/share/texmf-texlive/fonts/type1/adobe/utopia/putb8a.pfb></
 usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-t
 exlive/fonts/type1/adobe/utopia/putri8a.pfb>
-Output written on main.pdf (12 pages, 233759 bytes).
+Output written on main.pdf (12 pages, 233843 bytes).
 PDF statistics:
  134 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
