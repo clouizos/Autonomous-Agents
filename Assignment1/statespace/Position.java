@@ -1,9 +1,14 @@
 package statespace;
-
+/*
+ *  Position encodes an agent; either prey or predator
+ */
 public class Position {
 	// absolute coordinates
     private int x, y;
 
+    /*
+     *  Constructors
+     */
     public Position(int a, int b) {
 	this.x = wrap(a);
 	this.y = wrap(b);
@@ -19,11 +24,8 @@ public class Position {
     }
 
     /*
-    public int absDistance(Position p) {
-	return Math.abs(wrap(x - p.getX())) + Math.abs(wrap(y - p.getY()));
-    }
-    */
-
+     * Wrapper, since grid is toroidal
+     */
     public int wrap(int i) {
 	if ((i > 10))
 	    return i -= 11;
@@ -36,6 +38,36 @@ public class Position {
 	return ("["+ x +"]["+ y+']');
     }
 
+    /*
+     * Gives new position according to move
+     */
+    public Position move(String move) {
+	if(move.equals("north"))
+	    return new Position(x, y-1);
+	if(move.equals("south"))
+	    return new Position(x, y+1);
+	if(move.equals("west"))
+	    return new Position(x-1, y);
+	if(move.equals("east"))
+	    return new Position(x+1, y);
+	return new Position(x, y);
+    }
+    
+    /* transforms its position(predator) of given actual prey position to
+     * the projected position for prey[5][5]
+     */
+    public Position transformPrey55(Position prey) {
+    	int projx = 5-prey.getX()+this.getX();
+    	int projy = 5-prey.getY()+this.getY();
+    	return new Position(projx, projy);
+    }
+    
+    public boolean equals(Position p) {
+	if(x==p.getX()&&y==p.getY())
+	    return true;
+	return false;
+    }
+    
     public int getX() {
 	return x;
     }
@@ -56,53 +88,4 @@ public class Position {
 	int[] position = {x, y};
 	return position;
     }
-    
-    public Position move(String move) {
-	if(move.equals("north"))
-	    return new Position(x, y-1);
-	if(move.equals("south"))
-	    return new Position(x, y+1);
-	if(move.equals("west"))
-	    return new Position(x-1, y);
-	if(move.equals("east"))
-	    return new Position(x+1, y);
-	return new Position(x, y);
-    }
-    /*
-    public Position preymove(String move) {
-	if(move.compareTo("north")==0)
-	    return new Position(x, y-1);
-	if(move.compareTo("south")==0)
-	    return new Position(x, y+1);
-	if(move.compareTo("west")==0)
-		return new Position(x-1, y);
-	if(move.compareTo("east")==0)
-	    return new Position(x+1, y);
-	return new Position(x, y);
-    }
-    */
-    
-    /* transforms its position(predator) of given actual prey position to
-     * the projected position for prey[5][5]
-     */
-    public Position transformPrey55(Position prey) {
-    	int projx = 5-prey.getX()+this.getX();
-    	int projy = 5-prey.getY()+this.getY();
-    	return new Position(projx, projy);
-    }
-    
-    public boolean equals(Position p) {
-	if(x==p.getX()&&y==p.getY())
-	    return true;
-	return false;
-    }
-    
-    // test main
-    /*
-    public static void main(String[] args) {
-	Position p1, p2;
-	p1 = new Position(1,0);
-	p2 = p1.preymove("north");
-	System.out.println(p2.toString());
-    }*/
 }

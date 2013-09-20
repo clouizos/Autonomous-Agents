@@ -21,7 +21,9 @@ public class PolicyEvalReduced implements Policy {
     protected Hashtable stateactions, statevalues;
     protected double gamma, delta, theta;
     private static Policy policy;
-
+    /*
+     *  Constructors; inherits from policy evaluation
+     */	
     public PolicyEvalReduced(double g, double t, Policy p) {
     policy = p;
     	// statespace init
@@ -50,20 +52,20 @@ public class PolicyEvalReduced implements Policy {
     
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
-    	long startTime = System.nanoTime();
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEvalReduced p = new PolicyEvalReduced(0.8, 1.0E-20, rPolpred);
+    	long startTime = System.nanoTime();
         p.multisweep();
         Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
-    	long estimatedTime = System.nanoTime() - startTime;
-    	System.out.println();
-        System.out.println("time:"+estimatedTime+"ns");
+		long estimatedTime = System.nanoTime() - startTime;
+		System.out.println();
+		System.out.println("time:"+estimatedTime+"ns");
 		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     
-    /*
+    /* Required method to implement; returns an action according to implemented policy
      * Projects the currentState to the one when prey[5][5]
      * 
      */
@@ -188,6 +190,12 @@ public double getP(int nrnextstates, State next) {
         System.out.print(s);
     }
     
+    /*
+     *  IO methods, for writing the state actions into a file, 
+     *  which can be used to fill up a lookup table when the policy 
+     *  is executed within the simulator 
+     */
+    
     public static void write(File file, String string, boolean append) throws Exception
     {
 	if(append==false)
@@ -247,6 +255,10 @@ public double getP(int nrnextstates, State next) {
 	}
     }
     
+    /*
+     *  Print methods for table and list of statevalues
+     */
+    
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
@@ -271,6 +283,10 @@ public double getP(int nrnextstates, State next) {
     		}
     	}
     }
+    
+    /*
+     * Getters and setters
+     */
     
     public State[][] getStatespace() {
 		return statespace;
@@ -311,21 +327,4 @@ public double getP(int nrnextstates, State next) {
 	public double getGamma() {
 		return gamma;
 	}
-    
-//	public void initPolicy(State[][][][] statespace){
-//	State currentState;
-//	Random generator = new Random();
-//	ArrayList<String> actions = getActions();
-//	String action;
-//	for(int i=0; i < 11; i++)
-//		for(int j=0; j< 11; j++)
-//			for(int k=0; k<11; k++)
-//				for(int l=0;l<11;l++){
-//					currentState = statespace[i][j][k][l];
-//					action = actions.get(generator.nextInt(5)); 
-//					stateactions.put(currentState, action);
-//					statevalues.put(currentState, 0.0);
-//				}	
-////System.out.println(stateactions.get(statespace[0][0][0][0]));
-//}
 }

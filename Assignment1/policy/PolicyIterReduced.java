@@ -21,15 +21,36 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 	private int evaluation_runs = 0;
 	private int improvement_runs = 0;
 
+    /*
+     *  Constructors; inherits from policy evaluation
+     */	
 	public PolicyIterReduced(double g, double t) {
 		super(g, t, new RandomPolicyPredator());
 	}
 	
 	public PolicyIterReduced() {}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		PolicyIterReduced PI = new PolicyIterReduced(0.9, 1.0E-20);
+		long startTime = System.nanoTime();
+		PI.doIteration();
+		//printTable();
+		PI.printTable(new Position(5,5));
+		long estimatedTime = System.nanoTime() - startTime;
+		System.out.println();
+		System.out.println("time:"+estimatedTime+"ns");
+		
+        try {
+	    PI.output();
+        } catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+        }
+	}
 
-	 /*
+	 /*Required method to implement; returns an action according to implemented policy
      * Projects the currentState to the one when prey[5][5]
-     * 
      */
 	public String getAction(State currentState) {
     	Position pred = currentState.getPredator();
@@ -153,26 +174,6 @@ public class PolicyIterReduced extends PolicyEvalReduced{
 		return action;
 	}
 
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		long startTime = System.nanoTime();
-		PolicyIterReduced PI = new PolicyIterReduced(0.9, 1.0E-20);
-		PI.doIteration();
-		//printTable();
-		PI.printTable(new Position(5,5));
-		long estimatedTime = System.nanoTime() - startTime;
-		System.out.println();
-        System.out.println("time:"+estimatedTime+"ns");
-		
-        try {
-	    PI.output();
-        } catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-        }
-	}
-	
 	public int doPolicyEvaluationIteration(){
 		// init the multisweep for the policy evaluation
         return multisweep_iteration();   	

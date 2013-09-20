@@ -26,6 +26,9 @@ public class PolicyEval implements Policy {
     protected double gamma, delta, theta;
     private static Policy policy;
 
+    /*
+     *  Constructors
+     */
     public PolicyEval(double g, double t, Policy p) {
     policy = p;
     	// statespace init
@@ -40,7 +43,7 @@ public class PolicyEval implements Policy {
 	    		for(int l = 0; l < 11; l++) {
 	    			State s = new State(new Position(i, j), new Position(k, l));
 	    			action = rpp.getAction(s);
-	    			statespace[i][j][k][l] = s;
+	    			//statespace[i][j][k][l] = s;
 	    			stateactions.put((String)s.toString(), (String)action);
 					statevalues.put((String)s.toString(), (Double)0.0);
 	    		}
@@ -57,17 +60,17 @@ public class PolicyEval implements Policy {
     
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta
-    	long startTime = System.nanoTime();
     	RandomPolicyPredator rPolpred = new RandomPolicyPredator();
     	PolicyEval p = new PolicyEval(0.8, 1.0E-20, rPolpred);
-        p.multisweep();
+    	long startTime = System.nanoTime();
+    	p.multisweep();
         Position prey = new Position(5,5);
     	p.printList(prey);
     	p.printTable(prey);
-    	long estimatedTime = System.nanoTime() - startTime;
-    	System.out.println();
-        System.out.println("time:"+estimatedTime+"ns");
 		State statePrey = new State(new Position(0,0), new Position(5,5));
+		long estimatedTime = System.nanoTime() - startTime;
+		System.out.println();
+		System.out.println("time:"+estimatedTime+"ns");
 		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
 		statePrey = new State(new Position(2,3), new Position(5,4));
 		show('\n' + statePrey.toString() +  " statevalue: " +(double)p.getStatevalues().get(statePrey.toString()));
@@ -78,8 +81,9 @@ public class PolicyEval implements Policy {
 		//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
     }
     
-    
-
+    /*
+     * Required method to implement; returns an action according to implemented policy
+     */
     public String getAction(State currentState){
 	return (String)stateactions.get(currentState.toString());
     }
@@ -202,6 +206,12 @@ public double getP(int nrnextstates, State next) {
         System.out.print(s);
     }
     
+    /*
+     *  IO methods, for writing the state actions into a file, 
+     *  which can be used to fill up a lookup table when the policy 
+     *  is executed within the simulator 
+     */
+    
     public static void write(File file, String string, boolean append) throws Exception
     {
 	if(append==false)
@@ -261,6 +271,9 @@ public double getP(int nrnextstates, State next) {
 	}
     }
     
+    /*
+     *  Print methods for table and list of statevalues
+     */
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
@@ -285,6 +298,10 @@ public double getP(int nrnextstates, State next) {
     		}
     	}
     }
+    
+    /*
+     * Getters and setters
+     */
     
     public State[][][][] getStatespace() {
 		return statespace;
@@ -325,21 +342,4 @@ public double getP(int nrnextstates, State next) {
 	public double getGamma() {
 		return gamma;
 	}
-    
-//	public void initPolicy(State[][][][] statespace){
-//	State currentState;
-//	Random generator = new Random();
-//	ArrayList<String> actions = getActions();
-//	String action;
-//	for(int i=0; i < 11; i++)
-//		for(int j=0; j< 11; j++)
-//			for(int k=0; k<11; k++)
-//				for(int l=0;l<11;l++){
-//					currentState = statespace[i][j][k][l];
-//					action = actions.get(generator.nextInt(5)); 
-//					stateactions.put(currentState, action);
-//					statevalues.put(currentState, 0.0);
-//				}	
-////System.out.println(stateactions.get(statespace[0][0][0][0]));
-//}
 }

@@ -1,0 +1,15 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{3}
+\contentsline {subsection}{\numberline {1.1}Environment}{3}
+\contentsline {section}{\numberline {2}Methods and Procedures}{4}
+\contentsline {subsection}{\numberline {2.1}Implementation overview}{4}
+\contentsline {subsection}{\numberline {2.2}Iterative Policy Evaluation}{6}
+\contentsline {subsection}{\numberline {2.3}Policy Iteration}{6}
+\contentsline {subsection}{\numberline {2.4}Value Iteration}{8}
+\contentsline {subsection}{\numberline {2.5}Reducing the state space}{8}
+\contentsline {section}{\numberline {3}Results}{8}
+\contentsline {subsection}{\numberline {3.1}Random Policy}{8}
+\contentsline {subsection}{\numberline {3.2}Iterative Policy Evaluation}{9}
+\contentsline {subsection}{\numberline {3.3}Policy Iteration}{9}
+\contentsline {subsection}{\numberline {3.4}Value Iteration}{9}
+\contentsline {section}{\numberline {4}Discussion}{10}

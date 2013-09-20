@@ -2,7 +2,9 @@ package statespace;
 
 import java.io.File;
 import java.util.Vector;
-
+/*
+ * A state is defined by 2 Positions, that of prey and predator
+ */
 public class State {
     
     // State is defined on position prey and predator
@@ -28,6 +30,9 @@ public class State {
     	this.prey = prey;
     }
     
+	/*
+	 * Encodes the endstate
+	 */
     public boolean endState() {
 	if(prey.equals(predator)) {
 	    //show("captured!!");

@@ -330,11 +330,3 @@ List:
 [10][10][5][5] statevalue: 3.8831240424711546
 
 5) Right now it's from 11^4 to 11^2
-
-6) runtime
-policyEval 13037363887
-policyEvalreduced 350888850
-policyIter 28268640390
-policyIterreduced 276421535
-vip 4133541985
-vipreduced 272208482

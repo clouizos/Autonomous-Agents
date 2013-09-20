@@ -5,7 +5,11 @@ import java.io.File;
 import java.util.ArrayList;
 import policy.*;
 import statespace.*;
-
+/*
+ * Implementation of the prey predator domain
+ * Each policy can be executed for 100 runs and it will outputs it's preformance.
+ * Run the specific policy first for output of a policy.data file; then run the simulator
+ */
 public class Testsimulation {
 	// init 
 	static int runs = 0;
@@ -24,21 +28,21 @@ public class Testsimulation {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    Policy predPolicy = new RandomPolicyPredator();
+    //Policy predPolicy = new RandomPolicyPredator();
     //PolicyIter predPolicy = new PolicyIter();
     //VIPolicy predPolicy = new VIPolicy();
     //PolicyIterReduced predPolicy = new PolicyIterReduced();
-    //VIPolicyReduced predPolicy = new VIPolicyReduced();
+    VIPolicyReduced predPolicy = new VIPolicyReduced();
     Policy preyPolicy = new RandomPolicyPrey();
 	
-	/* fill look up table if Value iteration Policy is run
+	// fill look up table if Value iteration Policy is run
 	File file = new File("policy.data");
 	try {
 		predPolicy.filltable(file);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}*/
+	}
 	 
     test(predPolicy, preyPolicy);
     }

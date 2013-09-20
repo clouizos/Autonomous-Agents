@@ -21,12 +21,38 @@ public class PolicyIter extends PolicyEval{
 	private int evaluation_runs = 0;
 	private int improvement_runs = 0;
 
+    /*
+     *  Constructors; inherits from policyEval
+     */	
 	public PolicyIter(double g, double t) {
 		super(g, t, new RandomPolicyPredator());
 	}
 	
 	public PolicyIter() {}
 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//init policy iteration
+		PolicyIter PI = new PolicyIter(0.9, 1.0E-20);
+		long startTime = System.nanoTime();
+		PI.doIteration();
+		//printTable();
+		PI.printTable(new Position(5,5));
+		long estimatedTime = System.nanoTime() - startTime;
+		System.out.println();
+		System.out.println("time:"+estimatedTime+"ns");
+		
+        try {
+	    PI.output();
+        } catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+        }
+	}
+	
+    /*
+     * Required method to implement; returns an action according to implemented policy
+     */
 	public String getAction(State currentState) {
 		show("\ninside get action: "+currentState);
 
@@ -157,28 +183,6 @@ public class PolicyIter extends PolicyEval{
 		statevalues.put(currentState.toString(), max);
 		return action;
 	}
-
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//init policy iteration
-		long startTime = System.nanoTime();
-		PolicyIter PI = new PolicyIter(0.9, 1.0E-20);
-		PI.doIteration();
-		//printTable();
-		PI.printTable(new Position(5,5));
-		long estimatedTime = System.nanoTime() - startTime;
-		System.out.println();
-        System.out.println("time:"+estimatedTime+"ns");
-		
-        try {
-	    PI.output();
-        } catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-        }
-	}
-	
 	
 	public int doPolicyEvaluationIteration(){
 		// init the multisweep for the policy evaluation

@@ -17,7 +17,10 @@ public class VIPolicyReduced implements Policy {
     private State[][] statespace;
     private static Hashtable stateactions, statevalues;
     private double gamma, delta, theta;
-
+    
+    /*
+     *  Constructors
+     */
     public VIPolicyReduced(double g, double t) {
        // statespace init
 	statespace = new State[11][11];
@@ -39,16 +42,17 @@ public class VIPolicyReduced implements Policy {
 
     public static void main(String[] args) {
         // value iteration is run with VIpolicy(gamma, theta)
+    	VIPolicyReduced p = new VIPolicyReduced(0.9, 1.0E-20);
     	long startTime = System.nanoTime();
-    	VIPolicyReduced p = new VIPolicyReduced(0.5, 1.0E-20);
         p.multisweep();
         Position prey = new Position(5,5);
         p.printList(prey);
         p.printTable(prey);
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println();
-        System.out.println("time:"+estimatedTime+"ns");
         
+        long estimatedTime = System.nanoTime() - startTime;
+		System.out.println();
+		System.out.println("time:"+estimatedTime+"ns");
+		
         //p.show("size statespace tree: " + p.size);
         try {
 	    p.output();
@@ -58,15 +62,7 @@ public class VIPolicyReduced implements Policy {
 	}
     }
 
-    public Hashtable getSA() {
-        return stateactions;
-    }
-    
-    public Hashtable getSV() {
-        return statevalues;
-    }
-
-    /*
+    /* Required method to implement; returns an action according to implemented policy
      * Projects the currentState to the one when prey[5][5]
      * 
      */
@@ -175,10 +171,24 @@ public class VIPolicyReduced implements Policy {
             return 10.0;
 	return 0.0;
     }
+    
+    public Hashtable getSA() {
+        return stateactions;
+    }
+    
+    public Hashtable getSV() {
+        return statevalues;
+    }
 
     public void show(String s) {
         System.out.print(s);
     }
+    
+    /*
+     *  IO methods, for writing the state actions into a file, 
+     *  which can be used to fill up a lookup table when the policy 
+     *  is executed within the simulator 
+     */
     
     public static void write(File file, String string, boolean append) throws Exception
     {
@@ -239,6 +249,9 @@ public class VIPolicyReduced implements Policy {
 	}
     }
     
+    /*
+     *  Print methods for table and list of statevalues
+     */    
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
