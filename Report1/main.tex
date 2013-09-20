@@ -106,7 +106,7 @@ The aim of this assignment is to make a research according to the planning scena
 %general overview of dynammic programming and RL
 The general idea of reinforcement learning is to acquire knowledge from experience, specifically interacting with the environment, getting feedback from it in the form of rewards, in order to achieve a goal. To perform this kind of task there is a need of a policy, which basically summarizes the course of action an agent should take at any specific state of the environment. The agent always seeks to maximize the amount of reward it receives, either immediately or in the long run. 
 
-In order to be able to get an optimal policy given the environment, the agent should evaluate the current policy and then improve it if it's not the optimal one. The whole loop can be summed up pretty well in figure~\ref{GPI}. If we already a complete model of the environment, and the environment satisfies the Markov property, namely it is an MDP, we can solve this problem by using a paradigm called dynamic programming(DP), which evaluates and improves the policy at hand. There is a variety of methods in DP that are guaranteed to find the optimal policy for us, namely policy evaluation(~\ref{PEval}), policy iteration(~\ref{PIter}) and value iteration(~\ref{VIter}).    
+In order to be able to get an optimal policy given the environment, the agent should evaluate the current policy and then improve it if it's not the optimal one. The whole loop can be summed up pretty well in figure~\ref{GPI}. If we already have a complete model of the environment, and the environment satisfies the Markov property, namely it is only dependent on the current state, we can solve this problem by using a paradigm called dynamic programming(DP), which evaluates and improves the policy at hand. There is a variety of methods in DP that are guaranteed to find the optimal policy for us, namely policy evaluation(~\ref{PEval}), policy iteration(~\ref{PIter}) and value iteration(~\ref{VIter}).    
 \begin{figure}[H] \centering
 \fbox{\includegraphics[scale=0.5]{figtmp18.png}}
 \caption{Generalized Policy Iteration} 
@@ -114,7 +114,7 @@ In order to be able to get an optimal policy given the environment, the agent sh
 \end{figure}
 
 %overview of what will follow
-We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards we present in section~\ref{methods} the various methods that were implemented in the aforementioned environment. The results that derived from each of these methods are displayed in detail in section~\ref{results} and finally there is a discussion as well as a comparison between them in section~\ref{discussion}
+We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards we present in section~\ref{methods} the various methods that were implemented in the aforementioned environment. The results that derived from each of these methods as well as the comparison between them are displayed in detail in section~\ref{results} and finally there is a conclusion in section~\ref{discussion}.
 
 \subsection{Environment}
 \label{environment}
