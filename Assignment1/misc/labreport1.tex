@@ -206,13 +206,52 @@ As in our implementation of policy evaluation and policy iteration, the backup o
 
 \subsection{Reducing the state space}
 \label{reduce}
-From the values of the table of policy and value iteration when the prey was located at prey(5,5) and the tables from when the prey was at prey(2,3), displayed in table $\ref{rVIt}$, we can see that those are the same values only proportional to the distance of the predator and the prey, translated to a different position. From this observation we could reduce the state space from $11^4$  to $11^2$ by creating a transform function which translates the actual positions of the agents to the positions displayed in table~\ref{pitS}, hereby eliminating the need to represent the prey in all it's possible positions. The transformation taking place can be illustrated in formula ~\ref{trans}, which in the implemented form also takes into consideration that the grid is toroidal.
-%make a formula
+Regard the current maximum statespace in the form of 
 \begin{align}
-\text{projectedPredatorPosition} & = \text{projectedPreyPosition} - \notag\\
-&(\text{actualPreyPosition} + \text{actualPredatorPosition})\label{trans}
+statespace[predator(x_i,y_j), prey(x_k,y_l)]
 \end{align}
-The reduced state space results in a lot less memory requirements as well as less computation, which leads us to a faster runtime as seen in table~\ref{runtime}. 
+This statespace has size $11^4$, spanning all possible positions of predator and prey in the $11 \times 11$ grid. Reducing the statespace would mean compressing this table without information loss. Notice the tables of policy and value iteration, table $\ref{pitS}$ and table $\ref{vitS}$, both displaying the values for all possible states by keeping the prey fixed at [5][5]. We can see the same value distribution; and a pattern where the values are proportional to the distance of the predator to the prey. When we look at table $\ref{rVIt}$, where the prey is at [3][2], we notice the exact same value distribution, only translated to the current position of the prey. 
+
+\indent So a way of reducing the statespace would be by eliminating the representation of the prey within the statespace, by keeping it fixed; we marginalize the conditioning of the prey on the statevalue distribution. We can do this without information loss, by making use of a transform function which translates the actual positions of the prey and predator to an arbitrary one, where the position of the prey has been kept fixed; a statespace where only the position of the predator is variable. In our implementation we make use of one represented by table $\ref{vitS}$.
+
+\indent The transform function hereby is a simple translation in the following form:
+\begin{align}
+\begin{split}
+P'_{pred} &= \omega((P'_{prey}-P_{prey})+P_{pred}))
+\qquad
+\begin{cases}
+P'_{pred} &= \text{Projected predator position} \\
+P'_{prey} &= \text{Projected prey postion, [5][5] in our case} \\
+P_{prey} &= \text{Actual prey position} \\
+P_{pred} &= \text{Actual predator position}
+\end{cases}
+\end{split}
+\end{align}
+$\omega$ is the wrapper function implemented in our Position class, which takes into consideration that the grid is toroidal. 
+Take table $\ref{rVIt}$ as an aid to illustrate this translation, where we pick position [1][5] as $P_{pred}$ having a certain value (6.440 for the actual state value would not yet be known in the reduced space scenario). [3][2], denotes $P_{prey}$. The value of the state[1][5][3][2] can be looked up by translating this to the calculated reduced space:
+\begin{align}
+\begin{split}
+P'_{pred}
+&=\omega((\begin{bmatrix} 
+5 \\
+5
+\end{bmatrix} -
+\begin{bmatrix}
+3 \\
+2
+\end{bmatrix} )+
+\begin{bmatrix}
+1 \\
+5
+\end{bmatrix}
+\end{split})
+=
+\begin{bmatrix}
+3 \\
+8
+\end{bmatrix}
+\end{align}
+In the calculated reduced space this projected state[3][8][5][5], which has the same relative position of the predator to the prey as in the actual state, conforms with it's value 6.440, the same as we would in a maximum state space scenario. The reduced state space, effectively sized down to $11^2$, results in a lot less memory requirements as well as less computation, which leads us to a faster runtime as seen in table~\ref{runtime}. 
 
 \begin{table}[H]
 \caption{Runtime of normal and reduced statespace in seconds}
@@ -229,7 +268,7 @@ The reduced state space results in a lot less memory requirements as well as les
 \end{table}
 
 \begin{table}[H]
-\caption{Values from value iteration when the prey is at [2][3]}
+\caption{Values from value iteration when the prey is at [3][2]}
 \centering
 \begin{tabular}{l|l*{9}{c}r}
   \hline
