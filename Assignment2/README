@@ -1,0 +1,10 @@
+Executing a specific policy in the simulator requires running that policy first in the policy package. Every implementation of a policy 
+,ie VIPolicy.java (except PolicyEval~, RandomPolicy~), will output a policy.data file from the state-actions calculated within that policy, 
+which contains the lookup table Q(s,a) and thereby the policy for the predator to execute. 
+Executing that specific policy in the simulator requires an uncomment.
+
+TLDR:
+
+Step 1: execute policy.PolicyToExecute for a policy.data.
+Step 2: uncomment said policy in simulator.
+Step 3: run simulator!

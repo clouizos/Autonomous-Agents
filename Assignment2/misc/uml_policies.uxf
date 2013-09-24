@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>10</y>
+      <w>330</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>policy::PolicyEval
+--
+-statespace: statespace.State[][][][]
+-stateactions: java.util.Hashtable
+-statevalues: java.util.Hashtable
+-gamma: double
+-delta: double
+-theta: double
+-policy: policy.Policy
+--
++PolicyEval(double, double, policy.Policy): ctor
++PolicyEval(): ctor
++main(java.lang.String[]): void
++getAction(statespace.State): java.lang.String
++multisweep(): int
++sweep(): double
++updateValue(statespace.State): double
++getActionProb(): double
++getP(int, statespace.State): double
++getReward(statespace.State): double
++output(): void
++filltable(java.io.File): void
++printTable(statespace.Position): void
++printList(statespace.Position): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>10</y>
+      <w>370</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>policy::PolicyIter
+--
+-evaluation_runs: int
+-improvement_runs: int
+--
++PolicyIter(double, double): ctor
++PolicyIter(): ctor
++getAction(statespace.State): java.lang.String
++doIteration(): void
++doPolicyImprovement(): boolean
++argmaxupdateValue(statespace.State): java.lang.String
++main(java.lang.String[]): void
++doPolicyEvaluationIteration(): int
++multisweep_iteration(): int
++sweep_iteration(): double
++updateValue_iteration(statespace.State): double
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>290</x>
+      <y>440</y>
+      <w>180</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>policy::RandomPolicyPrey
+--
+--
++RandomPolicyPrey(): ctor
++getAction(State cs): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>440</y>
+      <w>250</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>policy::RandomPolicyPredator
+--
+--
++RandomPolicyPredator(): ctor
++getAction(State dummyState): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>550</y>
+      <w>330</w>
+      <h>380</h>
+    </coordinates>
+    <panel_attributes>policy::VIPolicy
+--
+-statespace: statespace.State[][][][]
+-stateactions: java.util.Hashtable
+-statevalues: java.util.Hashtable
+-gamma: double
+-delta: double
+-theta: double
+--
++VIPolicy(double, double): ctor
++VIPolicy(): ctor
++main(java.lang.String[]): void
++getAction(statespace.State): java.lang.String
++multisweep(): void
++sweep(): double
++updateValue(statespace.State): double
++getP(int, statespace.State): double
++getReward(statespace.State): double
++output(): void
++filltable(java.io.File): void
++printTable(statespace.Position): void
++printList(statespace.Position): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

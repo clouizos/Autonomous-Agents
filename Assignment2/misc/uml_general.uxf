@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>290</x>
+      <y>10</y>
+      <w>450</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>statespace::State
+--
+-predator: statespace.Position
+-prey: statespace.Position
+-preyAction: java.lang.String
+--
++State(statespace.Position, statespace.Position): ctor
++State(statespace.Position, statespace.Position, java.lang.String): ctor
++updatePosition(statespace.Position, statespace.Position): void
++endState(): boolean
++nextStates(java.lang.String): java.util.Vector
++nextStatesReduced(java.lang.String): java.util.Vector
++nextStatePrey(java.lang.String): statespace.State
++nextStatePred(java.lang.String): statespace.State
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>290</x>
+      <y>280</y>
+      <w>390</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>statespace::Position
+--
+-x: int
+-y: int
+--
++Position(int, int): ctor
++Position(statespace.Position): ctor
++wrap(int): int
++move(java.lang.String): statespace.Position
++transformPrey55(statespace.Position): statespace.Position
++equals(statespace.Position): boolean
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>360</y>
+      <w>180</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+policy::Policy
+--
+--
++getAction(State s): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>10</y>
+      <w>270</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>simulation::Testsimulation
+--
+~runs: int
+~allRuns: java.util.ArrayList
+~averageRuns: double
+~timesRun: int
+~predator: statespace.Position
+~prey: statespace.Position
+~resetGrid: boolean
+--
+~Testsimulation(): ctor
++Testsimulation(): ctor
++main(java.lang.String[]): void
++test(policy.Policy, policy.Policy): void
+~getAverage(java.util.ArrayList): double
+~getVariance(java.util.ArrayList): double
+~getStdDev(java.util.ArrayList): double
++show(java.lang.String): void
++pauseProg(): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
