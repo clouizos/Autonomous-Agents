@@ -84,14 +84,14 @@ public class OffPolicyMC {
 		Random generator = new Random();
 		int i = generator.nextInt(11);
 		int j = generator.nextInt(11);
-		Position pred = new Position(i,j);
-		Position prey = new Position(5,5);
+//		Position pred = new Position(i,j);
+//		Position prey = new Position(5,5);
 		Position preyDefault = new Position(5,5);
 		String predAction=null;
 		String preyAction=null;
 		Double r=0.0;
 		State currentState;
-		currentState = new State(pred,prey);
+		currentState = new State(new Position(i,j),new Position(5,5));
 		int counter=0;
 		do {
 			counter++;
@@ -140,7 +140,7 @@ public class OffPolicyMC {
 			 //Copy from ArrayList to HashSet to avoid duplicate pair state,action
 			 Set<String> set = new HashSet<String>();
 //			 System.out.println("tau "+tau+"size episode "+dataEpisode.size());
-			 for (int i=tau;i<dataEpisode.size();i++){
+			 for (int i=tau;i<dataEpisode.size()-1;i++){
 				 if (!dataEpisode.get(i).getS().endState())
 					 set.add(dataEpisode.get(i).getS().toString()+"-"+dataEpisode.get(i).getAction());
 			 }
@@ -170,11 +170,6 @@ public class OffPolicyMC {
 					 Return+=dataEpisode.get(k).getReward();
 				 }
 				 Return+=dataEpisode.get(dataEpisode.size()-1).getReward();
-//				 System.out.println("nilai w"+w);
-				 //get the Reward at time t. Need confirmation about R_t or R_t+1
-//				 System.out.println(pair);
-				 if (w*Return > 0|| w >0)
-//					 System.out.println(w*Return+" "+w);
 				 this.N.put(pair, this.N.get(pair)+w*Return);
 				 this.D.put(pair, this.D.get(pair)+w);
 				 this.Q.put(pair, this.N.get(pair)/this.D.get(pair));
@@ -210,7 +205,14 @@ public class OffPolicyMC {
 					 //Assign max action to the policy
 					 ((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
 				 }
-		}while (counter <2000000);
+			 System.out.println("Size Q : "+this.Q.size());
+			 System.out.println("Size N : "+this.N.size());
+			 System.out.println("Size D : "+this.D.size());
+			 System.out.println("Size table : "+tableFirstTimeOccurence);
+//			 System.out.println("Size D : "+this.D.size());
+			 
+			 
+		}while (counter <20000);
 	}
 	
 	public Policy getPi() {
