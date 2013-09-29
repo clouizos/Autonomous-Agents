@@ -11,18 +11,19 @@ public class State {
     private Position predator;
     private Position prey;
     
-    //private String action;
-    private String preyAction;
+    private String action;
+    //private String preyAction;
     
     public State(Position pred, Position prey) {
     predator = pred;
     this.prey = prey;
 	}
-
+    
+    // constructor with prey move
     public State(Position pred, Position prey, String a) {
     predator = pred;
     this.prey = prey;
-    preyAction = a;
+    action = a;
 	}
 
 	public void updatePosition(Position predator, Position prey){
@@ -144,8 +145,19 @@ public class State {
     	this.predator = predator;
     	this.prey = prey;
     }
-
+    
+    // used in assignment 1 to calculate prey action probability
 	public String getPreyaction() {
-		return preyAction;
+		return action;
+	}
+	
+	// used in assignment 2 for Qstate
+	public String getAction() {
+		return action;
+	}
+	
+	@Override
+	public int hashCode() {
+		return (toString()+action).hashCode();
 	}
 }
