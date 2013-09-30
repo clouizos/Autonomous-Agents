@@ -21,7 +21,7 @@ public class EGreedyPolicyTD implements Policy{
 	
 	public String getAction(State s, Map<State, Double> qtable){
 		ArrayList<String> actionS = ArbitraryPolicy.getAllActions();
-		// randomized list, so no move will get selected by default at init stage
+		// randomized list, so no move will get selected by default/preference at init stage
 		long seed = System.nanoTime();
 		Collections.shuffle(actionS, new Random(seed));
 		State key;
