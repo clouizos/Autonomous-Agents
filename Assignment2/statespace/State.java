@@ -25,6 +25,18 @@ public class State {
     this.prey = prey;
     action = a;
 	}
+    
+    // constructor used in TD
+    public State(State s, String a) {
+    	predator = s.getPredator();
+    	prey = s.getPrey();
+    	action = a;
+    }
+    
+    public State(State s) {
+    	predator = s.getPredator();
+    	prey = s.getPrey();   	
+    }
 
 	public void updatePosition(Position predator, Position prey){
     	this.predator = predator;
@@ -106,6 +118,13 @@ public class State {
 	return succstates;
     }
     
+    // returns projected state for prey at (5,5)
+    public State projectState() {
+    	Position predproj = predator.transformPrey55(prey);
+    	State stateproj = new State(predproj, new Position(5,5), action);
+    	return stateproj;
+    }
+    
     // next state after prey has taken a:preymove
     public State nextStatePrey(String preymove) {
     	return new State(predator, prey.move(preymove));
@@ -155,9 +174,17 @@ public class State {
 	public String getAction() {
 		return action;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return (toString()+action).hashCode();
 	}
+	
+	@Override
+    public boolean equals(Object s2) {
+	State s = (State) s2;
+	if(s.getPredator().equals(predator)&&s.getPrey().equals(prey)&&s.getPreyaction().equals(action))
+	    return true;
+	return false;
+    }
 }
