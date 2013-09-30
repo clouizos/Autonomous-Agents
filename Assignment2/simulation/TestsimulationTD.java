@@ -33,9 +33,11 @@ public class TestsimulationTD {
     double gamma = 0.5;
     double alpha = 0.1;
     // egreedy with epsilon = 0.1
-    EGreedyPolicyTD egreedy = new EGreedyPolicyTD(0.1);
-    // qlearning with policy
-    QLearning predPolicy = new QLearning(gamma, alpha, egreedy);
+    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+    // SoftMax with temperature tau = 0.1
+    SoftMax policy = new SoftMax(0.1);
+    // qlearning with input:policy
+    QLearning predPolicy = new QLearning(gamma, alpha, policy);
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	/* fill look up table if Value iteration Policy is run
@@ -46,43 +48,52 @@ public class TestsimulationTD {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}*/
-	 
-    test(predPolicy, preyPolicy);
+	
+    boolean verbose=false;
+    int nrRuns = 10000;
+    test(predPolicy, preyPolicy, verbose, nrRuns);
     }
     
-    public static void test(Policy predPolicy, Policy preyPolicy) {
+    public static void test(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
-    	while(timesRun < 10000) {
+    	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
-    			System.out.println("Resetting Grid for the "+timesRun+" run!");
+    			show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
     			currentState = initS();
     			resetGrid = false;
+    			//pauseProg();
     		}
 
     		//show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
-    		show("\n===========\nAt beginloop: Prey "+ prey.toString());
-    		show("At beginloop: Predator "+ predator.toString()+'\n');
+    		if(verbose) {
+    		show("\n===========\nAt beginloop: Predator "+ predator.toString());
+    		show("At beginloop: Prey "+ prey.toString()+'\n');
+    		}
     		
     		//predator move on new state(prey)
     		//updates the state according to predator move
     		String move = predPolicy.getAction(currentState);
     		predator = predator.move(move);
-    		show("\npredator moved: "+move);
     		oldState = new State(currentState, move);
     		currentState.setPredator(predator);
+    		if(verbose) {
+    		show("\npredator moved: "+move);
     		show("Predator: " + predator.toString());
+    		}
     		
     		//prey move
     		//updates the state upon the prey move
     		move = preyPolicy.getAction(currentState);
     		prey = prey.move(move);
-    		show("prey move: "+move);
     		// update state after prey moves
     		currentState.setPrey(prey);
+    		if(verbose) {
+    		show("prey move: "+move);
     		show("Prey: " + prey.toString());
+    		}
     		((QLearning)predPolicy).updateQ(oldState, currentState);
     		
     		
@@ -98,15 +109,11 @@ public class TestsimulationTD {
     		//pauseProg();
     	}
 	
+    //((QLearning)predPolicy).printTable(new Position(5,5));
+    //((QLearning)predPolicy).printList(new Position(5,5));
 	System.out.println("\nAll runs overview:");
 	System.out.println(allRuns);
 	
-	/*for (int i=0;i<allRuns.size();i++){
-		averageRuns += allRuns.get(i);
-	}
-	averageRuns = averageRuns/allRuns.size();
-	System.out.println("Average time for the predator to catch the prey is: "+ averageRuns+" !");
-	*/
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
     }

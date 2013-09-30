@@ -20,19 +20,19 @@ public class EGreedyPolicyTD implements Policy{
 	}
 	
 	public String getAction(State s, Map<State, Double> qtable){
-		ArrayList<String> Actions = ArbitraryPolicy.getAllActions();
-		// randomized list so no move will get selected by default at init stage
+		ArrayList<String> actionS = ArbitraryPolicy.getAllActions();
+		// randomized list, so no move will get selected by default at init stage
 		long seed = System.nanoTime();
-		Collections.shuffle(Actions, new Random(seed));
+		Collections.shuffle(actionS, new Random(seed));
 		State key;
-		double Qval;
+		double qVal;
 		double maxQ=-10;
 		String maxAction=null;
-		for (String action : Actions){
+		for (String action : actionS){
 			key = new State(s, action);
-			Qval = qtable.get(key);
-			if (maxQ<Qval){
-				maxQ = Qval;
+			qVal = qtable.get(key);
+			if (maxQ<qVal){
+				maxQ = qVal;
 				maxAction = action;
 			}
 		}
@@ -40,8 +40,8 @@ public class EGreedyPolicyTD implements Policy{
 		int index;
 		if (Math.random()<epsilon){
 			index = rand.nextInt(4);
-			Actions.remove(maxAction);
-			return Actions.get(index);
+			actionS.remove(maxAction);
+			return actionS.get(index);
 		}
 		return maxAction;
 	}

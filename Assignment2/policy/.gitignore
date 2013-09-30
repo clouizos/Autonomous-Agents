@@ -11,3 +11,5 @@ VIPolicyReduced.class
 PolicyIterReduced.class
 PolicyEvalReduced.class
 /EGreedyPolicyTD.class
+/SoftMax.class
+/OnPolicyMC.class
