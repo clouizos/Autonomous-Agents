@@ -1,6 +1,10 @@
 package policy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +18,7 @@ public class OnPolicyMC {
 	private static Map<State, Double> Q;
 	private static Map<State, ArrayList<Double>> returns;
 	private static Map<String, String> bestActioninState;
+	private static ArrayList<Integer> runsEachEpisode = new ArrayList<Integer>();
 	private Policy preyPolicy;
 	private static ESoftPolicy Pi;
 	private static double gamma;
@@ -42,7 +47,7 @@ public class OnPolicyMC {
 				for (String action:this.Actions){
 					//String key = "["+i+"]["+j+"][5][5]-"+action;
 					State init = new State(new Position(i,j), prey, action);
-					Q.put(init,0.0);
+					Q.put(init,15.0);
 					//Q.put(init, 0.0);
 					ArrayList<Double> return_list = new ArrayList<Double>();
 					returns.put(init, return_list);
@@ -108,6 +113,7 @@ public class OnPolicyMC {
 				 dataEpisode =  generateEpisode();
 			 }while (dataEpisode.size()<2);
 			 System.out.println("Episode size:"+dataEpisode.size());
+			 runsEachEpisode.add(dataEpisode.size());
 			 //-2 because we exclude for checking the terminal state
 			
 			 ArrayList<Double> tempreturns;
@@ -235,7 +241,7 @@ public class OnPolicyMC {
 				 }
 			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
-		}while(counter < 10000);
+		}while(counter < 100);
 		
 	}
 	
@@ -314,9 +320,55 @@ public class OnPolicyMC {
 			}
 			System.out.println();	
 		}
+		
+	    try {
+		    on.output();
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 	}
 	
 	public void show(String s){
 		System.out.println(s);
 	}
+	
+	 public static void write(File file, String string, boolean append) throws Exception
+	    {
+		if(append==false)
+		{
+		    file.delete();
+		    file.createNewFile();
+		}
+
+		FileOutputStream WriteFile = new FileOutputStream(file, true);
+		OutputStreamWriter WriteBuff = new OutputStreamWriter(WriteFile, "UTF8");
+		WriteBuff.write(string);
+		WriteBuff.close();
+		WriteFile.close();
+	    }
+	    
+	    // outputs the state actions into a file policy.data
+	    public void output() throws Exception {
+		File policyfile = new File("convergenceOnMC.data");
+		policyfile.delete();
+		policyfile.createNewFile();
+		if(!runsEachEpisode.isEmpty()) {
+			for(int times : runsEachEpisode){
+		    //Enumeration enu = stateactions.keys();
+		    //while(enu.hasMoreElements()) {
+			//String state = (String) enu.nextElement();
+			//String action = (String) stateactions.get(state);
+				try {
+					write(policyfile, String.valueOf(times)+"\n", true);
+				} catch (Exception e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			    System.out.println("Cannot write to file");
+			}
+		    }
+		} else
+		    show("\nRuns each episode is empty!!");
+	    }
+	    
 }
