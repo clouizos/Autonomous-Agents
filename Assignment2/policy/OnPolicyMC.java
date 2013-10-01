@@ -241,7 +241,7 @@ public class OnPolicyMC {
 				 }
 			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
-		}while(counter < 100);
+		}while(counter < 1000);
 		
 	}
 	
