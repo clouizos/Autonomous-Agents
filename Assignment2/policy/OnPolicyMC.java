@@ -16,12 +16,12 @@ public class OnPolicyMC {
 	private static Map<State, ArrayList<Double>> returns;
 	//private Map<String, Double> V;
 	private Policy preyPolicy;
-	private static EGreedyPolicyTD Pi;
+	private static ESoftPolicy Pi;
 	private static ArrayList<String> Actions=new ArrayList<String>();
 	
 	public OnPolicyMC(Policy P) {
 		//this.Pi = Pi;
-		Pi = (EGreedyPolicyTD) P;
+		Pi = (ESoftPolicy) P;
 		//this.preyPolicy = preyPolicy;
 		initialize();
 		// TODO Auto-generated constructor stub
@@ -68,23 +68,23 @@ public class OnPolicyMC {
 		State currentState;
 		currentState = new State(new Position(i,j),new Position(5,5));
 		int counter=0;
-		System.out.println("generating episode..");
+		//System.out.println("generating episode..");
 		do {
 			//System.out.println(counter);
 			counter++;
-			predAction = Pi.getAction(currentState, OnPolicyMC.Q);
-			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), predAction),r,predAction));
+			predAction = Pi.getAction(currentState);
+			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), predAction),getReward(currentState),predAction));
 			currentState.setPredator(currentState.getPredator().move(predAction));
+			//Save the last State
+			if (currentState.endState())
+				dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), null),getReward(currentState),null));
 			preyAction = preyPolicy.getAction(currentState);
 			currentState.setPrey(currentState.getPrey().move(preyAction));
 			Position predproj = currentState.getPredator().transformPrey55(currentState.getPrey());
 			currentState.updatePosition(predproj, preyDefault);
-			r = getReward(currentState);
-			//Save the last State
-			if (currentState.endState())
-				dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), predAction),r,null));
+			//r = getReward(currentState);
 		}while (! currentState.endState());
-		System.out.println("Generated episode that ends in "+counter+" moves!");
+		//System.out.println("Generated episode that ends in "+counter+" moves!");
 		//System.out.println(dataEpisode);
 		return dataEpisode;
 	}
@@ -131,7 +131,7 @@ public class OnPolicyMC {
 					 //set.add(dataEpisode.get(i).getS().toString()+"-"+dataEpisode.get(i).getAction());
 					 set.add(dataEpisode.get(i).getS());
 			 }
-  		 System.out.println("size "+set.size());
+  		// System.out.println("size "+set.size());
 			 for (State currState : set){
 				 //String[] tempPair = pair.split("-");
 				 //tempStateString = tempPair[0];
@@ -149,14 +149,14 @@ public class OnPolicyMC {
 				 //double w=1.0;
 				 double Return=0.0;
 				 //Product of 1/piPrime(s_k,a_k)
-				 for (int k=t+1;k<dataEpisode.size()-1;k++){
+				 for (int k=t+1;k<dataEpisode.size();k++){
 					 //For now we just use 0.5 since the probability of taking action in
 					 //behaviour policy is equally likely
 					 //w*=1/((EGreedyPolicy)this.Pi).getProbability(dataEpisode.get(k).getS(), dataEpisode.get(k).getAction());
 					 Return+=dataEpisode.get(k).getReward();
 				 }
-				 Return+=dataEpisode.get(dataEpisode.size()-1).getReward();
-				 tempreturns = this.returns.get(currState);
+				 //Return+=dataEpisode.get(dataEpisode.size()-1).getReward();
+				 tempreturns = OnPolicyMC.returns.get(currState);
 				 tempreturns.add(Return);
 				 average_returns = calculateAverage(tempreturns);
 //				 System.out.println("nilai w"+w);
@@ -210,11 +210,11 @@ public class OnPolicyMC {
 						 key = new State(new Position(i,j), prey, action);
 						 if (action.equals(maxAction)){
 							 new_Value = 1-e+(e/Actions.size());
-							 prob.put(key, new_Value);
+							 Pi.updateProbablity(key, action, new_Value);
 							 //((ArbitraryPolicy)this.Pi).updateValue(key, new_Value);
 						 }else{
 							 new_Value = e/Actions.size();
-							 prob.put(key, new_Value);
+							 Pi.updateProbablity(key, action, new_Value);
 							 //((ArbitraryPolicy)this.Pi).updateValue(key, new_Value);
 						 }
 					 }
@@ -222,8 +222,9 @@ public class OnPolicyMC {
 					 //Assign max action to the policy
 					 //((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
 				 }
+			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
-		}while(counter < 10);
+		}while(counter < 10000);
 		
 	}
 	
@@ -251,11 +252,12 @@ public class OnPolicyMC {
 	
 	public static void main(String[] args) {
 		//ArbitraryPolicy Pi = new ArbitraryPolicy();
-		EGreedyPolicyTD Pi = new EGreedyPolicyTD(0.1);
+		ESoftPolicy Pi = new ESoftPolicy(0.1);
 		OnPolicyMC on = new OnPolicyMC(Pi);
 		
 		on.doControl();
-		
+		ESoftPolicy Piprime = new ESoftPolicy(-1.0);
+		Piprime.setPolicyProb(Pi.getPolicyProb());
 		//String key;
 		State key;
 		//String action;
@@ -263,7 +265,8 @@ public class OnPolicyMC {
 		//System.out.println(Q.size());
 		for (int i=0;i<11;i++){
 			for (int j=0;j<11;j++){
-				for (String action : Actions){
+				key = new State(new Position(i,j), new Position(5,5));
+				/*for (String action : Actions){
 					key = new State(new Position(i,j), new Position(5,5), action);
 				//key = "["+i+"]["+j+"][5][5]";
 				//action = key.getAction();
@@ -271,7 +274,9 @@ public class OnPolicyMC {
 				//System.out.printf("%s\t",action);
 					System.out.print("["+i+"]"+"["+j+"]"+"[5][5]-"+action+" ");
 					System.out.println(Q.get(key));
-				}
+				}*/
+				String action = Piprime.getAction(key);
+				System.out.printf("%s\t",action);
 			}
 			System.out.println();
 			
