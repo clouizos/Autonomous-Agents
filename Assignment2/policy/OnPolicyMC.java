@@ -14,6 +14,7 @@ public class OnPolicyMC {
 	private static Map<State, Double> Q;
 	private static Map<State, Double> prob;
 	private static Map<State, ArrayList<Double>> returns;
+	private static Map<String, String> bestActioninState;
 	//private Map<String, Double> V;
 	private Policy preyPolicy;
 	private static ESoftPolicy Pi;
@@ -29,7 +30,6 @@ public class OnPolicyMC {
 	
 	public void initialize(){
 		Actions = ArbitraryPolicy.getAllActions();
-		
 		//The key is String consist of State-action pair, and the Value is double.
 		Q = new HashMap<State, Double>();
 		prob = new HashMap<State, Double>();
@@ -75,13 +75,16 @@ public class OnPolicyMC {
 			predAction = Pi.getAction(currentState);
 			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), predAction),getReward(currentState),predAction));
 			currentState.setPredator(currentState.getPredator().move(predAction));
+			//System.out.println("current state reward:"+getReward(currentState));
 			//Save the last State
-			if (currentState.endState())
+			if (currentState.endState()){
 				dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey(), null),getReward(currentState),null));
-			preyAction = preyPolicy.getAction(currentState);
-			currentState.setPrey(currentState.getPrey().move(preyAction));
-			Position predproj = currentState.getPredator().transformPrey55(currentState.getPrey());
-			currentState.updatePosition(predproj, preyDefault);
+			}else{
+				preyAction = preyPolicy.getAction(currentState);
+				currentState.setPrey(currentState.getPrey().move(preyAction));
+				Position predproj = currentState.getPredator().transformPrey55(currentState.getPrey());
+				currentState.updatePosition(predproj, preyDefault);
+			}
 			//r = getReward(currentState);
 		}while (! currentState.endState());
 		//System.out.println("Generated episode that ends in "+counter+" moves!");
@@ -95,6 +98,7 @@ public class OnPolicyMC {
 		ArrayList<DataEpisode> dataEpisode = new ArrayList<DataEpisode>();
 		int counter=0;
 		System.out.println("controling...");
+		double Return = 0.0;
 		do{
 			counter++;
 			//this.Pi = new EGreedyPolicy(OnPolicyMC.Q);
@@ -102,6 +106,7 @@ public class OnPolicyMC {
 				 dataEpisode.clear();
 				 dataEpisode =  generateEpisode();
 			 }while (dataEpisode.size()<2);
+			 System.out.println("Episode size:"+dataEpisode.size());
 			 //-2 because we exclude for checking the terminal state
 			 /*
 			 int tau = 0;
@@ -147,7 +152,7 @@ public class OnPolicyMC {
 							 break;	 
 						 } 
 				 //double w=1.0;
-				 double Return=0.0;
+				 //double Return=0.0;
 				 //Product of 1/piPrime(s_k,a_k)
 				 for (int k=t+1;k<dataEpisode.size();k++){
 					 //For now we just use 0.5 since the probability of taking action in
@@ -168,6 +173,7 @@ public class OnPolicyMC {
 				 //this.D.put(pair, this.D.get(pair)+w);
 				 returns.put(currState, tempreturns);
 				 Q.put(currState, average_returns);
+				 Return = 0.0;
 			 }
 //			 for (Map.Entry<String, Double> entry : this.Q.entrySet()) {
 //				    String key = entry.getKey();
@@ -224,17 +230,18 @@ public class OnPolicyMC {
 				 }
 			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
-		}while(counter < 10000);
+		}while(counter < 1000);
 		
 	}
 	
 	private double calculateAverage(ArrayList <Double> returns) {
-		  Double sum = 0.0;
+		  double sum = 0.0;
+		  //System.out.println(returns);
 		  if(!returns.isEmpty()) {
-		    for (Double return_ : returns) {
+		    for (double return_ : returns) {
 		        sum += return_;
 		    }
-		    return sum.doubleValue() / returns.size();
+		    return sum / returns.size();
 		  }
 		  return sum;
 		}
@@ -256,6 +263,7 @@ public class OnPolicyMC {
 		OnPolicyMC on = new OnPolicyMC(Pi);
 		
 		on.doControl();
+		bestActioninState = new HashMap<String, String>();
 		ESoftPolicy Piprime = new ESoftPolicy(-1.0);
 		Piprime.setPolicyProb(Pi.getPolicyProb());
 		//String key;
@@ -277,9 +285,28 @@ public class OnPolicyMC {
 				}*/
 				String action = Piprime.getAction(key);
 				System.out.printf("%s\t",action);
+				bestActioninState.put(key.toString(), action);
 			}
-			System.out.println();
-			
+			System.out.println();	
+		}
+		System.out.println();
+		for (int i=0;i<11;i++){
+			for (int j=0;j<11;j++){
+				key = new State(new Position(i,j), new Position(5,5));
+				/*for (String action : Actions){
+					key = new State(new Position(i,j), new Position(5,5), action);
+				//key = "["+i+"]["+j+"][5][5]";
+				//action = key.getAction();
+				//action = ((ArbitraryPolicy)on.getPi()).getPolicyCollections().get(key);
+				//System.out.printf("%s\t",action);
+					System.out.print("["+i+"]"+"["+j+"]"+"[5][5]-"+action+" ");
+					System.out.println(Q.get(key));
+				}*/
+				String action = bestActioninState.get(key.toString());
+				State keyQ = new State(new Position(i,j), new Position(5,5), action);
+				System.out.printf("%.2f\t",Q.get(keyQ));
+			}
+			System.out.println();	
 		}
 	}
 }

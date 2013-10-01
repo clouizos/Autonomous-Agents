@@ -2,7 +2,6 @@ package policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -94,9 +93,6 @@ public class ESoftPolicy implements Policy{
 	}	
 
 	public static void main(String[] args){
-		String state = "Predator(1,5), Prey(0,0)";
-		Map<String, Double> value=null;
-		ESoftPolicy esoft = new ESoftPolicy(0.1);
 		
 	}
 	

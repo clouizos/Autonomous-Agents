@@ -37,7 +37,8 @@ public class TestsimulationTD {
     // SoftMax with temperature tau = 0.1
     SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
-    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+    //QLearning predPolicy = new QLearning(gamma, alpha, policy);
+    Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	/* fill look up table if Value iteration Policy is run
@@ -78,8 +79,8 @@ public class TestsimulationTD {
     		
     		//predator move on new state(prey)
     		//updates the state according to predator move
-    		predator = predator.move(move);
     		oldState = new State(currentState, move);
+    		predator = predator.move(move);
     		currentState.setPredator(predator);
     		move = predPolicy.getAction(currentState);
     		if(verbose) {
