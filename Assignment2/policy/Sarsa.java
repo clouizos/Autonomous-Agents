@@ -14,8 +14,9 @@ public class Sarsa extends QLearning{
 		State currentState = cs.projectState();
 		State nextState = nextS.projectState();
 		double currentQ = (Double) qtable.get(currentState);
+		double nextQ = (Double) qtable.get(nextS);
 		double qUpdated = currentQ + alpha*(getReward(nextState) 
-				+ gamma*argmaxQ(nextState) - currentQ);
+				+ gamma*nextQ - currentQ);
 		qtable.put(currentState, qUpdated);
 	}
 

@@ -14,3 +14,9 @@ PolicyEvalReduced.class
 /SoftMax.class
 /OnPolicyMC.class
 /Sarsa.class
+/ArbitraryPolicy.class
+/DataEpisode.class
+/EGreedyPolicy.class
+/ESoftPolicy.class
+/OffPolicyMC.class
+/QLearning.class

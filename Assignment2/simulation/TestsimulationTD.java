@@ -51,13 +51,15 @@ public class TestsimulationTD {
 	
     boolean verbose=false;
     int nrRuns = 10000;
-    testQ(predPolicy, preyPolicy, verbose, nrRuns);
+    //testQ(predPolicy, preyPolicy, verbose, nrRuns);
+    testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     }
     
     // TODO: Change to Sarsa
     public static void testSarsa(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
+    	String move = predPolicy.getAction(currentState);
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
@@ -76,10 +78,10 @@ public class TestsimulationTD {
     		
     		//predator move on new state(prey)
     		//updates the state according to predator move
-    		String move = predPolicy.getAction(currentState);
     		predator = predator.move(move);
     		oldState = new State(currentState, move);
     		currentState.setPredator(predator);
+    		move = predPolicy.getAction(currentState);
     		if(verbose) {
     		show("\npredator moved: "+move);
     		show("Predator: " + predator.toString());
@@ -96,7 +98,6 @@ public class TestsimulationTD {
     		show("Prey: " + prey.toString());
     		}
     		((QLearning)predPolicy).updateQ(oldState, currentState);
-    		
     		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");
