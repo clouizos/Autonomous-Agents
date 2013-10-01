@@ -61,6 +61,7 @@ public class TestsimulationTD {
     	State currentState = initS();
     	State oldState;
     	String move = predPolicy.getAction(currentState);
+    	currentState.setAction(move);
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
@@ -82,7 +83,6 @@ public class TestsimulationTD {
     		oldState = new State(currentState, move);
     		predator = predator.move(move);
     		currentState.setPredator(predator);
-    		move = predPolicy.getAction(currentState);
     		if(verbose) {
     		show("\npredator moved: "+move);
     		show("Predator: " + predator.toString());
@@ -91,6 +91,7 @@ public class TestsimulationTD {
     		//prey move
     		//updates the state upon the prey move
     		move = preyPolicy.getAction(currentState);
+    		currentState.setAction(move);
     		prey = prey.move(move);
     		// update state after prey moves
     		currentState.setPrey(prey);
@@ -99,6 +100,7 @@ public class TestsimulationTD {
     		show("Prey: " + prey.toString());
     		}
     		((QLearning)predPolicy).updateQ(oldState, currentState);
+    		move = predPolicy.getAction(currentState);
     		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");

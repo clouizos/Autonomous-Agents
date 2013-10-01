@@ -165,6 +165,10 @@ public class State {
     	this.prey = prey;
     }
     
+    public void setAction(String move) {
+    	action = move;
+    }
+    
     // used in assignment 1 to calculate prey action probability
 	public String getPreyaction() {
 		return action;
