@@ -83,7 +83,7 @@ public class ESoftPolicy implements Policy{
 			actprob.put(bestAction, maxProb);
 			return randomKey;	
 		}
-		
+		//System.out.println("best action");
 		//else return the optimal one calculated above
 		return bestAction;
 	}
@@ -92,9 +92,9 @@ public class ESoftPolicy implements Policy{
 		return policyProb.get(state.toString()).get(action);
 	}	
 
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		
-	}
+	}*/
 	
 	public Map<String, Map<String, Double>> getPolicyProb() {
 		return policyProb;
