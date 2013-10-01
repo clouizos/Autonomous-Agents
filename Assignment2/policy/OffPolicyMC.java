@@ -39,9 +39,11 @@ public class OffPolicyMC {
 	private Map<String, Double> Q;
 	private Map<String, Double> N;
 	private Map<String, Double> D;
+	private Map<String, Double> W;
 	private Policy preyPolicy;
 	private Policy Pi;
 	private Policy PiPrime;
+	private double gamma = 0.8;
 	private ArrayList<String> Actions=new ArrayList<String>();
 	/**
 	 * @param args
@@ -54,19 +56,21 @@ public class OffPolicyMC {
 	}
 	
 	public void initialize(){
-		Actions = ArbitraryPolicy.getAllActions();
+		this.Actions = ArbitraryPolicy.getAllActions();
 		
 		//The key is String consist of State-action pair, and the Value is double.
 		Q = new HashMap<String, Double>();
 		N = new HashMap<String, Double>();
 		D = new HashMap<String, Double>();
+		W = new HashMap<String, Double>();
 		for (int i=0;i<11;i++)
 			for (int j=0;j<11;j++)
 				for (String action:this.Actions){
 					String key = "["+i+"]["+j+"][5][5]-"+action;
-					Q.put(key,Math.random() * 5+1);
+					Q.put(key,0.0);
 					N.put(key,0.0);
 					D.put(key,0.0);
+					W.put(key,0.0);
 				}
 	}
 	
@@ -93,20 +97,21 @@ public class OffPolicyMC {
 		State currentState;
 		currentState = new State(new Position(i,j),new Position(5,5));
 		int counter=0;
-		do {
+		while (! currentState.endState()) {
 			counter++;
 			predAction = PiPrime.getAction(currentState);
-			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey()),r,predAction));
+			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey()),getReward(currentState),predAction));
 			currentState.setPredator(currentState.getPredator().move(predAction));
-			preyAction = preyPolicy.getAction(currentState);
-			currentState.setPrey(currentState.getPrey().move(preyAction));
-			Position predproj = currentState.getPredator().transformPrey55(currentState.getPrey());
-			currentState.updatePosition(predproj, preyDefault);
-			r = getReward(currentState);
-			//Save the last State
-			if (currentState.endState())
-				dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey()),r,null));
-		}while (! currentState.endState());
+			if (currentState.endState()){
+				//Save the last State
+				dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey()),getReward(currentState),null));
+			} else{
+				preyAction = preyPolicy.getAction(currentState);
+				currentState.setPrey(currentState.getPrey().move(preyAction));
+				Position predproj = currentState.getPredator().transformPrey55(currentState.getPrey());
+				currentState.updatePosition(predproj, preyDefault);
+			}
+		}
 		return dataEpisode;
 	}
 	
@@ -129,8 +134,7 @@ public class OffPolicyMC {
 					 break;
 				 }
 			 }
-			 
-			 
+			 System.out.println(counter+" Size episode "+dataEpisode.size()+" Tau : "+(dataEpisode.size()-tau));
 			 State tempState;
 			 String tempStateString;
 			 String tempAction;
@@ -151,28 +155,33 @@ public class OffPolicyMC {
 				 tempStateString = tempPair[0];
 				 tempAction = tempPair[1];
 				 //looking for the time of first occurrence of s,a in the table
-				 if (tableFirstTimeOccurence.get(tempStateString) != null)
-					 t = tableFirstTimeOccurence.get(tempStateString);
+				 if (tableFirstTimeOccurence.get(pair) != null)
+					 t = tableFirstTimeOccurence.get(pair);
 				 else //If it doesn't exist in the table so just find, and add to the table
 					 for (int j=tau;j<dataEpisode.size();j++)
-						 if (dataEpisode.get(j).getS().toString().equals(tempStateString)){
+						 if ((dataEpisode.get(j).getS().toString()+"-"+dataEpisode.get(j).getAction()).equals(pair)){
 							 t = j;
-							 tableFirstTimeOccurence.put(tempStateString, j);
+							 tableFirstTimeOccurence.put(pair, j);
 							 break;	 
 						 } 
 				 double w=1.0;
 				 double Return=0.0;
 				 //Product of 1/piPrime(s_k,a_k)
+				 double power=0;
 				 for (int k=t+1;k<dataEpisode.size()-1;k++){
 					 //For now we just use 0.5 since the probability of taking action in
 					 //behaviour policy is equally likely
 					 w*=1/((EGreedyPolicy)this.PiPrime).getProbability(dataEpisode.get(k).getS(), dataEpisode.get(k).getAction());
-					 Return+=dataEpisode.get(k).getReward();
+					 Return+=dataEpisode.get(k).getReward()*Math.pow(this.gamma, power++);
 				 }
-				 Return+=dataEpisode.get(dataEpisode.size()-1).getReward();
-				 this.N.put(pair, this.N.get(pair)+w*Return);
-				 this.D.put(pair, this.D.get(pair)+w);
-				 this.Q.put(pair, this.N.get(pair)/this.D.get(pair));
+				 Return+=dataEpisode.get(dataEpisode.size()-1).getReward()*Math.pow(this.gamma, power);
+//				 this.N.put(pair, this.N.get(pair)+w*Return);
+//				 this.D.put(pair, this.D.get(pair)+w);
+//				 this.Q.put(pair, this.N.get(pair)/this.D.get(pair));
+				 //incremental
+				 this.W.put(pair, this.W.get(pair)+w);
+				 this.Q.put(pair, this.Q.get(pair)+(w/this.W.get(pair))*(Return-this.Q.get(pair)));
+//				 System.out.println("Update Q at "+pair+"with value "+this.Q.get(pair));
 			 }
 //			 for (Map.Entry<String, Double> entry : this.Q.entrySet()) {
 //				    String key = entry.getKey();
@@ -188,7 +197,9 @@ public class OffPolicyMC {
 //				 System.out.println(action);
 			 for (int i=0;i<11;i++)
 				 for (int j=0;j<11;j++){
-					 double maxQ=-10;
+					 if (i==5&&j==5)
+						 continue;
+					 double maxQ=0.0;
 					 String maxAction=null;
 					 //Iterate over all actions
 //					 System.out.println("Size actions "+Actions.size());
@@ -205,18 +216,55 @@ public class OffPolicyMC {
 					 //Assign max action to the policy
 					 ((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
 				 }
-			 System.out.println("Size Q : "+this.Q.size());
-			 System.out.println("Size N : "+this.N.size());
-			 System.out.println("Size D : "+this.D.size());
-			 System.out.println("Size table : "+tableFirstTimeOccurence);
+//			 System.out.println("Size Q : "+this.Q.size());
+//			 System.out.println("Size N : "+this.N.size());
+//			 System.out.println("Size D : "+this.D.size());
+//			 System.out.println("Size table : "+tableFirstTimeOccurence);
 //			 System.out.println("Size D : "+this.D.size());
 			 
 			 
-		}while (counter <20000);
+		}while (counter <30000);
 	}
 	
 	public Policy getPi() {
 		return Pi;
+	}
+	
+	public void printMaxQ(){
+		String key;
+		double Qval;
+		
+		String maxAction;
+//		String action;
+		ArrayList<String> Actions = ArbitraryPolicy.getAllActions();
+		for (int i=0;i<11;i++){
+			for (int j=0;j<11;j++){
+//				key = this.statespace.toState(i, j, 0, 0);
+				
+				if (i==0 && j==0){
+					System.out.printf("%f\t",0.0);
+					continue;
+				}
+				double maxQ= 0.0;
+				for (String action : Actions){
+					 key = "["+j+"]["+i+"][5][5]-"+action;
+//					 String stateAction = key+"-"+action;
+//					 System.out.println(stateAction);
+					 Qval = this.Q.get(key);
+//					 System.out.println(action+" "+Qval);
+//					 System.out.println(Qval);
+					 if (Qval>=maxQ){
+						 maxQ = Qval;
+						 maxAction = action;
+					 }
+//					 System.out.println(action+" "+maxQ);
+					 
+				 }
+//				action = ((ArbitraryPolicy)off.getPi()).getPolicyCollections().get(key);
+				System.out.printf("%f\t",maxQ);
+			}
+			System.out.println();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -231,11 +279,12 @@ public class OffPolicyMC {
 //		    String value = entry.getValue();
 //		    System.out.println(key);
 //		}
+		off.printMaxQ();
 		String key;
 		String action;
 		for (int i=0;i<11;i++){
 			for (int j=0;j<11;j++){
-				key = "["+i+"]["+j+"][5][5]";
+				key = "["+j+"]["+i+"][5][5]";
 				action = ((ArbitraryPolicy)off.getPi()).getPolicyCollections().get(key);
 				System.out.printf("%s\t",action);
 			}
