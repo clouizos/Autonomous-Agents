@@ -51,10 +51,75 @@ public class TestsimulationTD {
 	
     boolean verbose=false;
     int nrRuns = 10000;
-    test(predPolicy, preyPolicy, verbose, nrRuns);
+    testQ(predPolicy, preyPolicy, verbose, nrRuns);
     }
     
-    public static void test(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
+    // TODO: Change to Sarsa
+    public static void testSarsa(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
+    	State currentState = initS();
+    	State oldState;
+    	while(timesRun < nrRuns) {
+    		if(resetGrid){
+    			runs = 0;
+    			show("\nResetting Grid for the "+timesRun+" run!");
+    			// reset prey and predator positions
+    			currentState = initS();
+    			resetGrid = false;
+    			//pauseProg();
+    		}
+
+    		//show(currentState.getPrey().toString()+" start rel coordinates of prey at begin loopbody");
+    		if(verbose) {
+    		show("\n===========\nAt beginloop: Predator "+ predator.toString());
+    		show("At beginloop: Prey "+ prey.toString()+'\n');
+    		}
+    		
+    		//predator move on new state(prey)
+    		//updates the state according to predator move
+    		String move = predPolicy.getAction(currentState);
+    		predator = predator.move(move);
+    		oldState = new State(currentState, move);
+    		currentState.setPredator(predator);
+    		if(verbose) {
+    		show("\npredator moved: "+move);
+    		show("Predator: " + predator.toString());
+    		}
+    		
+    		//prey move
+    		//updates the state upon the prey move
+    		move = preyPolicy.getAction(currentState);
+    		prey = prey.move(move);
+    		// update state after prey moves
+    		currentState.setPrey(prey);
+    		if(verbose) {
+    		show("prey move: "+move);
+    		show("Prey: " + prey.toString());
+    		}
+    		((QLearning)predPolicy).updateQ(oldState, currentState);
+    		
+    		
+    		if(currentState.endState()){
+    			show("\nPredator catched the prey in "+runs+" runs!");
+    			timesRun++;
+    			allRuns.add(runs);
+    			resetGrid = true;
+    			//break;
+    		}else{
+    			runs++;
+    		}
+    		//pauseProg();
+    	}
+	
+    //((QLearning)predPolicy).printTable(new Position(5,5));
+    //((QLearning)predPolicy).printList(new Position(5,5));
+	System.out.println("\nAll runs overview:");
+	System.out.println(allRuns);
+	
+	double stdDev = getStdDev(allRuns);
+	System.out.println("The standard deviation is: "+stdDev);
+    }
+    
+    public static void testQ(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
     	while(timesRun < nrRuns) {

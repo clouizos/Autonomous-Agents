@@ -13,3 +13,4 @@ PolicyEvalReduced.class
 /EGreedyPolicyTD.class
 /SoftMax.class
 /OnPolicyMC.class
+/Sarsa.class
