@@ -285,7 +285,7 @@ public class OnPolicyMC {
 		//System.out.println(Q.size());
 		for (int i=0;i<11;i++){
 			for (int j=0;j<11;j++){
-				key = new State(new Position(i,j), new Position(5,5));
+				key = new State(new Position(j,i), new Position(5,5));
 				/*for (String action : Actions){
 					key = new State(new Position(i,j), new Position(5,5), action);
 				//key = "["+i+"]["+j+"][5][5]";
@@ -304,7 +304,7 @@ public class OnPolicyMC {
 		System.out.println();
 		for (int i=0;i<11;i++){
 			for (int j=0;j<11;j++){
-				key = new State(new Position(i,j), new Position(5,5));
+				key = new State(new Position(j,i), new Position(5,5));
 				/*for (String action : Actions){
 					key = new State(new Position(i,j), new Position(5,5), action);
 				//key = "["+i+"]["+j+"][5][5]";
@@ -315,7 +315,7 @@ public class OnPolicyMC {
 					System.out.println(Q.get(key));
 				}*/
 				String action = bestActioninState.get(key.toString());
-				State keyQ = new State(new Position(i,j), new Position(5,5), action);
+				State keyQ = new State(new Position(j,i), new Position(5,5), action);
 				System.out.printf("%.3f\t",Q.get(keyQ));
 			}
 			System.out.println();	
