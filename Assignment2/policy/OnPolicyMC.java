@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import statespace.Position;
 import statespace.State;
-
 import simulation.Testsimulation;
 
 public class OnPolicyMC {
@@ -345,6 +345,7 @@ public class OnPolicyMC {
 		
 	    try {
 		    on.output();
+		    on.output_policy();
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -374,6 +375,21 @@ public class OnPolicyMC {
 	 		File policyfile = new File("policOnMC.data");
 			policyfile.delete();
 			policyfile.createNewFile();
+			Set entries = bestActioninState.entrySet();
+			Iterator entryIter = entries.iterator();
+		    //System.out.println("The map contains the following associations:");
+		      while (entryIter.hasNext()) {
+		         Map.Entry entry = (Map.Entry)entryIter.next();
+		         Object key = entry.getKey();  // Get the key from the entry.
+		         Object value = entry.getValue();  // Get the value.
+		         //System.out.println( "   (" + key + "," + value + ")" );
+		         try{
+		        	 write(policyfile, (String)key+"=>"+(String)value+"\n", true);
+		         }catch(Exception e){
+		        	 
+		         }
+		      }
+		      /*
 			if(!bestActioninState.isEmpty()) {
 				Set<String> keys = bestActioninState.keySet();
 				for(String times : bestActioninState){
@@ -391,7 +407,7 @@ public class OnPolicyMC {
 			    }
 			} else
 			    show("\nRuns each episode is empty!!");
-	 		
+	 		*/
 	 	}
 	    
 	    // outputs the state actions into a file policy.data
@@ -399,21 +415,6 @@ public class OnPolicyMC {
 		File policyfile = new File("convergenceOnMC.data");
 		policyfile.delete();
 		policyfile.createNewFile();
-		if(!runsEachEpisode.isEmpty()) {
-			for(int times : runsEachEpisode){
-		    //Enumeration enu = stateactions.keys();
-		    //while(enu.hasMoreElements()) {
-			//String state = (String) enu.nextElement();
-			//String action = (String) stateactions.get(state);
-				try {
-					write(policyfile, String.valueOf(times)+"\n", true);
-				} catch (Exception e) {
-			    // TODO Auto-generated catch block
-			    e.printStackTrace();
-			    System.out.println("Cannot write to file");
-			}File policyfile = new File("convergenceOnMC.data");
-			policyfile.delete();
-			policyfile.createNewFile();
 			if(!runsEachEpisode.isEmpty()) {
 				for(int times : runsEachEpisode){
 			    //Enumeration enu = stateactions.keys();
@@ -430,9 +431,7 @@ public class OnPolicyMC {
 			    }
 			} else
 			    show("\nRuns each episode is empty!!");
-		    }
-		} else
-		    show("\nRuns each episode is empty!!");
+	    	
 	    }
 	    
 	    
