@@ -14,6 +14,8 @@ import java.util.Set;
 import statespace.Position;
 import statespace.State;
 
+import simulation.Testsimulation;
+
 public class OnPolicyMC {
 	private static Map<State, Double> Q;
 	private static Map<State, ArrayList<Double>> returns;
@@ -237,10 +239,12 @@ public class OnPolicyMC {
 					 }
 					 
 					 //adaptive epsilon
-					 //if (counter%500==0){
-					//	e = e*0.8;
-					//	Pi.setEpsilon(e);
-					 //}
+					 
+					 if (counter%100==0){
+						e = e*0.8;
+						Pi.setEpsilon(e);
+					 }
+					 
 					 
 					 //Assign max action to the policy
 					 //((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
@@ -248,6 +252,15 @@ public class OnPolicyMC {
 			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
 		}while(counter < 20000);
+		
+		
+		/*
+		double sum = 0.0;
+		for (int i=0;i<runsEachEpisode.size();i++)
+			sum+=runsEachEpisode.get(i);
+		double average = (double)sum/runsEachEpisode.size();
+		System.out.println("average "+average);
+		*/
 		
 	}
 	
@@ -276,7 +289,7 @@ public class OnPolicyMC {
 	
 	public static void main(String[] args) {
 		//ArbitraryPolicy Pi = new ArbitraryPolicy();
-		ESoftPolicy Pi = new ESoftPolicy(0.1);
+		ESoftPolicy Pi = new ESoftPolicy(0.5);
 		OnPolicyMC on = new OnPolicyMC(Pi);
 		
 		on.doControl();
@@ -327,6 +340,9 @@ public class OnPolicyMC {
 			System.out.println();	
 		}
 		
+		double stdDev = Testsimulation.getStdDev(runsEachEpisode);
+		System.out.println("The standard deviation is: "+stdDev);
+		
 	    try {
 		    on.output();
 		} catch (Exception e) {
@@ -376,5 +392,6 @@ public class OnPolicyMC {
 		} else
 		    show("\nRuns each episode is empty!!");
 	    }
+	    
 	    
 }
