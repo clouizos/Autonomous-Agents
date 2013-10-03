@@ -8,10 +8,11 @@ import statespace.State;
 
 public class EGreedyPolicy implements Policy{
 	private Map<String, Double> Q;
-	private double e=0.1;
+	private double e;
 	
-	public EGreedyPolicy(Map<String, Double> Q){
+	public EGreedyPolicy(Map<String, Double> Q, double epsilon){
 		this.Q = Q;
+		e = epsilon;
 	}
 	
 	public String getAction(State s){

@@ -43,6 +43,7 @@ public class OffPolicyMC {
 	private Map<String, Double> N;
 	private Map<String, Double> D;
 	private Map<String, Double> W;
+	private ArrayList<int[]> allStates = new ArrayList<int[]>();
 	private Policy preyPolicy;
 	private Policy Pi;
 	private Policy PiPrime;
@@ -68,7 +69,13 @@ public class OffPolicyMC {
 		D = new HashMap<String, Double>();
 		W = new HashMap<String, Double>();
 		for (int i=0;i<11;i++)
-			for (int j=0;j<11;j++)
+			for (int j=0;j<11;j++){
+				if (j!=5 && i!=5){
+					int[] tempInitPos=new int[2];
+					tempInitPos[0]=i;
+					tempInitPos[1]=j;
+					this.allStates.add(tempInitPos);	
+				}
 				for (String action:this.Actions){
 					String key = "["+i+"]["+j+"][5][5]-"+action;
 					Q.put(key,0.0);
@@ -76,6 +83,7 @@ public class OffPolicyMC {
 					D.put(key,0.0);
 					W.put(key,0.0);
 				}
+			}
 	}
 	
 	public double getReward(State s){
@@ -86,12 +94,12 @@ public class OffPolicyMC {
 	}
 	
 	//
-	public ArrayList<DataEpisode> generateEpisode(){
+	public ArrayList<DataEpisode> generateEpisode(int i, int j){
 		ArrayList<DataEpisode> dataEpisode = new ArrayList<DataEpisode>();
 		//Choose Initial State(position of predator), and follow policy until terminate
 		Random generator = new Random();
-		int i = generator.nextInt(11);
-		int j = generator.nextInt(11);
+//		i = generator.nextInt(11);
+//		j = generator.nextInt(11);
 //		Position pred = new Position(i,j);
 //		Position prey = new Position(5,5);
 		Position preyDefault = new Position(5,5);
@@ -123,12 +131,21 @@ public class OffPolicyMC {
 		this.preyPolicy = new RandomPolicyPrey();
 		ArrayList<DataEpisode> dataEpisode = new ArrayList<DataEpisode>();
 		int counter=0;
+		double epsilon = 0.5;
+		int index = -1;
 		do{
 			counter++;
-			this.PiPrime = new EGreedyPolicy(this.Q);
+			index++;
+			if (index==this.allStates.size())
+				index = 0;
+			if (counter%500==0)
+				epsilon = epsilon*0.8;
+			epsilon = 0.1;
+			this.PiPrime = new EGreedyPolicy(this.Q,epsilon);
+			int[] initialStart = allStates.get(index);
 			 do{
 				 dataEpisode.clear();
-				 dataEpisode =  generateEpisode();
+				 dataEpisode =  generateEpisode(initialStart[0],initialStart[1]);
 			 }while (dataEpisode.size()<2);
 			 runsEachEpisode.add(dataEpisode.size());
 			 //-2 because we exclude for checking the terminal state
@@ -228,7 +245,7 @@ public class OffPolicyMC {
 //			 System.out.println("Size D : "+this.D.size());
 			 
 			 
-		}while (counter <30000);
+		}while (counter <12000);
 	}
 	
 	public Policy getPi() {
@@ -270,6 +287,13 @@ public class OffPolicyMC {
 			}
 			System.out.println();
 		}
+//		\\print average
+		int sum=0;
+		for (int i=runsEachEpisode.size()-120;i<runsEachEpisode.size();i++)
+			sum+=runsEachEpisode.get(i);
+		double average = (double)sum/120;
+		System.out.println("average "+average);
+		
 	}
 
 	public static void main(String[] args) {
