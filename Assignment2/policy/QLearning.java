@@ -1,6 +1,10 @@
 package policy;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import statespace.*;
@@ -17,9 +21,10 @@ public class QLearning implements Policy {
 	 * alpha = small positive number; learning rate
 	 */
     protected HashMap<State, Double> qtable;
+    protected HashMap<String, String> stateactions = new HashMap<String, String>();
     protected double gamma, alpha;
-    private static EGreedyPolicyTD policy;
-    //private static SoftMax policy;
+    //private static EGreedyPolicyTD policy;
+    private static SoftMax policy;
     private static ArrayList<String> actions = ArbitraryPolicy.getAllActions();
     
     /*
@@ -29,8 +34,8 @@ public class QLearning implements Policy {
 	public QLearning(double g, double a, Policy p){
 		
 		// policy could be e-greedy or softmax
-	    policy = (EGreedyPolicyTD) p;
-	    //policy = (SoftMax) p;
+	    //policy = (EGreedyPolicyTD) p;
+	    policy = (SoftMax) p;
 	    /* qtable init
 	     * qtable consist of all possible states+actions
 	     * we consider the reduced q(s,a) where the statespace is reduced;
@@ -38,7 +43,7 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(15.0);
+		initQ(0.0);
 	    gamma = g;
 	    alpha = a;	      
 	}
@@ -125,7 +130,7 @@ public class QLearning implements Policy {
     		if(nextline < i) {show("\n");}
     		for(int j = 0; j < 11; j++) {
     			for (String action : actions){
-			    	State s = new State(new Position(i, j), prey, action);
+			    	State s = new State(new Position(j, i), prey, action);
 			    	show(String.format( "%.3f", (double)qtable.get(s))+ " ");
     			}	
     		}
@@ -137,10 +142,81 @@ public class QLearning implements Policy {
     	for(int i = 0; i < 11; i++) {
 		    for(int j = 0; j < 11; j++) {
 		    	for (String action : actions){
-			    	State s = new State(new Position(i, j), prey, action);
+			    	State s = new State(new Position(j, i), prey, action);
 			    	show('\n'+s.toString()+s.getAction()+ " statevalue: " +(double)qtable.get(s));
 		    	}
 		    }
 		}
+    }
+    
+    public void printActionsTable() {
+    State key;
+    int y = 0;
+    State state;
+    String action;
+    if(!qtable.isEmpty()) {
+	    Enumeration enu = Collections.enumeration(qtable.keySet());
+	    while(enu.hasMoreElements()) {
+		state = (State) enu.nextElement();
+		if(state.getAction()==null) show("NULLL");
+		action = state.getAction();
+		stateactions.put(state.toString(), action);
+	    }
+	    for (int i=0;i<11;i++){
+			for (int j=0;j<11;j++){
+				key = new State(new Position(j,i), new Position(5,5));
+				String action2 = stateactions.get(key.toString());
+				//State keyQ = new State(new Position(j,i), new Position(5,5), action);
+				System.out.printf("%s\t", action2);
+			}
+			System.out.println();	
+			}
+	} else
+	    show("Qtable table is empty!!");
+	}
+    
+    /*
+     *  IO methods, for writing the state actions into a file, 
+     *  which can be used to fill up a lookup table when the policy 
+     *  is executed within the simulator 
+     */
+    
+    public static void write(File file, String string, boolean append) throws Exception
+    {
+	if(append==false)
+	{
+	    file.delete();
+	    file.createNewFile();
+	}
+
+	FileOutputStream WriteFile = new FileOutputStream(file, true);
+	OutputStreamWriter WriteBuff = new OutputStreamWriter(WriteFile, "UTF8");
+	WriteBuff.write(string);
+	WriteBuff.close();
+	WriteFile.close();
+    }
+    
+    // outputs the state actions into a file policy.data
+    public void output() throws Exception {
+	File policyfile = new File("policy.data");
+	policyfile.delete();
+	policyfile.createNewFile();
+	String state;
+	String action;
+	if(!stateactions.isEmpty()) {
+	    Enumeration enu = Collections.enumeration(stateactions.keySet());
+	    while(enu.hasMoreElements()) {
+		state = (String) enu.nextElement();
+		action = (String) stateactions.get(state);
+		try {
+		    write(policyfile, state+"=>"+action+"\n", true);
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		    System.out.println("Cannot write to file");
+		}
+	    }
+	} else
+	    show("State actions table is empty!!");
     }
 }

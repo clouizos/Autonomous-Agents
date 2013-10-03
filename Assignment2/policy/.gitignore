@@ -20,3 +20,5 @@ PolicyEvalReduced.class
 /ESoftPolicy.class
 /OffPolicyMC.class
 /QLearning.class
+/TestSimulation.class
+/TestPolicy.class

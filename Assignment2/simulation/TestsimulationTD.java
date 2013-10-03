@@ -32,12 +32,12 @@ public class TestsimulationTD {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    double gamma = 0.5;
-    double alpha = 0.1;
+    double gamma = 0.8;
+    double alpha = 0.8;
     // egreedy with epsilon = 0.1
-    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
     // SoftMax with temperature tau = 0.1
-    //SoftMax policy = new SoftMax(0.1);
+    SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
     QLearning predPolicy = new QLearning(gamma, alpha, policy);
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
@@ -53,17 +53,19 @@ public class TestsimulationTD {
 	}*/
 	
     boolean verbose=false;
-    int nrRuns = 10000;
+    int nrRuns = 100000;
     testQ(predPolicy, preyPolicy, verbose, nrRuns);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
+    predPolicy.printActionsTable();
     }
     
     // TODO: Change to Sarsa
     public static void testSarsa(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
-    	String move = predPolicy.getAction(currentState);
-    	currentState.setAction(move);
+    	String predmove = predPolicy.getAction(currentState);
+    	currentState.setAction(predmove);
+    	String preymove;
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
@@ -82,27 +84,27 @@ public class TestsimulationTD {
     		
     		//predator move on new state(prey)
     		//updates the state according to predator move
-    		oldState = new State(currentState, move);
-    		predator = predator.move(move);
+    		oldState = new State(currentState, predmove);
+    		predator = predator.move(predmove);
     		currentState.setPredator(predator);
     		if(verbose) {
-    		show("\npredator moved: "+move);
+    		show("\npredator moved: "+predmove);
     		show("Predator: " + predator.toString());
     		}
     		
     		//prey move
     		//updates the state upon the prey move
-    		move = preyPolicy.getAction(currentState);
-    		currentState.setAction(move);
-    		prey = prey.move(move);
+    		preymove = preyPolicy.getAction(currentState);
+    		currentState.setAction(preymove);
+    		prey = prey.move(preymove);
     		// update state after prey moves
     		currentState.setPrey(prey);
     		if(verbose) {
-    		show("prey move: "+move);
+    		show("prey move: "+preymove);
     		show("Prey: " + prey.toString());
     		}
-    		((QLearning)predPolicy).updateQ(oldState, currentState);
-    		move = predPolicy.getAction(currentState);
+    		((Sarsa)predPolicy).updateQ(oldState, currentState);
+    		predmove = predPolicy.getAction(currentState);
     		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");

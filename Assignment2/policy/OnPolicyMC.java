@@ -369,6 +369,30 @@ public class OnPolicyMC {
 		WriteBuff.close();
 		WriteFile.close();
 	    }
+	 
+	 	public void output_policy() throws Exception{
+	 		File policyfile = new File("policOnMC.data");
+			policyfile.delete();
+			policyfile.createNewFile();
+			if(!bestActioninState.isEmpty()) {
+				Set<String> keys = bestActioninState.keySet();
+				for(String times : bestActioninState){
+			    //Enumeration enu = stateactions.keys();
+			    //while(enu.hasMoreElements()) {
+				//String state = (String) enu.nextElement();
+				//String action = (String) stateactions.get(state);
+					try {
+						write(policyfile, String.valueOf(times)+"\n", true);
+					} catch (Exception e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				    System.out.println("Cannot write to file");
+				}
+			    }
+			} else
+			    show("\nRuns each episode is empty!!");
+	 		
+	 	}
 	    
 	    // outputs the state actions into a file policy.data
 	    public void output() throws Exception {
@@ -387,7 +411,25 @@ public class OnPolicyMC {
 			    // TODO Auto-generated catch block
 			    e.printStackTrace();
 			    System.out.println("Cannot write to file");
-			}
+			}File policyfile = new File("convergenceOnMC.data");
+			policyfile.delete();
+			policyfile.createNewFile();
+			if(!runsEachEpisode.isEmpty()) {
+				for(int times : runsEachEpisode){
+			    //Enumeration enu = stateactions.keys();
+			    //while(enu.hasMoreElements()) {
+				//String state = (String) enu.nextElement();
+				//String action = (String) stateactions.get(state);
+					try {
+						write(policyfile, String.valueOf(times)+"\n", true);
+					} catch (Exception e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				    System.out.println("Cannot write to file");
+				}
+			    }
+			} else
+			    show("\nRuns each episode is empty!!");
 		    }
 		} else
 		    show("\nRuns each episode is empty!!");
