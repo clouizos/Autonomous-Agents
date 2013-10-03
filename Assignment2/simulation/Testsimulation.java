@@ -108,7 +108,7 @@ public class Testsimulation {
 	System.out.println("The standard deviation is: "+stdDev);
     }
     
-    static double getAverage(ArrayList<Integer> allRuns){
+    public static double getAverage(ArrayList<Integer> allRuns){
     	double average = 0.0;
     	for (int i=0;i<allRuns.size();i++){
     		average += allRuns.get(i);
@@ -118,7 +118,7 @@ public class Testsimulation {
     	return average;
     }
     
-    static double getVariance(ArrayList<Integer> allRuns)
+    public static double getVariance(ArrayList<Integer> allRuns)
     {
         double average = getAverage(allRuns);
         double temp = 0;
@@ -127,7 +127,7 @@ public class Testsimulation {
         	return temp/allRuns.size();
     }
 
-    static double getStdDev(ArrayList<Integer> allRuns)
+    public static double getStdDev(ArrayList<Integer> allRuns)
     {
         return Math.sqrt(getVariance(allRuns));
     }

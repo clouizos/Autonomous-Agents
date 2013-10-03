@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import simulation.Testsimulation;
 import statespace.Position;
 import statespace.State;
 
@@ -138,7 +139,7 @@ public class OffPolicyMC {
 			index++;
 			if (index==this.allStates.size())
 				index = 0;
-			if (counter%500==0)
+			if (counter%100==0)
 				epsilon = epsilon*0.8;
 			epsilon = 0.1;
 			this.PiPrime = new EGreedyPolicy(this.Q,epsilon);
@@ -245,7 +246,7 @@ public class OffPolicyMC {
 //			 System.out.println("Size D : "+this.D.size());
 			 
 			 
-		}while (counter <12000);
+		}while (counter <20000);
 	}
 	
 	public Policy getPi() {
@@ -288,11 +289,12 @@ public class OffPolicyMC {
 			System.out.println();
 		}
 //		\\print average
-		int sum=0;
-		for (int i=runsEachEpisode.size()-120;i<runsEachEpisode.size();i++)
-			sum+=runsEachEpisode.get(i);
-		double average = (double)sum/120;
-		System.out.println("average "+average);
+//		int sum=0;
+//		for (int i=0;i<runsEachEpisode.size();i++)
+//			sum+=runsEachEpisode.get(i);
+//		double average = (double)sum/runsEachEpisode.size();
+		System.out.println(Testsimulation.getStdDev(runsEachEpisode));
+//		System.out.println("average "+average);
 		
 	}
 
