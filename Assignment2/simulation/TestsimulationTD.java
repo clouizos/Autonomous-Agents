@@ -32,12 +32,12 @@ public class TestsimulationTD {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    double gamma = 0.8;
-    double alpha = 0.8;
+    double gamma = 0.9;
+    double alpha = 0.1;
     // egreedy with epsilon = 0.1
-    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
     // SoftMax with temperature tau = 0.1
-    SoftMax policy = new SoftMax(0.1);
+    //SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
     QLearning predPolicy = new QLearning(gamma, alpha, policy);
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
@@ -103,8 +103,6 @@ public class TestsimulationTD {
     		show("prey move: "+preymove);
     		show("Prey: " + prey.toString());
     		}
-    		((Sarsa)predPolicy).updateQ(oldState, currentState);
-    		predmove = predPolicy.getAction(currentState);
     		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");
@@ -114,6 +112,8 @@ public class TestsimulationTD {
     			//break;
     		}else{
     			runs++;
+    			((Sarsa)predPolicy).updateQ(oldState, currentState);
+        		predmove = predPolicy.getAction(currentState);
     		}
     		//pauseProg();
     	}

@@ -23,8 +23,8 @@ public class QLearning implements Policy {
     protected HashMap<State, Double> qtable;
     protected HashMap<String, String> stateactions = new HashMap<String, String>();
     protected double gamma, alpha;
-    //private static EGreedyPolicyTD policy;
-    private static SoftMax policy;
+    private static EGreedyPolicyTD policy;
+    //private static SoftMax policy;
     private static ArrayList<String> actions = ArbitraryPolicy.getAllActions();
     
     /*
@@ -34,8 +34,8 @@ public class QLearning implements Policy {
 	public QLearning(double g, double a, Policy p){
 		
 		// policy could be e-greedy or softmax
-	    //policy = (EGreedyPolicyTD) p;
-	    policy = (SoftMax) p;
+	    policy = (EGreedyPolicyTD) p;
+	    //policy = (SoftMax) p;
 	    /* qtable init
 	     * qtable consist of all possible states+actions
 	     * we consider the reduced q(s,a) where the statespace is reduced;
@@ -52,9 +52,9 @@ public class QLearning implements Policy {
 	    double gamma = 0.5;
 	    double alpha = 0.1;
 	    // egreedy with epsilon = 0.1
-	    // EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
 	    // SoftMax with temperature tau = 0.1
-	    SoftMax policy = new SoftMax(0.1);
+	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy
 	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
 	    predPolicy.printTable(new Position(5,5));
@@ -91,7 +91,7 @@ public class QLearning implements Policy {
 		qtable.put(currentState, qUpdated);
 	}
 	
-	// argmax_a' of Q(s',a')
+	// argmax_a' of Q(s',a') output: value
 	public double argmaxQ(State nextState) {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
@@ -105,6 +105,24 @@ public class QLearning implements Policy {
     		}
     	}
 		return max;
+	}
+	
+	// argmax_a' of Q(s',a') output: action
+	public String argmaxQaction(State state) {
+		long seed = System.nanoTime();
+		Collections.shuffle(actions, new Random(seed));
+		State key;
+		double temp, max = 0;
+		int index = 0;
+		for(String action : actions) {
+			key = new State(state, action);
+			temp = (Double) qtable.get(key);
+    		if(temp>max) {
+    			max = temp;
+    			index++;
+    		}
+    	}
+		return actions.get(index-1);
 	}
 	
     // implement reward function: only when captured the immediate award=10, else 0
@@ -158,8 +176,7 @@ public class QLearning implements Policy {
 	    Enumeration enu = Collections.enumeration(qtable.keySet());
 	    while(enu.hasMoreElements()) {
 		state = (State) enu.nextElement();
-		if(state.getAction()==null) show("NULLL");
-		action = state.getAction();
+		action = argmaxQaction(state);
 		stateactions.put(state.toString(), action);
 	    }
 	    for (int i=0;i<11;i++){
