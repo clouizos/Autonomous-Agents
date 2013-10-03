@@ -239,12 +239,12 @@ public class OnPolicyMC {
 					 }
 					 
 					 //adaptive epsilon
-					 
+					 /*
 					 if (counter%100==0){
 						e = e*0.8;
 						Pi.setEpsilon(e);
 					 }
-					 
+					 */
 					 
 					 //Assign max action to the policy
 					 //((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
