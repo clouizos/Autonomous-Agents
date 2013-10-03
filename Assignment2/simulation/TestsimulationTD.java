@@ -3,6 +3,8 @@ package simulation;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import policy.*;
@@ -33,12 +35,12 @@ public class TestsimulationTD {
     double gamma = 0.5;
     double alpha = 0.1;
     // egreedy with epsilon = 0.1
-    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
     // SoftMax with temperature tau = 0.1
-    SoftMax policy = new SoftMax(0.1);
+    //SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
-    //QLearning predPolicy = new QLearning(gamma, alpha, policy);
-    Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
+    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+    //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	/* fill look up table if Value iteration Policy is run
@@ -52,8 +54,8 @@ public class TestsimulationTD {
 	
     boolean verbose=false;
     int nrRuns = 10000;
-    //testQ(predPolicy, preyPolicy, verbose, nrRuns);
-    testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
+    testQ(predPolicy, preyPolicy, verbose, nrRuns);
+    //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     }
     
     // TODO: Change to Sarsa
@@ -180,8 +182,14 @@ public class TestsimulationTD {
 	
     //((QLearning)predPolicy).printTable(new Position(5,5));
     //((QLearning)predPolicy).printList(new Position(5,5));
-	System.out.println("\nAll runs overview:");
-	System.out.println(allRuns);
+	//System.out.println("\nAll runs overview:");
+	//System.out.println(allRuns);
+	try {
+	    output();
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
@@ -231,5 +239,45 @@ public class TestsimulationTD {
     	System.out.println("Press enter to continue...");
     	Scanner keyboard = new Scanner(System.in);
     	keyboard.nextLine();
+    }
+    
+    public static void write(File file, String string, boolean append) throws Exception
+    {
+	if(append==false)
+	{
+	    file.delete();
+	    file.createNewFile();
+	}
+
+	FileOutputStream WriteFile = new FileOutputStream(file, true);
+	OutputStreamWriter WriteBuff = new OutputStreamWriter(WriteFile, "UTF8");
+	WriteBuff.write(string);
+	WriteBuff.close();
+	WriteFile.close();
+    }
+    
+    // outputs the state actions into a file policy.data
+    public static void output() throws Exception {
+	File policyfile = new File("convergenceQLearning.data");
+	policyfile.delete();
+	policyfile.createNewFile();
+	//System.out.println("trying to write");
+	if(!allRuns.isEmpty()) {
+		//System.out.println(allRuns);
+		for(int times : allRuns){
+	    //Enumeration enu = stateactions.keys();
+	    //while(enu.hasMoreElements()) {
+		//String state = (String) enu.nextElement();
+		//String action = (String) stateactions.get(state);
+			try {
+				write(policyfile, String.valueOf(times)+"\n", true);
+			} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		    System.out.println("Cannot write to file");
+		}
+	    }
+	} else
+	    show("\nRuns each episode is empty!!");
     }
 }

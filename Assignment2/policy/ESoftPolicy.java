@@ -65,18 +65,24 @@ public class ESoftPolicy implements Policy{
 		double maxProb = 0.0;
 		String bestAction = null;
 		String randomKey = null;
-		
+		double lowProb = 0.0;
 		//find best action according to the probabilities of each action
 		for(String action : allActions){
 			double newProb = actprob.get(action);
 			if (newProb > maxProb){
 				maxProb = newProb;
 				bestAction = action; 
+			}else{
+				lowProb = newProb;
 			}
 		}
-		
+		/*
+		System.out.println("high: "+maxProb);
+		System.out.println("low: "+lowProb);
+		System.out.println("e: "+e);
+		*/
 		//if you need to select a non greedy action return a random one, except the best one
-		if (e < epsilon){
+		if (e < lowProb){
 			actprob.remove(bestAction);
 			List<String> keys = new ArrayList<String>(actprob.keySet());
 			randomKey = keys.get( random.nextInt(keys.size()));

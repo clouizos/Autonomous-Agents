@@ -1,5 +1,8 @@
 package policy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +48,7 @@ public class OffPolicyMC {
 	private Policy PiPrime;
 	private double gamma = 0.8;
 	private ArrayList<String> Actions=new ArrayList<String>();
+	private static ArrayList<Integer> runsEachEpisode = new ArrayList<Integer>();
 	/**
 	 * @param args
 	 */
@@ -126,6 +130,7 @@ public class OffPolicyMC {
 				 dataEpisode.clear();
 				 dataEpisode =  generateEpisode();
 			 }while (dataEpisode.size()<2);
+			 runsEachEpisode.add(dataEpisode.size());
 			 //-2 because we exclude for checking the terminal state
 			 int tau = 0;
 			 for ( int i=dataEpisode.size()-2;i>=0;i--){
@@ -290,6 +295,53 @@ public class OffPolicyMC {
 			}
 			System.out.println();
 		}
+		try {
+		    off.output();
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 	}
+	public void show(String s){
+		System.out.println(s);
+	}
+	
+	 public static void write(File file, String string, boolean append) throws Exception
+	    {
+		if(append==false)
+		{
+		    file.delete();
+		    file.createNewFile();
+		}
+
+		FileOutputStream WriteFile = new FileOutputStream(file, true);
+		OutputStreamWriter WriteBuff = new OutputStreamWriter(WriteFile, "UTF8");
+		WriteBuff.write(string);
+		WriteBuff.close();
+		WriteFile.close();
+	    }
+	    
+	    // outputs the state actions into a file policy.data
+	    public void output() throws Exception {
+		File policyfile = new File("convergenceOffMC.data");
+		policyfile.delete();
+		policyfile.createNewFile();
+		if(!runsEachEpisode.isEmpty()) {
+			for(int times : runsEachEpisode){
+		    //Enumeration enu = stateactions.keys();
+		    //while(enu.hasMoreElements()) {
+			//String state = (String) enu.nextElement();
+			//String action = (String) stateactions.get(state);
+				try {
+					write(policyfile, String.valueOf(times)+"\n", true);
+				} catch (Exception e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			    System.out.println("Cannot write to file");
+			}
+		    }
+		} else
+		    show("\nRuns each episode is empty!!");
+	    }
 
 }

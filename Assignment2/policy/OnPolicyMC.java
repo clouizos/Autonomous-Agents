@@ -47,7 +47,7 @@ public class OnPolicyMC {
 				for (String action:this.Actions){
 					//String key = "["+i+"]["+j+"][5][5]-"+action;
 					State init = new State(new Position(i,j), prey, action);
-					Q.put(init,15.0);
+					Q.put(init,0.0);
 					//Q.put(init, 0.0);
 					ArrayList<Double> return_list = new ArrayList<Double>();
 					returns.put(init, return_list);
@@ -70,7 +70,7 @@ public class OnPolicyMC {
 		currentState = new State(new Position(i,j),new Position(5,5));
 		int counter=0;
 		//System.out.println("generating episode..");
-		do {
+		while(!currentState.endState()) {
 			//System.out.println(counter);
 			counter++;
 			predAction = Pi.getAction(currentState);
@@ -92,7 +92,7 @@ public class OnPolicyMC {
 				currentState.updatePosition(predproj, preyDefault);
 			}
 			//r = getReward(currentState);
-		}while (! currentState.endState());
+		}//while (! currentState.endState());
 		//System.out.println("Generated episode that ends in "+counter+" moves!");
 		//System.out.println(dataEpisode);
 		return dataEpisode;
@@ -241,7 +241,7 @@ public class OnPolicyMC {
 				 }
 			 System.out.println("doing control step "+counter);
 		//}while (counter <2000000);
-		}while(counter < 1000);
+		}while(counter < 20000);
 		
 	}
 	
