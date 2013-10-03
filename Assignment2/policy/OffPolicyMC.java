@@ -51,6 +51,7 @@ public class OffPolicyMC {
 	private double gamma = 0.8;
 	private ArrayList<String> Actions=new ArrayList<String>();
 	private static ArrayList<Integer> runsEachEpisode = new ArrayList<Integer>();
+	private static ArrayList<Integer> runsEachEpisode2 = new ArrayList<Integer>();
 	/**
 	 * @param args
 	 */
@@ -95,7 +96,7 @@ public class OffPolicyMC {
 	}
 	
 	//
-	public ArrayList<DataEpisode> generateEpisode(int i, int j){
+	public ArrayList<DataEpisode> generateEpisode(Policy p, int i, int j){
 		ArrayList<DataEpisode> dataEpisode = new ArrayList<DataEpisode>();
 		//Choose Initial State(position of predator), and follow policy until terminate
 		Random generator = new Random();
@@ -112,7 +113,7 @@ public class OffPolicyMC {
 		int counter=0;
 		while (! currentState.endState()) {
 			counter++;
-			predAction = PiPrime.getAction(currentState);
+			predAction = p.getAction(currentState);
 			dataEpisode.add(new DataEpisode(new State(currentState.getPredator(), currentState.getPrey()),getReward(currentState),predAction));
 			currentState.setPredator(currentState.getPredator().move(predAction));
 			if (currentState.endState()){
@@ -131,6 +132,7 @@ public class OffPolicyMC {
 	public void doControl(){
 		this.preyPolicy = new RandomPolicyPrey();
 		ArrayList<DataEpisode> dataEpisode = new ArrayList<DataEpisode>();
+		ArrayList<DataEpisode> dataEpisode2 = new ArrayList<DataEpisode>();
 		int counter=0;
 		double epsilon = 0.5;
 		int index = -1;
@@ -139,16 +141,24 @@ public class OffPolicyMC {
 			index++;
 			if (index==this.allStates.size())
 				index = 0;
-			if (counter%100==0)
-				epsilon = epsilon*0.8;
+			if (counter%500==0)
+				epsilon = epsilon*0.5;
 			epsilon = 0.1;
 			this.PiPrime = new EGreedyPolicy(this.Q,epsilon);
 			int[] initialStart = allStates.get(index);
 			 do{
 				 dataEpisode.clear();
-				 dataEpisode =  generateEpisode(initialStart[0],initialStart[1]);
+				 Random generator = new Random();
+					int i = generator.nextInt(11);
+					int j = generator.nextInt(11);
+				 dataEpisode =  generateEpisode(PiPrime, i,j);
+				 
 			 }while (dataEpisode.size()<2);
+			 dataEpisode2 = generateEpisode(Pi, 0,0);
+//			 System.out.println(dataEpisode2.size());
 			 runsEachEpisode.add(dataEpisode.size());
+			 runsEachEpisode2.add(dataEpisode2.size());
+//			 System.out.println(runsEachEpisode2.size());
 			 //-2 because we exclude for checking the terminal state
 			 int tau = 0;
 			 for ( int i=dataEpisode.size()-2;i>=0;i--){
@@ -246,7 +256,7 @@ public class OffPolicyMC {
 //			 System.out.println("Size D : "+this.D.size());
 			 
 			 
-		}while (counter <20000);
+		}while (counter <20005);
 	}
 	
 	public Policy getPi() {
@@ -324,7 +334,8 @@ public class OffPolicyMC {
 			System.out.println();
 		}
 		try {
-		    off.output();
+		    off.output(runsEachEpisode, "convergenceOffMC.data");
+		    off.output(off.runsEachEpisode2, "convergenceOffMC2.data");
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -350,8 +361,9 @@ public class OffPolicyMC {
 	    }
 	    
 	    // outputs the state actions into a file policy.data
-	    public void output() throws Exception {
-		File policyfile = new File("convergenceOffMC.data");
+	    public void output(ArrayList<Integer> runsEachEpisode, String filename) throws Exception {
+		System.out.println(runsEachEpisode.size());
+	    File policyfile = new File(filename);
 		policyfile.delete();
 		policyfile.createNewFile();
 		if(!runsEachEpisode.isEmpty()) {
