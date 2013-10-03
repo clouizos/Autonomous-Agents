@@ -109,5 +109,13 @@ public class ESoftPolicy implements Policy{
 	public void setPolicyProb(Map<String, Map<String, Double>> policyProb) {
 		this.policyProb = policyProb;
 	}
+	
+	public double getEpsilon(){
+		return epsilon;
+	}
+	
+	public void setEpsilon(double epsilon){
+		this.epsilon = epsilon;
+	}
 
 }

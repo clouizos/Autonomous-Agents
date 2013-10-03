@@ -220,7 +220,7 @@ public class OnPolicyMC {
 					 //old_value = ((ArbitraryPolicy)this.Pi).getValue(key);
 					 //ArrayList<String> actions = ArbitraryPolicy.getAllActions();
 					 double new_Value;
-					 double e = 0.1;
+					 double e = Pi.getEpsilon();
 					 for(String action : Actions){
 						 //key = "["+i+"]["+j+"][5][5]-"+action;
 						 key = new State(new Position(i,j), prey, action);
@@ -235,6 +235,12 @@ public class OnPolicyMC {
 							 //((ArbitraryPolicy)this.Pi).updateValue(key, new_Value);
 						 }
 					 }
+					 
+					 //adaptive epsilon
+					 //if (counter%500==0){
+					//	e = e*0.8;
+					//	Pi.setEpsilon(e);
+					 //}
 					 
 					 //Assign max action to the policy
 					 //((ArbitraryPolicy)this.Pi).updateAction("["+i+"]["+j+"][5][5]", maxAction);
