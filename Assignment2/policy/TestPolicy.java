@@ -10,16 +10,30 @@ import statespace.State;
 
 public class TestPolicy implements Policy {
 	HashMap<String, String> stateactions;
+	HashMap<String, String> optimal;
 	
 	public TestPolicy() {
-		stateactions = new HashMap<String, String>();
-		File file = new File("policy.data");
+		optimal = new HashMap<String, String>();
+		File file2 = new File("optimal.data");
 		try {
-			filltable(file);
+			filltable(file2, optimal);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stateactions = new HashMap<String, String>();
+		File file = new File("policy.data");
+		try {
+			filltable(file, stateactions);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		TestPolicy test = new TestPolicy();
+		test.printActionsTable();
 	}
 	
     /* Required method to implement; returns an action according to implemented policy
@@ -27,15 +41,12 @@ public class TestPolicy implements Policy {
      * 
      */
     public String getAction(State currentState){
-    	Position pred = currentState.getPredator();
-    	Position prey = currentState.getPrey();
-    	Position predproj = pred.transformPrey55(prey);
-    	State stateproj = new State(predproj, new Position(5,5));
+    	State stateproj = currentState.projectState();
     	return (String)stateactions.get(stateproj.toString());
     }
     
     // fill the stateactions "look up table" with the values in policy.data
-    public void filltable(File file) throws Exception {
+    public void filltable(File file, HashMap table) throws Exception {
     	String s;
     	FileReader readFile = new FileReader(file);
     	BufferedReader readBuf = new BufferedReader(readFile);
@@ -45,13 +56,47 @@ public class TestPolicy implements Policy {
     		if(stateaction.length>1) {
     			String state = stateaction[0];
     			String action = stateaction[1];
-    			if(stateactions.containsKey(state)) {
-    				System.out.println("stateactions is not empty!");
-    				return;
-    			} else {
-    				stateactions.put(state, action);
-    			}
+    			table.put(state, action);
     		}
     	}
+    }
+    
+    /* policy comparisons
+     * calculates the ratio stateactions/optimal
+     * to give a measure how much a tested policy differs
+     * from the optimal policy, the closer to 1.0 the more optimal
+     * optimal policy is taken from value iteration
+     */
+    public double optimality(HashMap<String, String> sa) {
+    	int delta = 0;
+    	State state;
+    	String test, opti;
+    	Position prey = new Position(5,5);
+        for(int y = 0; y < 11; y++) {
+        	for(int x = 0; x < 11; x++) {
+        		state = new State(new Position(x,y),prey);
+        		test = sa.get(state.toString());
+        		opti = optimal.get(state.toString());
+        		if(test.equals(opti)) delta++;
+        	}
+        }
+    	return delta/121.0;
+    }
+    
+    public void printActionsTable() {
+    State state;
+    String action;
+	Position prey = new Position(5,5);
+    for(int y = 0; y < 11; y++) {
+    	for(int x = 0; x < 11; x++) {
+    		state = new State(new Position(x,y),prey);
+    		action = optimal.get(state.toString());
+    		System.out.println(state+" "+action);
+    	}
+    }
+	}
+    
+    public static void show(String s) {
+        System.out.print(s);
     }
 }

@@ -1,11 +1,8 @@
 package simulation;
 
-import java.util.Random;
-import java.util.Scanner;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
+import policy.TestPolicy;
 
 import policy.*;
 import statespace.*;
@@ -32,10 +29,10 @@ public class TestsimulationTD {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    double gamma = 0.9;
-    double alpha = 0.1;
+    double gamma = 0.7;
+    double alpha = 0.2;
     // egreedy with epsilon = 0.1
-    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.000001);
     // SoftMax with temperature tau = 0.1
     //SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
@@ -56,7 +53,8 @@ public class TestsimulationTD {
     int nrRuns = 100000;
     testQ(predPolicy, preyPolicy, verbose, nrRuns);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
-    predPolicy.printActionsTable();
+    predPolicy.printTable(new Position(5,5));
+    predPolicy.printActionsTable(new Position(5,5));
     }
     
     // TODO: Change to Sarsa
@@ -103,17 +101,16 @@ public class TestsimulationTD {
     		show("prey move: "+preymove);
     		show("Prey: " + prey.toString());
     		}
+			((Sarsa)predPolicy).updateQ(oldState, currentState);
+    		predmove = predPolicy.getAction(currentState);
     		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
-    			//break;
     		}else{
     			runs++;
-    			((Sarsa)predPolicy).updateQ(oldState, currentState);
-        		predmove = predPolicy.getAction(currentState);
     		}
     		//pauseProg();
     	}
@@ -133,7 +130,7 @@ public class TestsimulationTD {
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
-    			show("\nResetting Grid for the "+timesRun+" run!");
+    			//show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
     			currentState = initS();
     			resetGrid = false;
@@ -171,11 +168,20 @@ public class TestsimulationTD {
     		
     		
     		if(currentState.endState()){
-    			show("\nPredator catched the prey in "+runs+" runs!");
+    			//show("\nPredator catched the prey in "+runs+" runs!");
     			timesRun++;
     			allRuns.add(runs);
-    			resetGrid = true;
-    			//break;
+    			resetGrid = true;/*
+    			if((timesRun%200)==0) {
+    				TestPolicy optimal = new TestPolicy();
+    				HashMap test = ((QLearning)predPolicy).getStateactions();
+    				double delta = optimal.optimality(test);
+    				show("\nRuns: "+timesRun+ " optimality: "+delta);
+    				if(delta>0.80) {
+    				((QLearning)predPolicy).printActionsTable(new Position(5,5));
+    				pauseProg();
+    				}
+    			}*/
     		}else{
     			runs++;
     		}
@@ -195,6 +201,10 @@ public class TestsimulationTD {
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
+	TestPolicy optimal = new TestPolicy();
+	HashMap test = ((QLearning)predPolicy).getStateactions();
+	double delta = optimal.optimality(test);
+	show("\nRuns: "+timesRun+ " optimality: "+delta);
     }
     
 	/*

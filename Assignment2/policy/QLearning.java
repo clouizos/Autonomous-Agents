@@ -1,11 +1,6 @@
 package policy;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
 import statespace.*;
 
@@ -21,7 +16,7 @@ public class QLearning implements Policy {
 	 * alpha = small positive number; learning rate
 	 */
     protected HashMap<State, Double> qtable;
-    protected HashMap<String, String> stateactions = new HashMap<String, String>();
+    protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     private static EGreedyPolicyTD policy;
     //private static SoftMax policy;
@@ -43,7 +38,7 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(0.0);
+		initQVI();
 	    gamma = g;
 	    alpha = a;	      
 	}
@@ -75,6 +70,28 @@ public class QLearning implements Policy {
 		}
 	}
 	
+	// initializes with values from valueiteration
+	public void initQVI() {
+		VIPolicyReduced vip = new VIPolicyReduced(0.9, 1.0E-20);
+		vip.multisweep();
+	    Position prey = new Position(5, 5);
+	    Hashtable statevalues = vip.getSV();
+	    double value;
+		for(int i = 0; i < 11; i++) {
+		    for(int j = 0; j < 11; j++) {
+		    	for (String action : actions){
+		    		State s = new State(new Position(i, j), prey, action);
+		    		if(action.equals(vip.getAction(s))) {
+		    				value = (Double)statevalues.get(s.toString());
+		    				qtable.put(s, value);
+		    		} else
+			    	// init Q(s,a) = 0 
+			    	qtable.put(s, 0.0);	
+		    	}
+		    }
+		}
+	}
+	
 	public String getAction(State s){
 		// get action according to policy derived from Q
 		State stateproj = s.projectState();
@@ -85,10 +102,12 @@ public class QLearning implements Policy {
 	public void updateQ(State cs, State nextS) {			
 		State currentState = cs.projectState();
 		State nextState = nextS.projectState();
-		double currentQ = (Double) qtable.get(currentState);
-		double qUpdated = currentQ + alpha*(getReward(nextState) 
-				+ gamma*argmaxQ(nextState) - currentQ);
-		qtable.put(currentState, qUpdated);
+		if(!currentState.endState()) {					
+			double currentQ = (Double) qtable.get(currentState);
+			double qUpdated = currentQ + alpha*(getReward(nextState) 
+					+ gamma*argmaxQ(nextState) - currentQ);
+			qtable.put(currentState, qUpdated);
+		}
 	}
 	
 	// argmax_a' of Q(s',a') output: value
@@ -113,16 +132,16 @@ public class QLearning implements Policy {
 		Collections.shuffle(actions, new Random(seed));
 		State key;
 		double temp, max = 0;
-		int index = 0;
+		String maxAction = "wait";
 		for(String action : actions) {
 			key = new State(state, action);
 			temp = (Double) qtable.get(key);
     		if(temp>max) {
     			max = temp;
-    			index++;
+    			maxAction = action;
     		}
     	}
-		return actions.get(index-1);
+		return maxAction;
 	}
 	
     // implement reward function: only when captured the immediate award=10, else 0
@@ -142,15 +161,16 @@ public class QLearning implements Policy {
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
-    	show("\n======statevalues in grid around prey"+prey.toString()+"======\n");
+    	show("\n======max state values in grid around prey"+prey.toString()+"======\n");
     	int nextline = 0;
+    	State s;
+    	double qValue;
     	for(int i = 0; i < 11; i++) {
     		if(nextline < i) {show("\n");}
     		for(int j = 0; j < 11; j++) {
-    			for (String action : actions){
-			    	State s = new State(new Position(j, i), prey, action);
-			    	show(String.format( "%.3f", (double)qtable.get(s))+ " ");
-    			}	
+			    	s = new State(new Position(j, i), prey);
+			    	qValue = argmaxQ(s);
+			    	show(String.format( "%.3f\t", qValue));
     		}
     		nextline = i;
     	}
@@ -167,29 +187,21 @@ public class QLearning implements Policy {
 		}
     }
     
-    public void printActionsTable() {
+    public void printActionsTable(Position prey) {
     State key;
-    int y = 0;
-    State state;
+    int nextline = 0;
+    State s;
     String action;
-    if(!qtable.isEmpty()) {
-	    Enumeration enu = Collections.enumeration(qtable.keySet());
-	    while(enu.hasMoreElements()) {
-		state = (State) enu.nextElement();
-		action = argmaxQaction(state);
-		stateactions.put(state.toString(), action);
-	    }
-	    for (int i=0;i<11;i++){
-			for (int j=0;j<11;j++){
-				key = new State(new Position(j,i), new Position(5,5));
-				String action2 = stateactions.get(key.toString());
-				//State keyQ = new State(new Position(j,i), new Position(5,5), action);
-				System.out.printf("%s\t", action2);
-			}
-			System.out.println();	
-			}
-	} else
-	    show("Qtable table is empty!!");
+    show("\n======stateactions in grid around prey"+prey.toString()+"======\n");
+    for(int i = 0; i < 11; i++) {
+    	if(nextline < i) {show("\n");}
+    	for(int j = 0; j < 11; j++) {
+    		s = new State(new Position(j, i), prey);
+    		action = argmaxQaction(s);
+    		show(String.format( "%s\t", action));
+    	}
+    	nextline = i;
+    }
 	}
     
     /*
@@ -213,25 +225,42 @@ public class QLearning implements Policy {
 	WriteFile.close();
     }
     
+    public HashMap<String, String> getStateactions() {
+    	stateactions = new HashMap<String, String>();
+    	State key;
+        State s;
+        String action;
+        Position prey = new Position(5,5);
+        for(int i = 0; i < 11; i++) {
+        	for(int j = 0; j < 11; j++) {
+        		s = new State(new Position(j, i), prey);
+        		action = argmaxQaction(s);
+        		stateactions.put(s.toString(), action);
+        	}
+        }
+    	return stateactions;
+    }
+    
     // outputs the state actions into a file policy.data
     public void output() throws Exception {
 	File policyfile = new File("policy.data");
 	policyfile.delete();
 	policyfile.createNewFile();
-	String state;
+	State state;
 	String action;
-	if(!stateactions.isEmpty()) {
-	    Enumeration enu = Collections.enumeration(stateactions.keySet());
-	    while(enu.hasMoreElements()) {
-		state = (String) enu.nextElement();
-		action = (String) stateactions.get(state);
-		try {
-		    write(policyfile, state+"=>"+action+"\n", true);
-		} catch (Exception e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		    System.out.println("Cannot write to file");
-		}
+	if(!qtable.isEmpty()) {
+	    for(int i = 0; i < 11; i++) {
+	    	for(int j = 0; j < 11; j++) {
+	    		state = new State(new Position(j, i), new Position(5,5));
+	    		action = argmaxQaction(state);
+	    		try {
+	    		    write(policyfile, state.toString()+"=>"+action+"\n", true);
+	    		} catch (Exception e) {
+	    		    // TODO Auto-generated catch block
+	    		    e.printStackTrace();
+	    		    System.out.println("Cannot write to file");
+	    		}
+	    	}
 	    }
 	} else
 	    show("State actions table is empty!!");
