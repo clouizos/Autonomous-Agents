@@ -4,14 +4,14 @@
 \@writefile{lof}{\select@language{english}}
 \@writefile{lot}{\select@language{english}}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Environment: Should we keep this?}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Environment: Should we keep this? Maybe the 1st paragraph?}{2}}
 \newlabel{environment}{{1.1}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Methods and Procedures}{3}}
 \newlabel{methods}{{2}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}\textbf  {Action selection}}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}\textbf  {On-Policy Monte Carlo}}{3}}
 \newlabel{returnOn}{{2.2}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces On-policy Monte Carlo Control Pseudo-code}}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces On-policy Monte Carlo Control pseudo-code}}{4}}
 \newlabel{onmc}{{2.1}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}\textbf  {Off-Policy Monte Carlo}}{4}}
 \newlabel{eq:relative prob 1}{{2.4}{5}}
@@ -23,44 +23,62 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}\textbf  {Q-learning}}{7}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Q-learning: An off-policy TD control algorithm.}}{8}}
 \newlabel{figure:Q}{{2.4}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Reducing the state space}{8}}
-\newlabel{reduce}{{2.6}{8}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Runtime of normal and reduced statespace in seconds}}{9}}
-\newlabel{runtime}{{2.1}{9}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Values from value iteration when the prey is at [3][2]}}{9}}
-\newlabel{rVIt}{{2.2}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Experiments and Results}{9}}
-\newlabel{results}{{3}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Theoretical Differences}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}On-Policy Monte Carlo Control}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Off-Policy Monte Carlo Control}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Catching time with different fixed epsilon value}}{10}}
-\newlabel{figure:differentFixEpsilon}{{3.1}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Catch time with fix epsilon value}}{11}}
-\newlabel{figure:fixEpsilon}{{3.2}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Catching time with dynamic epsilon value}}{12}}
-\newlabel{figure:dynamicEpsilon}{{3.3}{12}}
-\newlabel{figure:dynamicEpsilon}{{3.3}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Catch time with dynamic epsilon value}}{13}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Target Policy Off-Policy Monte Carlo Control}}{13}}
-\newlabel{table:TargetPolicy}{{3.1}{13}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Policy evaluation results}}{14}}
-\newlabel{PE parameter}{{3.2}{14}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces State values for the following states}}{14}}
-\newlabel{PE states values}{{3.3}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Policy Iteration}{14}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Convergence in iterations for different $\gamma $}}{14}}
-\newlabel{convPIter}{{3.4}{14}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Values from policy iteration when the prey is at [5][5]}}{15}}
-\newlabel{pitS}{{3.5}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Value Iteration}{15}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Convergence in iterations for different $\gamma $}}{15}}
-\newlabel{convVIter}{{3.6}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Experiments and Results}{8}}
+\newlabel{results}{{3}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Theoretical Differences}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Q-learning: experiement with different values of $\alpha $ and $\gamma $}{9}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Convergence for different values of $\alpha $}}{9}}
+\newlabel{table:qalpha}{{3.1}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Optimal convergence for $\alpha =0.2$}}{9}}
+\newlabel{figure:alpha02}{{3.1}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Optimal convergence for $\alpha =0.2$ on bigger y-axis}}{10}}
+\newlabel{figure:alpha02Big}{{3.2}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Optimality for different $\alpha $ as a ratio to the optimal policy}}{10}}
+\newlabel{figure:alphaOpti}{{3.3}{10}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Convergence for different values of $\gamma $}}{11}}
+\newlabel{table:qgamma}{{3.2}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Optimality for different $\gamma $ as a ratio to the optimal policy}}{11}}
+\newlabel{figure:gammaOpti}{{3.4}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Convergence for different values of $\epsilon $}}{12}}
+\newlabel{table:qepsilon}{{3.3}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Optimal convergence for $\epsilon =0.1$}}{12}}
+\newlabel{figure:epsilon02}{{3.5}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Optimality for different $\epsilon $ as a ratio to the optimal policy}}{13}}
+\newlabel{figure:epsilonOpti}{{3.6}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Divergence after optimistic initialization}}{14}}
+\newlabel{figure:DivOpti}{{3.7}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Divergence from the optimal policy after optimistic initialization}}{15}}
+\newlabel{figure:OptiDiv}{{3.8}{15}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Convergence for different values of initialization}}{15}}
+\newlabel{table:qinit}{{3.4}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces Convergence to the optimal policy after different initialization values}}{16}}
+\newlabel{figure:DivInit}{{3.9}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}On-Policy Monte Carlo Control}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces On Policy MC catching time with different epsilon value}}{17}}
+\newlabel{figure:differentFixEpsilonOn}{{3.10}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces On Policy MC catching time with optimistic initial Q value}}{17}}
+\newlabel{figure:differentFixEpsilonOnOpt}{{3.11}{17}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Target Policy Off-Policy Monte Carlo Control}}{18}}
+\newlabel{table:onpolicy}{{3.5}{18}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Optimal state value function for each state given prey at (5,5)}}{18}}
+\newlabel{table:valueFunctionOn}{{3.6}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Off-Policy Monte Carlo Control}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.12}{\ignorespaces Catching time with fix epsilon value}}{19}}
+\newlabel{figure:fixEpsilon}{{3.12}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.13}{\ignorespaces Catching time with dynamic epsilon value}}{20}}
+\newlabel{figure:dynamicEpsilon}{{3.13}{20}}
+\newlabel{figure:dynamicEpsilon}{{3.13}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.14}{\ignorespaces Catching time with different fixed epsilon value}}{21}}
+\newlabel{figure:differentFixEpsilon}{{3.14}{21}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces Optimal state value function for each state given prey at (5,5)}}{22}}
+\newlabel{table:valueFunctionOff}{{3.7}{22}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.8}{\ignorespaces Optimal target policy's actions for each state given the prey at (5,5)}}{22}}
+\newlabel{table:TargetPolicyOff}{{3.8}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Comparison of all approaches to the learning problem}{22}}
 \bibcite{suttonBarto}{1}
-\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces Values from value iteration when the prey is at [5][5]}}{16}}
-\newlabel{vitS}{{3.7}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Comparison of Policy and Value iteration}{16}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Comparative graph of convergence for policy and value iteration}}{16}}
-\newlabel{converge}{{3.5}{16}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}conclusion}{16}}
-\newlabel{discussion}{{4}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.15}{\ignorespaces Catching times for best choice of $\epsilon $ for On and Off policy MC}}{23}}
+\newlabel{figure:onoffcomp}{{3.15}{23}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.9}{\ignorespaces Average catching time for all algorithms at convergence}}{23}}
+\newlabel{compavg}{{3.9}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}conclusion}{23}}
+\newlabel{discussion}{{4}{23}}

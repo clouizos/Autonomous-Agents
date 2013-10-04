@@ -7,11 +7,11 @@ Created on Tue Oct  1 21:23:01 2013
 
 import matplotlib.pyplot as plt
 
-f = open('convergenceQLearning_0.1_0.1_0.9.data', 'r')
-f2 = open('convergenceQLearning_0.1_0.2_0.9.data', 'r')
-f3 = open('convergenceQLearning_0.1_0.3_0.9.data', 'r')
-f4 = open('convergenceQLearning_0.1_0.4_0.9.data', 'r')
-f5 = open('convergenceQLearning_0.1_0.5_0.9.data', 'r')
+f = open('convergenceQLearning_0.1_0.2_0.1.data', 'r')
+f2 = open('convergenceQLearning_0.1_0.2_0.2.data', 'r')
+f3 = open('convergenceQLearning_0.1_0.2_0.5.data', 'r')
+f4 = open('convergenceQLearning_0.1_0.2_0.7.data', 'r')
+f5 = open('convergenceQLearning_0.1_0.2_0.9.data', 'r')
 
 data = f.read().splitlines()
 data2 = f2.read().splitlines()
@@ -36,34 +36,41 @@ for i in range(len(data)):
     data3[i] = int(data3[i])
     data4[i] = int(data4[i])
     data5[i] = int(data5[i])
+    
+#for j in range(len(data)/100):
+#    data[j] = sum(data[j*100:j*100+100])/100
+#    data2[j] = sum(data2[j*100:j*100+100])/100
+#    data3[j] = sum(data3[j*100:j*100+100])/100
+#    data4[j] = sum(data4[j*100:j*100+100])/100
+#    data5[j] = sum(data5[j*100:j*100+100])/100
 #print data
 plt.figure(1)
 plt.plot(data, 'r', label = '0.1')
-plt.ylim([0,50])
+plt.ylim([0,40])
 plt.ylabel('episode size')
 plt.xlabel('iterations')
 plt.legend()
 plt.figure(2)
 plt.plot(data2, 'b', label = '0.2')
-plt.ylim([0,50])
+plt.ylim([0,40])
 plt.ylabel('episode size')
 plt.xlabel('iterations')
 plt.legend()
 plt.figure(3)
-plt.plot(data3, 'g', label = '0.3')
-plt.ylim([0,50])
+plt.plot(data3, 'g', label = '0.5')
+plt.ylim([0,40])
 plt.ylabel('episode size')
 plt.xlabel('iterations')
 plt.legend()
 plt.figure(4)
-plt.plot(data4, 'm', label = '0.4')
-plt.ylim([0,50])
+plt.plot(data4, 'm', label = '0.7')
+plt.ylim([0,40])
 plt.ylabel('episode size')
 plt.xlabel('iterations')
 plt.legend()
 plt.figure(5)
-plt.plot(data5, 'c', label = '0.5')
-plt.ylim([0,50])
+plt.plot(data5, 'c', label = '0.9')
+plt.ylim([0,40])
 plt.ylabel('episode size')
 plt.xlabel('iterations')
 plt.legend()

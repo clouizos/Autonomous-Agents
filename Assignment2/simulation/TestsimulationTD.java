@@ -34,7 +34,7 @@ public class TestsimulationTD {
        
     // egreedy with epsilon
     double epsilon = 0.1;
-    double alpha = 0.5;
+    double alpha = 0.2;
     double gamma = 0.9;
     EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
     // SoftMax with temperature tau = 0.1
@@ -120,7 +120,7 @@ public class TestsimulationTD {
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
-    			if((timesRun%500)==0) {
+    			if((timesRun%200)==0) {
     				TestPolicy optimal = new TestPolicy();
     				HashMap test = ((QLearning)predPolicy).getStateactions();
     				delta = optimal.optimality(test);
@@ -197,7 +197,7 @@ public class TestsimulationTD {
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
-    			if((timesRun%500)==0) {
+    			if((timesRun%200)==0) {
     				TestPolicy optimal = new TestPolicy();
     				HashMap test = ((QLearning)predPolicy).getStateactions();
     				delta = optimal.optimality(test);

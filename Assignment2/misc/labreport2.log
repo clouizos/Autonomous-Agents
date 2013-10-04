@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  4 OCT 2013 18:28
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  4 OCT 2013 23:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -463,61 +463,65 @@ les
 \f@ncyO@erf=\skip65
 \f@ncyO@olf=\skip66
 \f@ncyO@orf=\skip67
-) (./labreport2.aux
+)
+\c@eqn=\count105
+ (./labreport2.aux
 
 LaTeX Warning: Label `figure:dynamicEpsilon' multiply defined.
 
 )
 \openout1 = `labreport2.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 94.
-LaTeX Font Info:    Try loading font information for FML+futm on input line 94.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 111.
+LaTeX Font Info:    Try loading font information for FML+futm on input line 111
+.
  (/usr/share/texmf-dist/tex/latex/fourier/fmlfutm.fd
 File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
 )
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 94.
-LaTeX Font Info:    Try loading font information for FMS+futm on input line 94.
-
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 111.
+LaTeX Font Info:    Try loading font information for FMS+futm on input line 111
+.
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmsfutm.fd
 File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
 )
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 94.
-LaTeX Font Info:    Try loading font information for FMX+futm on input line 94.
-
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 111.
+LaTeX Font Info:    Try loading font information for FMX+futm on input line 111
+.
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmxfutm.fd
 File: fmxfutm.fd futm-extension
 )
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 94.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 94.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 111.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 111.
+
 
 (/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Try loading font information for T1+futs on input line 94.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Try loading font information for T1+futs on input line 111.
+
 
 (/usr/share/texmf-dist/tex/latex/fourier/t1futs.fd
 File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
 )
-LaTeX Info: Redefining \microtypecontext on input line 94.
+LaTeX Info: Redefining \microtypecontext on input line 111.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -534,16 +538,16 @@ Package microtype Info: Loading generic settings for font family
 
 (/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count105
+\scratchcounter=\count106
 \scratchdimen=\dimen116
 \scratchbox=\box31
-\nofMPsegments=\count106
-\nofMParguments=\count107
+\nofMPsegments=\count107
+\nofMParguments=\count108
 \everyMPshowfont=\toks30
-\MPscratchCnt=\count108
+\MPscratchCnt=\count109
 \MPscratchDim=\dimen117
-\MPnumerator=\count109
-\makeMPintoPDFobject=\count110
+\MPnumerator=\count110
+\makeMPintoPDFobject=\count111
 \everyMPtoPDFconversion=\toks31
 ) (/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -593,7 +597,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 96.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 113.
+
 
 (/usr/share/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
@@ -602,7 +607,8 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `cmss' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for OT1+bch on input line 96.
+LaTeX Font Info:    Try loading font information for OT1+bch on input line 113.
+
 
 (/usr/share/texmf-dist/tex/latex/psnfss/ot1bch.fd
 File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
@@ -611,25 +617,25 @@ File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
 File: mt-bch.cfg 2007/03/03 v1.5 microtype config. file: Bitstream Charter (RS)
 
 )
-LaTeX Font Info:    Try loading font information for FML+futmi on input line 96
-.
+LaTeX Font Info:    Try loading font information for FML+futmi on input line 11
+3.
 
 (/usr/share/texmf-dist/tex/latex/fourier/fmlfutmi.fd
 File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
 )
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 96.
+(Font)              scaled to size 13.24796pt on input line 113.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 96.
+(Font)              scaled to size 9.19998pt on input line 113.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 96.
+(Font)              scaled to size 7.35999pt on input line 113.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 96.
+(Font)              scaled to size 13.24796pt on input line 113.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 96.
+(Font)              scaled to size 9.19998pt on input line 113.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 96.
-LaTeX Font Info:    Try loading font information for U+msa on input line 96.
+(Font)              scaled to size 7.35999pt on input line 113.
+LaTeX Font Info:    Try loading font information for U+msa on input line 113.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -637,7 +643,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 96.
+LaTeX Font Info:    Try loading font information for U+msb on input line 113.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -646,150 +652,355 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 97.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 114.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 97.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 114.
 
-Overfull \hbox (4.54109pt too wide) in paragraph at lines 98--99
+Overfull \hbox (4.54109pt too wide) in paragraph at lines 115--116
 \T1/futs/b/n/10.95 ods, namely Q-learning, On-policy Monte Carlo Con-trol, Off-
 policy Monte Carlo
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 98--99
+Overfull \hbox (2.9468pt too wide) in paragraph at lines 115--116
+\T1/futs/b/n/10.95 their re-sults and to con-clude which one is the op-ti-mal h
+igh-reward pol-icy which
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 107.
+(Font)              scaled to size 10.07397pt on input line 124.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 107.
+(Font)              scaled to size 7.63599pt on input line 124.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 107.
+(Font)              scaled to size 5.51999pt on input line 124.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 107.
+(Font)              scaled to size 10.07397pt on input line 124.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 107.
+(Font)              scaled to size 7.63599pt on input line 124.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 107.
+(Font)              scaled to size 5.51999pt on input line 124.
 [1
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 119--121
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--121
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
 
  []
 
 LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <12> not available
-(Font)              Font shape `T1/futs/b/sc' tried instead on input line 137.
+(Font)              Font shape `T1/futs/b/sc' tried instead on input line 154.
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 145--148
+Underfull \hbox (badness 10000) in paragraph at lines 162--165
 
  []
 
 [3] <pseudotmp5.pdf, id=18, 501.875pt x 384.43625pt>
 File: pseudotmp5.pdf Graphic file (type pdf)
  <use pseudotmp5.pdf>
-Package pdftex.def Info: pseudotmp5.pdf used on input line 163.
+Package pdftex.def Info: pseudotmp5.pdf used on input line 180.
 (pdftex.def)             Requested size: 301.12732pt x 230.66351pt.
 
 [4 <./pseudotmp5.pdf>] <offPolicyPseudo.png, id=23, 404.26031pt x 304.88907pt>
 File: offPolicyPseudo.png Graphic file (type png)
 
 <use offPolicyPseudo.png>
-Package pdftex.def Info: offPolicyPseudo.png used on input line 188.
+Package pdftex.def Info: offPolicyPseudo.png used on input line 205.
 (pdftex.def)             Requested size: 323.40869pt x 243.91158pt.
  [5]
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <8.3> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 197.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 214.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <6> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 197.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 214.
 
 <sarsa_algorithm.png, id=27, 590.205pt x 242.9075pt>
 File: sarsa_algorithm.png Graphic file (type png)
  <use sarsa_algorithm.png>
-Package pdftex.def Info: sarsa_algorithm.png used on input line 203.
+Package pdftex.def Info: sarsa_algorithm.png used on input line 220.
 (pdftex.def)             Requested size: 354.12573pt x 145.7456pt.
 
 [6 <./offPolicyPseudo.png>] <pseudotmp9.png, id=31, 580.1675pt x 218.8175pt>
 File: pseudotmp9.png Graphic file (type png)
 
 <use pseudotmp9.png>
-Package pdftex.def Info: pseudotmp9.png used on input line 218.
+Package pdftex.def Info: pseudotmp9.png used on input line 235.
 (pdftex.def)             Requested size: 348.10316pt x 131.2915pt.
- [7 <./sarsa_algorithm.png>] [8 <./pseudotmp9.png>]
-Overfull \hbox (16.97055pt too wide) in paragraph at lines 288--304
+ [7 <./sarsa_algorithm.png>]
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 11.03998pt on input line 333.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 8.27998pt on input line 333.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 6.43999pt on input line 333.
+LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <12> not available
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 333.
+LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <9> not available
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 333.
+LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <7> not available
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 333.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 11.03998pt on input line 333.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 8.27998pt on input line 333.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 6.43999pt on input line 333.
+
+<alpha0_1.pdf, id=37, 578.16pt x 433.62pt>
+File: alpha0_1.pdf Graphic file (type pdf)
+ <use alpha0_1.pdf>
+Package pdftex.def Info: alpha0_1.pdf used on input line 338.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<alpha0_3.pdf, id=38, 578.16pt x 433.62pt>
+File: alpha0_3.pdf Graphic file (type pdf)
+ <use alpha0_3.pdf>
+Package pdftex.def Info: alpha0_3.pdf used on input line 339.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<alpha0_4.pdf, id=39, 578.16pt x 433.62pt>
+File: alpha0_4.pdf Graphic file (type pdf)
+ <use alpha0_4.pdf>
+Package pdftex.def Info: alpha0_4.pdf used on input line 340.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<alpha0_5.pdf, id=40, 578.16pt x 433.62pt>
+File: alpha0_5.pdf Graphic file (type pdf)
+ <use alpha0_5.pdf>
+Package pdftex.def Info: alpha0_5.pdf used on input line 341.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+ [8 <./pseudotmp9.png>] <alpha0_2.pdf, id=45, 578.16pt x 433.62pt>
+File: alpha0_2.pdf Graphic file (type pdf)
+ <use alpha0_2.pdf>
+Package pdftex.def Info: alpha0_2.pdf used on input line 347.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+
+<alpha0_2bigY.pdf, id=46, 578.16pt x 433.62pt>
+File: alpha0_2bigY.pdf Graphic file (type pdf)
+ <use alpha0_2bigY.pdf>
+Package pdftex.def Info: alpha0_2bigY.pdf used on input line 353.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+ [9 <./alpha0_1.pdf> <./alpha0_3.pdf
+
+pdfTeX warning: pdflatex (file ./alpha0_3.pdf): PDF inclusion: multiple pdfs wi
+th page group included in a single page
+> <./alpha0_4.pdf
+
+pdfTeX warning: pdflatex (file ./alpha0_4.pdf): PDF inclusion: multiple pdfs wi
+th page group included in a single page
+> <./alpha0_5.pdf
+
+pdfTeX warning: pdflatex (file ./alpha0_5.pdf): PDF inclusion: multiple pdfs wi
+th page group included in a single page
+> <./alpha0_2.pdf
+
+pdfTeX warning: pdflatex (file ./alpha0_2.pdf): PDF inclusion: multiple pdfs wi
+th page group included in a single page
+>] <alphaOptimality.pdf, id=171, 578.16pt x 433.62pt>
+File: alphaOptimality.pdf Graphic file (type pdf)
+
+<use alphaOptimality.pdf>
+Package pdftex.def Info: alphaOptimality.pdf used on input line 359.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+ <gamma0_1alpha0_2.pdf, id=172, 578.16pt x 433.62pt>
+File: gamma0_1alpha0_2.pdf Graphic file (type pdf)
+
+<use gamma0_1alpha0_2.pdf>
+Package pdftex.def Info: gamma0_1alpha0_2.pdf used on input line 368.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+ <gamma0_9alpha0_2.pdf, id=173, 578.16pt x 433.62pt>
+File: gamma0_9alpha0_2.pdf Graphic file (type pdf)
+
+<use gamma0_9alpha0_2.pdf>
+Package pdftex.def Info: gamma0_9alpha0_2.pdf used on input line 369.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+ <gammaOptimality.pdf, id=174, 578.16pt x 433.62pt>
+File: gammaOptimality.pdf Graphic file (type pdf)
+
+<use gammaOptimality.pdf>
+Package pdftex.def Info: gammaOptimality.pdf used on input line 374.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+ [10 <./alpha0_2bigY.pdf> <./alphaOptimality.pdf
+
+pdfTeX warning: pdflatex (file ./alphaOptimality.pdf): PDF inclusion: multiple 
+pdfs with page group included in a single page
+>] <epsilon0_001.pdf, id=230, 578.16pt x 433.62pt>
+File: epsilon0_001.pdf Graphic file (type pdf)
+ <use epsilon0_001.pdf>
+Package pdftex.def Info: epsilon0_001.pdf used on input line 384.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<epsilon0_2.pdf, id=231, 578.16pt x 433.62pt>
+File: epsilon0_2.pdf Graphic file (type pdf)
+ <use epsilon0_2.pdf>
+Package pdftex.def Info: epsilon0_2.pdf used on input line 385.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<epsilon0_3.pdf, id=232, 578.16pt x 433.62pt>
+File: epsilon0_3.pdf Graphic file (type pdf)
+ <use epsilon0_3.pdf>
+Package pdftex.def Info: epsilon0_3.pdf used on input line 386.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<epsilon0_5.pdf, id=233, 578.16pt x 433.62pt>
+File: epsilon0_5.pdf Graphic file (type pdf)
+ <use epsilon0_5.pdf>
+Package pdftex.def Info: epsilon0_5.pdf used on input line 387.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+ [11 <./gamma0_1alpha0_2.pdf> <./gamma0_9alpha0_2.pdf
+
+pdfTeX warning: pdflatex (file ./gamma0_9alpha0_2.pdf): PDF inclusion: multiple
+ pdfs with page group included in a single page
+> <./gammaOptimality.pdf
+
+pdfTeX warning: pdflatex (file ./gammaOptimality.pdf): PDF inclusion: multiple 
+pdfs with page group included in a single page
+>] <epsilon0_1.pdf, id=315, 578.16pt x 433.62pt>
+File: epsilon0_1.pdf Graphic file (type pdf)
+ <use epsilon0_1.pdf>
+Package pdftex.def Info: epsilon0_1.pdf used on input line 393.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+
+<epsilonOptimality.pdf, id=316, 578.16pt x 433.62pt>
+File: epsilonOptimality.pdf Graphic file (type pdf)
+
+<use epsilonOptimality.pdf>
+Package pdftex.def Info: epsilonOptimality.pdf used on input line 399.
+(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
+ [12 <./epsilon0_001.pdf> <./epsilon0_2.pdf
+
+pdfTeX warning: pdflatex (file ./epsilon0_2.pdf): PDF inclusion: multiple pdfs 
+with page group included in a single page
+> <./epsilon0_3.pdf
+
+pdfTeX warning: pdflatex (file ./epsilon0_3.pdf): PDF inclusion: multiple pdfs 
+with page group included in a single page
+> <./epsilon0_5.pdf
+
+pdfTeX warning: pdflatex (file ./epsilon0_5.pdf): PDF inclusion: multiple pdfs 
+with page group included in a single page
+> <./epsilon0_1.pdf
+
+pdfTeX warning: pdflatex (file ./epsilon0_1.pdf): PDF inclusion: multiple pdfs 
+with page group included in a single page
+>] <convergenceQLearningOptimistic.pdf, id=442, 578.16pt x 433.62pt>
+File: convergenceQLearningOptimistic.pdf Graphic file (type pdf)
+
+<use convergenceQLearningOptimistic.pdf>
+Package pdftex.def Info: convergenceQLearningOptimistic.pdf used on input line 
+405.
+(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
+ [13 <./epsilonOptimality.pdf>]
+<optimalityOptimistic.pdf, id=475, 578.16pt x 433.62pt>
+File: optimalityOptimistic.pdf Graphic file (type pdf)
+
+<use optimalityOptimistic.pdf>
+Package pdftex.def Info: optimalityOptimistic.pdf used on input line 411.
+(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
+ [14 <./convergenceQLearningOptimistic.pdf>]
+<init0.pdf, id=512, 578.16pt x 433.62pt>
+File: init0.pdf Graphic file (type pdf)
+ <use init0.pdf>
+Package pdftex.def Info: init0.pdf used on input line 420.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<init10.pdf, id=513, 578.16pt x 433.62pt>
+File: init10.pdf Graphic file (type pdf)
+ <use init10.pdf>
+Package pdftex.def Info: init10.pdf used on input line 421.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<init15.pdf, id=514, 578.16pt x 433.62pt>
+File: init15.pdf Graphic file (type pdf)
+ <use init15.pdf>
+Package pdftex.def Info: init15.pdf used on input line 422.
+(pdftex.def)             Requested size: 173.44933pt x 130.087pt.
+
+<optimalDifInit.pdf, id=515, 578.16pt x 433.62pt>
+File: optimalDifInit.pdf Graphic file (type pdf)
+ <use optimalDifInit.pdf>
+Package pdftex.def Info: optimalDifInit.pdf used on input line 428.
+(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
+
+[15 <./optimalityOptimistic.pdf> <./init0.pdf
+
+pdfTeX warning: pdflatex (file ./init0.pdf): PDF inclusion: multiple pdfs with 
+page group included in a single page
+> <./init10.pdf
+
+pdfTeX warning: pdflatex (file ./init10.pdf): PDF inclusion: multiple pdfs with
+ page group included in a single page
+> <./init15.pdf
+
+pdfTeX warning: pdflatex (file ./init15.pdf): PDF inclusion: multiple pdfs with
+ page group included in a single page
+>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[16 <./optimalDifInit.pdf>] [17]
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 479--495
  [][] 
  []
 
-[9] <target_fix_different_epsilon4.png, id=44, 578.16pt x 431.4519pt>
-File: target_fix_different_epsilon4.png Graphic file (type png)
-
-<use target_fix_different_epsilon4.png>
-Package pdftex.def Info: target_fix_different_epsilon4.png used on input line 3
-22.
-(pdftex.def)             Requested size: 404.70924pt x 302.01427pt.
- [10 <./target_fix_different_epsilon4.png>] <target_fix_0_1.png, id=50, 578.16p
-t x 431.4519pt>
+[18] <target_fix_0_1.png, id=662, 578.16pt x 431.4519pt>
 File: target_fix_0_1.png Graphic file (type png)
 
 <use target_fix_0_1.png>
-Package pdftex.def Info: target_fix_0_1.png used on input line 334.
+Package pdftex.def Info: target_fix_0_1.png used on input line 507.
 (pdftex.def)             Requested size: 289.07928pt x 215.72542pt.
 
-<target_dynamic_0_5_0_8_0_05.png, id=51, 578.16pt x 431.4519pt>
+<target_dynamic_0_5_0_8_0_05.png, id=664, 578.16pt x 431.4519pt>
 File: target_dynamic_0_5_0_8_0_05.png Graphic file (type png)
 
 <use target_dynamic_0_5_0_8_0_05.png>
-Package pdftex.def Info: target_dynamic_0_5_0_8_0_05.png used on input line 339
+Package pdftex.def Info: target_dynamic_0_5_0_8_0_05.png used on input line 512
 .
 (pdftex.def)             Requested size: 289.07928pt x 215.72542pt.
- [11 <./target_fix_0_1.png>]
-<target_fix_0_001.png, id=56, 578.16pt x 431.4519pt>
-File: target_fix_0_001.png Graphic file (type png)
+ [19 <./target_fix_0_1.png>]
+<target_fix_different_epsilon4.png, id=670, 578.16pt x 431.4519pt>
+File: target_fix_different_epsilon4.png Graphic file (type png)
 
-<use target_fix_0_001.png>
-Package pdftex.def Info: target_fix_0_001.png used on input line 352.
-(pdftex.def)             Requested size: 289.07928pt x 215.72542pt.
- [12 <./target_dynamic_0_5_0_8_0_05.png>] [13 <./target_fix_0_001.png>] [14]
-Overfull \hbox (16.97055pt too wide) in paragraph at lines 445--461
+<use target_fix_different_epsilon4.png>
+Package pdftex.def Info: target_fix_different_epsilon4.png used on input line 5
+26.
+(pdftex.def)             Requested size: 346.89867pt x 258.87314pt.
+ [20 <./target_dynamic_0_5_0_8_0_05.png>]
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 538--554
  [][] 
  []
 
-
-Overfull \hbox (16.97055pt too wide) in paragraph at lines 487--503
- [][] 
- []
-
-[15] [16] [17] (./labreport2.aux)
+[21 <./target_fix_different_epsilon4.png>] [22] [23] (./labreport2.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7048 strings out of 493311
- 105329 string characters out of 6143651
- 222491 words of memory out of 5000000
- 10086 multiletter control sequences out of 15000+600000
- 158210 words of font info for 290 fonts, out of 8000000 for 9000
+ 7244 strings out of 493311
+ 108873 string characters out of 6143651
+ 221709 words of memory out of 5000000
+ 10242 multiletter control sequences out of 15000+600000
+ 191211 words of font info for 330 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 47i,22n,47p,1546b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 47i,13n,47p,1418b,340s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
 ts/type1/public/fourier/fourier-mex.pfb></usr/share/texmf-dist/fonts/type1/publ
-ic/fourier/fourier-ml.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/fou
-rier-mlit.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/fourier-ms.pfb>
-</usr/share/texmf-dist/fonts/type1/adobe/utopia/putb8a.pfb></usr/share/texmf-di
-st/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-dist/fonts/type1/adobe
-/utopia/putri8a.pfb>
-Output written on labreport2.pdf (17 pages, 411277 bytes).
+ic/fourier/fourier-mlit.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/f
+ourier-ms.pfb></usr/share/texmf-dist/fonts/type1/adobe/utopia/putb8a.pfb></usr/
+share/texmf-dist/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-dist/fon
+ts/type1/adobe/utopia/putri8a.pfb>
+Output written on labreport2.pdf (23 pages, 1485380 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
- 62 compressed objects within 1 object stream
+ 707 PDF objects out of 1000 (max. 8388607)
+ 190 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 47657 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 51858 words of extra memory for PDF output out of 61914 (max. 10000000)
 
