@@ -17,6 +17,8 @@ public class TestsimulationTD {
 	static ArrayList<Integer> allRuns = new ArrayList<Integer>();
 	static double averageRuns = 0;
 	static int timesRun = 0;
+	static double delta;
+	static ArrayList<Double> optimalities = new ArrayList<Double>();
 
 	static Position predator;
 	static Position prey;
@@ -29,10 +31,12 @@ public class TestsimulationTD {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    double gamma = 0.8;
-    double alpha = 0.1;
-    // egreedy with epsilon = 0.1
-    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+       
+    // egreedy with epsilon
+    double epsilon = 0.1;
+    double alpha = 0.5;
+    double gamma = 0.9;
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
     // SoftMax with temperature tau = 0.1
     //SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
@@ -50,11 +54,17 @@ public class TestsimulationTD {
 	}*/
 	
     boolean verbose=false;
-    int nrRuns = 100000;
+    int nrRuns = 20000;
     testQ(predPolicy, preyPolicy, verbose, nrRuns);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
-    predPolicy.printTable(new Position(5,5));
-    predPolicy.printActionsTable(new Position(5,5));
+    //predPolicy.printTable(new Position(5,5));
+    //predPolicy.printActionsTable(new Position(5,5));
+	try {
+	    output(epsilon, alpha, gamma);
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
     
     // TODO: Change to Sarsa
@@ -110,6 +120,16 @@ public class TestsimulationTD {
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
+    			if((timesRun%500)==0) {
+    				TestPolicy optimal = new TestPolicy();
+    				HashMap test = ((QLearning)predPolicy).getStateactions();
+    				delta = optimal.optimality(test);
+    				show("\nRuns: "+timesRun+ " optimality: "+delta);
+    				optimalities.add(delta);
+    				//if(delta>0.80) {
+    				//((QLearning)predPolicy).printActionsTable(new Position(5,5));
+    				//}
+    			}
     		}else{
     			runs++;
     		}
@@ -123,6 +143,10 @@ public class TestsimulationTD {
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
+	TestPolicy optimal = new TestPolicy();
+	HashMap test = ((QLearning)predPolicy).getStateactions();
+	double delta = optimal.optimality(test);
+	show("\nRuns: "+timesRun+ " optimality: "+delta);
     }
     
     public static void testQ(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
@@ -176,11 +200,12 @@ public class TestsimulationTD {
     			if((timesRun%500)==0) {
     				TestPolicy optimal = new TestPolicy();
     				HashMap test = ((QLearning)predPolicy).getStateactions();
-    				double delta = optimal.optimality(test);
+    				delta = optimal.optimality(test);
     				show("\nRuns: "+timesRun+ " optimality: "+delta);
-    				if(delta>0.80) {
-    				((QLearning)predPolicy).printActionsTable(new Position(5,5));
-    				}
+    				optimalities.add(delta);
+    				//if(delta>0.80) {
+    				//((QLearning)predPolicy).printActionsTable(new Position(5,5));
+    				//}
     			}
     		}else{
     			runs++;
@@ -192,12 +217,6 @@ public class TestsimulationTD {
     //((QLearning)predPolicy).printList(new Position(5,5));
 	//System.out.println("\nAll runs overview:");
 	//System.out.println(allRuns);
-	try {
-	    output();
-	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
@@ -269,26 +288,34 @@ public class TestsimulationTD {
     }
     
     // outputs the state actions into a file policy.data
-    public static void output() throws Exception {
-	File policyfile = new File("convergenceQLearning.data");
+    public static void output(double epsilon, double a, double g) throws Exception {
+	File policyfile = new File("convergenceQLearning_"+epsilon+'_'+a+'_'+g+".data");
 	policyfile.delete();
 	policyfile.createNewFile();
+	File optfile = new File("optimality_"+epsilon+'_'+a+'_'+g+".data");
+	optfile.delete();
+	optfile.createNewFile();
 	//System.out.println("trying to write");
 	if(!allRuns.isEmpty()) {
 		//System.out.println(allRuns);
 		for(int times : allRuns){
-	    //Enumeration enu = stateactions.keys();
-	    //while(enu.hasMoreElements()) {
-		//String state = (String) enu.nextElement();
-		//String action = (String) stateactions.get(state);
 			try {
 				write(policyfile, String.valueOf(times)+"\n", true);
 			} catch (Exception e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		    System.out.println("Cannot write to file");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Cannot write to file");
+			}
 		}
-	    }
+		for(double delta : optimalities) {
+			try {
+				write(optfile, String.valueOf(delta)+"\n", true);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Cannot write to file");
+			}
+		}
 	} else
 	    show("\nRuns each episode is empty!!");
     }

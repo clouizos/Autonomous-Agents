@@ -95,7 +95,7 @@
 \maketitle
 \bigskip
 \begin{abstract}
-The purpose of this assignment is to focus on the research of a learning scenario in which the agent does not know the transition probabilities, nor the reward structure.  In order to complete that, we have implemented and tested various methods, namely  Q-learning, On-policy Monte Carlo Control, Off-policy Monte Carlo Control and Sarsa in order to explain their theoretical differences, to compare their results and to conclude which one is the best policy regarding the convergence speed. (Conclusion)\\
+The aim of this assignment is to focus on the research of a learning scenario in which the agent does not know the transition probabilities, nor the reward structure. For completing that, we have implemented and tested various methods, namely  Q-learning, On-policy Monte Carlo Control, Off-policy Monte Carlo Control and Sarsa in order to explain their theoretical differences, to compare their results and to conclude which one is the best policy regarding the convergence speed. (Conclusion)\\
 \end{abstract}
 %\newpage
 %\tableofcontents 
@@ -110,35 +110,20 @@ $\bullet$ On-policy Monte-Carlo Control; \\
 $\bullet$ Off-policy Monte-Carlo Control; \\
 $\bullet$ Sarsa.
 
-
-% Written part introduction from Chuan
-TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. Like Monte Carlo methods, TD methods can learn directly from raw experience without a model of the environment's dynamics. Like DP, TD methods update estimates based in part on other learned estimates, without waiting for a final outcome (they bootstrap).
-Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to $V(s_t)$ (only then $R_t$ is  known), TD methods need wait only until the next time step.
-
-%Unlike the previous chapter, here we do not assume complete knowledge of the environment.
-%Monte Carlo methods require only experience--sample sequences of states, actions, and rewards from on-line or simulated interaction with an environment.
-%Learning from simulated experience is also powerful.
-
-%Monte Carlo methods are ways of solving the reinforcement learning problem based on averaging sample returns.
-%It is only upon the completion of an episode that value estimates and policies are changed - methods based on averaging complete returns.
-
-%TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. 
-%Model-free (Monte Carlo) and bootstrap (DP).
-%Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to $V(s_t)$ (only then $R_t$ is  known), TD methods need wait only until the next time step. \\ \\
-
-
-In this assignment, we have considered the learning methods for estimating value functions and discovering  optimal policies.\\ 
-Regarding Monte Carlo methods, they require only experience through sample sequences of states, actions and rewards from on-line or simulated interaction with an environment. They do not require prior knowledge of the environments dynamics, yet can still achieve an optimal behavior. Concerning the disadvantages of these methods, Monte Carlo do not require a model and is conceptually simple, but is not suited for step-by-step incremental  computation.\\
-Temporal Difference Learning (TD Learning) represents a combination of Monte Carlo and Dynamic Programming ideas. Like MC methods, TD methods do not require a model, while like DP, TD methods bootstrap; they update estimates in part on other learned estimates, without waiting for a final outcome like MC:\\
+In this assignment, we have explored the learning methods for estimating value functions and discovering  optimal policies.\\ 
+Monte Carlo methods (MC methods) require only experience through sample sequences of states, actions and rewards from on-line or simulated interaction with an environment. They do not require prior knowledge of the environment's dynamics, yet can still achieve an optimal behavior. Concerning the disadvantages of these methods, Monte Carlo do not require a model and is conceptually simple, but is not suited for step-by-step incremental  computation.\\
+Temporal-Difference Learning (TD Learning) represents a combination of Monte Carlo and Dynamic Programming ideas. Like MC methods, TD methods do not require a model, while like DP, TD methods bootstrap; they update estimates in part on other learned estimates, without waiting for a final outcome like MC:
 \begin{align}
 V(s_t) \leftarrow V(s_t) + \alpha [R_t-V(s_t)] \qquad \text{MC: update target is $R_t$} \\
-V(s_t) \leftarrow V(s_t) + \alpha[r_{t+1}-\gamma V(s_{t+1})-V(s_t)] \qquad \text{TD: update target is $r_{t+1}+\gamma V_t(s_{t+1})$}
+V(s_t) \leftarrow V(s_t) + \alpha[r_{t+1}+\gamma V(s_{t+1})-V(s_t)] \qquad \text{TD: update target is $r_{t+1}+\gamma V_t(s_{t+1})$}
 \end{align}
- 
-%overview of what will follow
-We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards, we present in section~\ref{methods} the methods that were implemented in the aforementioned environment. The results according to each of these methods as well as the comparison between them are displayed in detail in section~\ref{results} and the brief conclusion is indicated in section~\ref{discussion}.
+During this research, our main focus is to understand better the idea of each of the learning methods and to highlight some demands like: What are the differences, both theoretical and practical, between all the implemented methods? Which method converges to the most optimal policy faster?\\ \\
 
-\subsection{Environment}
+
+%overview of what will follow
+In order to do that, we have structured the report in 4 sections comprising: section 2, where we explain the theoretical background of each method and learn how to implement the pseudo-code; in section 3 we present  some of the theoretical differences between the methods and we show the experiments through results and graphics, afterwards in section 4 we discuss about the brief conclusion of this assignment.
+
+\subsection{Environment: Should we keep this?}
 \label{environment}
 The environment is a 11x11 grid which is toroidal and each state is encoded as the positions of the two agents, predator and prey.
 %insert later dataflow diagram
@@ -149,15 +134,16 @@ in any state. The prey has a fixed policy and hence it can be modelled as part o
 
 \section{Methods and Procedures}
 \label{methods}
-\subsection{\textbf {Q-learning}}
-\subsubsection*{Q-learning with $\epsilon$-greedy action selection}
+\subsection{\textbf {Action selection}}
+\subsubsection*{$\epsilon$-greedy action selection}
 Using $\epsilon$-greedy method underlines the idea of the agent choosing the action that it believes to have the best long-term effect with probability $1-\epsilon$ , and it chooses an action uniformly at random. The action is selected independently of the action-value estimates and the highest estimated reward is called the greediest action . This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered.
 
-\subsubsection*{Q-learning with Softmax action selection}
+\subsubsection*{Softmax action selection}
 Considering the Softmax Action Selection,  we have chosen an action $a$ on the $t$-th play with the probability that depends on the value of $Q$ and $\tau$, which represents the temperature and is defined as a positive parameter. Therefore, we can assign the distribution in the following way:
-\begin{figure}[H] \centering
-\includegraphics[scale=0.6]{numeqtmp1.png}
-\end{figure}
+\begin{align}
+\frac{e^{Q_t(a)/\tau}}{\sum_{b=1}^{n} e^{Q_t(b)/\tau}}
+\end{align}
+It is important to note that high temperatures cause the actions to be all (nearly) equiprobable, whereas low temperatures cause a greater difference in selection probability for actions that differ in their value estimates. In the limit as $\tau \to 0 $  , softmax action selection becomes the same as greedy action selection. \\
 A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavourable.\\
 
 
@@ -208,20 +194,30 @@ The Off-Policy Monte Carlo Control uses off-policy evaluation as mentioned befor
 Sarsa is an on-policy method based on model-free action policy estimation. It determines the optimal policy while controlling the MDP with respect to the algorithm which behaves according to the same policy that has been improved.
 
 \subsection*{Sarsa On-Policy TD Control}
-Sarsa is an on-policy method of TD learning which applies for every iteration the quintuple $Q(s_t, a_t, r_{t+1}, s_{t+1}, a_{t+1})$, where  $\mathbf{s_t, a_t}$ are the original state and action, $\mathbf{r_{t+1}}$ is the reward observed in the following state and $\mathbf{s_{t+1}, a_{t+1}}$ are the new state-action pair.\\
-Following the explanation of the quintuple from above, its update expression for defining the Sarsa method is:
+Sarsa is an on-policy method of TD learning, whose name is derived from the quintuple $Q(s_t, a_t, r_{t+1}, s_{t+1}, a_{t+1})$, where  $\mathbf{s_t, a_t}$ are the original state and action, $\mathbf{r_{t+1}}$ is the reward observed in the following state and $\mathbf{s_{t+1}, a_{t+1}}$ are the new state-action pair. It expresses the transition from one state-action pair to the next and its update rule is as follow:
 \begin{align}
 Q(s_t, a_t) \gets Q(s_t, a_t)+\alpha[r_{t+1}+\gamma Q(s_{t+1}, a_{t+1})-Q(s_t, a_t)]
 \end{align}\\
-The steps that should be completed for each iteration according to this method are presented in Figure 2.3 below:
+The algorithm for Sarsa is presented in Figure 2.3 below:
 \begin{figure}[H] \centering
 \includegraphics[scale=0.6]{sarsa_algorithm.png}
 \caption{Sarsa Pseudo-code} \label{figure:Sarsa}
 \end{figure}
-As in all on-policy methods, we continually estimate $Q^\pi$ for the behavior policy $\pi$, and at the same time change $\pi$ toward greediness with respect to $Q^\pi$. The update is done after every transition from a nonterminal state $s$. If $s'$ is terminal, therefore $Q(s',a')$ will be defined as zero. This rule uses every element of the quintuple of events, that make up a transition from one state-action pair to the next one.\\
+As in all on-policy methods, we continually estimate $Q^\pi$ for the behavior policy $\pi$, and at the same time change $\pi$ toward greediness with respect to $Q^\pi$. The update is done after every transition from a nonterminal state $s$. If $s'$ is terminal, then $Q(s',a')$ will be defined as zero. \\
 Regarding both Q-learning and Sarsa methods, the major difference between them is that the maximum reward for the next state is not necessarily used for updating the Q-values.
 
-
+\subsection{\textbf {Q-learning}}
+Q-learning is a model-free method which works by learning an action-value function that ultimately gives the expected utility of taking a given action in a given state and following the optimal policy thereafter.  The optimal policy can be constructed by selecting the action with the highest value in each state.
+\subsection*{Q-learning Off-policy TD Control}
+Q-learning is an off-policy TD control algorithm. It directly approximates the optimal policy $Q^*$ independent from the policy being followed. Its update rule is as follows:
+\begin{align}
+Q(s_t,a_t) \leftarrow Q(s_t,a_t)+\alpha[r_{t+1}+\gamma \max_a Q(s_{t+1},a)-Q(s_t,a_t)]
+\end{align}
+The influence of the policy is still in determining which state-action pairs are visited and updated. However, as long as all pairs continue to be updated, which is the minimal requirement to find optimal behavior in the general case, correct convergence shall be reached. Convergence to $Q^*$ with a probability of 1, requires stochastic approximation conditions on the sequence of step-size parameters, i.e. discounted $\epsilon$, $\alpha$. The algorithm is presented in Figure $\ref{figure:Q}$ below:
+\begin{figure}[H] \centering
+\includegraphics[scale=0.6]{pseudotmp9.png}
+\caption{Q-learning: An off-policy TD control algorithm.} \label{figure:Q}
+\end{figure}
 
 \subsection{Reducing the state space}
 \label{reduce}
@@ -313,9 +309,24 @@ In the calculated reduced space this projected state[3][8][5][5], which has the 
 
 \subsection{Theoretical Differences}
 
+\subsection{On-Policy Monte Carlo Control}
 
 \subsection{Off-Policy Monte Carlo Control}
-The purpose of this experiment was to implement Off-Policy Monte Carlo Control algorithm and to observe the results in terms of the target policy, maximum action value function, and also the number of step that the predator take to catch the prey. We also tried several approaches in the behavior policy in order to get a better results. Firstly we set the $\epsilon$ value in $\epsilon$-greedy policy as a fix number, then we tried a different approach by making it dynamic by reducing the value after each fix number of iterations. The idea behind this approach was to put more chance in exploration at the beginning and slowly become more deterministic time after time. 
+The purpose of this experiment was to implement Off-Policy Monte Carlo Control algorithm and to observe the results in terms of the target policy, maximum action value function, and also the number of step that the predator take to catch the prey. Different fix value of $\epsilon$ also been tested to show how this value, which represents the probability of exploring and exploiting, affect the learning processes of action value function. We also tried another approaches beside fix value to set the $\epsilon$ of the behavior policy in order to get a better results. We organize this subsection starting from presenting the results of using different fix values of $\epsilon$, then we will describe how different approach of setting $\epsilon$ value will affect the learning, and finally we will show the convergence of the target policy. 
+
+\subsubsection*{Experiment with different values of $\epsilon$}
+In this part we made some experiments by changing the fix value of $\epsilon$. Since the epsilon represents the chance of exploring and exploiting in learning, then we will make a conclusion related to that matter. 
+
+The values that we tested was 0.5, 0.3, 0.1, and 0.001, and the result is shown by figure $\ref{figure:differentFixEpsilon}$ below. 
+\begin{figure}[H] \centering
+\includegraphics[scale=0.7]{target_fix_different_epsilon4.png}
+\caption{Catching time with different fixed epsilon value} \label{figure:differentFixEpsilon}
+\end{figure}
+
+The figure above tells us that in our test case, $\epsilon$ value of 0.1 and 0.3 give the best performance, while 0.5 result shows a slower convergence than the previous values and 0.001 become the worst. This result con
+
+\subsubsection*{Experiment with different approaches of setting $\epsilon$ value}
+Firstly we set the $\epsilon$ value in $\epsilon$-greedy policy as a fix number, then we tried a different approach by making it dynamic by reducing the value after each fix number of iterations. The idea behind this approach was to put more chance in exploration at the beginning and slowly reduced the chance thus it started to exploit more time after time, but also maintained it to be stochastic in order to keep the learning process run.
 
 Figure $\ref{figure:fixEpsilon}$ shows the number of steps the predator took to catch the prey in every iteration governed by the target policy. The $\epsilon$ value was set to be fix of 0.1. In order to get a consistent measurement, the episodes were generated from fix start points of the predator and the prey, which were (0,0) and (5,5) respectively. The time that the predator took to catch the prey can be used to measure the performance of Off-Policy Monte Carlo Learning after each iteration, because the target policy uses the $Q$ value immediately after each iteration. Since the target policy was greedy, then it always take best action based on the $Q$ value. The better the $Q$ value, the better target policy's performance should be.
 
@@ -331,19 +342,19 @@ Figure $\ref{figure:fixEpsilon}$ shows the number of steps the predator took to 
 
 Figure $\ref{figure:dynamicEpsilon}$ was generated from the same setting as before except the value of $\epsilon$ was set to dynamically changed over iteration. First we set the value to 0.5 then after every 500 iterations it was reduced by multiplying with 0.8. In order to maintain the value not become too small, we set the minimum value to 0.1, because if $\epsilon$ is too small then it will become greedy and almost never explore anymore. As a consequence, learning processes will stop because both behavior and target policy always agree on actions taken in the generated episodes.
 
-Even though the difference between the two figures above is not very significant, but we can still see the influence of setting the $\epsilon$ value to a fix and to a dynamic value. For fix value approach, the number of time drop quicker than the one from dynamic approach. This is because the fix value approach exploited more even from beginning due to the probability of exploiting much larger than exploring. On the other hand,the dynamic approach give the same probability between exploiting and exploring, so at the beginning it explored more than the fix value approach. Now let us see the last 3000 iterations from the two figures, it can be seen that dynamic value approach shows a slightly better performance, it fluctuates less than that in the other one.
+Even though the difference between the two figures above is not very significant, but we can still see the influence of setting the $\epsilon$ value to a fix and to a dynamic value. For fix value approach, the number of time drop quicker than the one from dynamic approach. This is because the fix value approach exploited more even from beginning due to the probability of exploiting much larger than exploring. On the other hand,the dynamic approach give the same probability between exploiting and exploring, so at the beginning it explored more than the fix value approach. Now let us see the last 3000 iterations from the two figures, it can be seen that dynamic value approach shows a slightly better performance, it fluctuates less than that in the other figure. Give more chance to explore at the beginning might help the learning process to find the optimal value slightly faster.
+
+{\raggedleft{}Some text flushed right.}
 
 
-\begin{figure}[H] \centering
-\includegraphics[scale=0.5]{target_fix_different_epsilon.png}
-\caption{Catching time with dynamic epsilon value} \label{figure:dynamicEpsilon}
-\end{figure}
 
 \begin{figure}[H] \centering
 \includegraphics[scale=0.5]{target_fix_0_001.png}
 \caption{Catch time with dynamic epsilon value} 
 \end{figure}
 
+\subsubsection*{Convergence}
+In this section we will show that the Off-Policy Monte Carlo Control method can converge to the optimal policy
 \begin{table}[H]
 \caption{Target Policy Off-Policy Monte Carlo Control}
 \centering
@@ -362,7 +373,7 @@ Even though the difference between the two figures above is not very significant
 9&$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\uparrow$&	$\uparrow$\\	
 10&$\uparrow$&	$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$
 \end{tabular}
-\label{rVIt}
+\label{table:TargetPolicy}
 \end{table}
 
 The goal of the experiment in this algorithm was to evaluate the arbitrary policy, and to measure the number of iterations it took to converge. There were two parameters that should be defined, the discount factor $\mathbf{\gamma}$ and a threshold value for the stopping condition $\mathbf{\theta}$. The values of the parameters along with some results are shown in the following table.
