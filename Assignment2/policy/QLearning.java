@@ -43,18 +43,6 @@ public class QLearning implements Policy {
 	    alpha = a;	      
 	}
 	
-	public static void main(String[] args) {
-	    double gamma = 0.5;
-	    double alpha = 0.1;
-	    // egreedy with epsilon = 0.1
-	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
-	    // SoftMax with temperature tau = 0.1
-	    //SoftMax policy = new SoftMax(0.1);
-	    // qlearning with policy
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
-	    predPolicy.printTable(new Position(5,5));
-	}
-	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
 	public void initQ(double value) {
 	    // prey fixed at (5,5)
@@ -64,7 +52,10 @@ public class QLearning implements Policy {
 		    	for (String action : actions){
 			    	State s = new State(new Position(i, j), prey, action);
 			    	// init Q(s,a) = 0 
-			    	qtable.put(s, value);	
+			    	if(s.endState())
+			    		qtable.put(s, 0.0);
+			    	else
+			    		qtable.put(s, value);	
 		    	}
 		    }
 		}
@@ -81,7 +72,7 @@ public class QLearning implements Policy {
 		    for(int j = 0; j < 11; j++) {
 		    	for (String action : actions){
 		    		State s = new State(new Position(i, j), prey, action);
-		    		if(action.equals(vip.getAction(s))) {
+		    		if(action.equals(vip.getAction(s))&&!s.endState()) {
 		    				value = (Double)statevalues.get(s.toString());
 		    				qtable.put(s, value);
 		    		} else
@@ -154,6 +145,18 @@ public class QLearning implements Policy {
     public static void show(String s) {
         System.out.print(s);
     }
+    
+	public static void main(String[] args) {
+	    double gamma = 0.5;
+	    double alpha = 0.1;
+	    // egreedy with epsilon = 0.1
+	    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+	    // SoftMax with temperature tau = 0.1
+	    SoftMax policy = new SoftMax(0.1);
+	    // qlearning with policy
+	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+	    predPolicy.printTable(new Position(5,5));
+	}
     
     /*
      *  Print methods for table and list of statevalues

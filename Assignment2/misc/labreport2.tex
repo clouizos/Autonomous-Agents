@@ -1,3 +1,6 @@
+%http://pastebin.com/PxAwdRav
+%http://pastebin.com/QrbRv3Dc
+%http://pastebin.com/dmxhDtcS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LaTeX Example: Project Report
 %
@@ -70,7 +73,7 @@
 \title{
 		%\vspace{-1in} 	
 		\usefont{OT1}{bch}{b}{n}
-		\normalfont \normalsize \textsc{Autonomous Agents Assignment 1} \\ [25pt]
+		\normalfont \normalsize \textsc{Autonomous Agents Assignment 2} \\ [25pt]
 		\horrule{0.5pt} \\[0.4cm]
 		\huge Single Agent Learning \\
 		\horrule{2pt} \\[0.5cm]
@@ -91,53 +94,47 @@
 \begin{document}
 \maketitle
 \bigskip
-\bigskip
-\bigskip
-\bigskip
 \begin{abstract}
-%change first sentence
-Insert abstract
+The purpose of this assignment is to focus on the research of a learning scenario in which the agent does not know the transition probabilities, nor the reward structure.  In order to complete that, we have implemented and tested various methods, namely  Q-learning, On-policy Monte Carlo Control, Off-policy Monte Carlo Control and Sarsa in order to explain their theoretical differences, to compare their results and to conclude which one is the best policy regarding the convergence speed. (Conclusion)\\
 \end{abstract}
 %\newpage
 %\tableofcontents 
 %\newpage
 
 \section{Introduction}
-%general overview of model-free learning
+In this research, we have considered that the model is unknown and, in this situation, two approaches can be pursued. A model-based approach tries to learn the model explicitly and then use methods like Dynamic Programming to compute the optimal policy with respect to the estimate of the model. On the other hand, a model-free approach concentrates on learning the state value function (Q-value function) directly and obtaining the optimal policy from this estimates.\\
+We shall try to focus on model-free methods for learning in MDPs by making use of: \\
+$\bullet$ Q-learning with $\epsilon$-greedy action selection; \\
+$\bullet$ Q-learning with Softmax action selection; \\
+$\bullet$ On-policy Monte-Carlo Control; \\
+$\bullet$ Off-policy Monte-Carlo Control; \\
+$\bullet$ Sarsa.
 
-In this assignment we will focus on model-free learning.
 
-Q-learning with $\epsilon$-greedy action selection.
-Q-learning with Softmax action selection.
-On-policy Monte-Carlo Control.
-Off-policy Monte-Carlo Control.
-Sarsa.
+% Written part introduction from Chuan
+TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. Like Monte Carlo methods, TD methods can learn directly from raw experience without a model of the environment's dynamics. Like DP, TD methods update estimates based in part on other learned estimates, without waiting for a final outcome (they bootstrap).
+Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to $V(s_t)$ (only then $R_t$ is  known), TD methods need wait only until the next time step.
 
-On-line/Off-line.
-On-policy/Off-policy
+%Unlike the previous chapter, here we do not assume complete knowledge of the environment.
+%Monte Carlo methods require only experience--sample sequences of states, actions, and rewards from on-line or simulated interaction with an environment.
+%Learning from simulated experience is also powerful.
 
-5. Monte Carlo Methods (Sutton) 
+%Monte Carlo methods are ways of solving the reinforcement learning problem based on averaging sample returns.
+%It is only upon the completion of an episode that value estimates and policies are changed - methods based on averaging complete returns.
 
-Unlike the previous chapter, here we do not assume complete knowledge of the environment.
-Monte Carlo methods require only experience--sample sequences of states, actions, and rewards from on-line or simulated interaction with an environment.
-Learning from simulated experience is also powerful.
+%TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. 
+%Model-free (Monte Carlo) and bootstrap (DP).
+%Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to $V(s_t)$ (only then $R_t$ is  known), TD methods need wait only until the next time step. \\ \\
 
-Monte Carlo methods are ways of solving the reinforcement learning problem based on averaging sample returns.
-It is only upon the completion of an episode that value estimates and policies are changed - methods based on averaging complete returns.
 
-6. Temporal-Difference Learning (Q-learning Sarsa)
-
-TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. 
-Model-free (Monte Carlo) and bootstrap (DP).
-
-Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to V(s_t) (only then R_t is  known), TD methods need wait only until the next time step.
-
-\begin{figure}[H] \centering
-%\fbox{\includegraphics[scale=0.5]{figtmp18.png}}
-\caption{Generalized Policy Iteration\cite{suttonBarto}} 
-\label{GPI}
-\end{figure}
-
+In this assignment, we have considered the learning methods for estimating value functions and discovering  optimal policies.\\ 
+Regarding Monte Carlo methods, they require only experience through sample sequences of states, actions and rewards from on-line or simulated interaction with an environment. They do not require prior knowledge of the environments dynamics, yet can still achieve an optimal behavior. Concerning the disadvantages of these methods, Monte Carlo do not require a model and is conceptually simple, but is not suited for step-by-step incremental  computation.\\
+Temporal Difference Learning (TD Learning) represents a combination of Monte Carlo and Dynamic Programming ideas. Like MC methods, TD methods do not require a model, while like DP, TD methods bootstrap; they update estimates in part on other learned estimates, without waiting for a final outcome like MC:\\
+\begin{align}
+V(s_t) \leftarrow V(s_t) + \alpha [R_t-V(s_t)] \qquad \text{MC: update target is $R_t$} \\
+V(s_t) \leftarrow V(s_t) + \alpha[r_{t+1}-\gamma V(s_{t+1})-V(s_t)] \qquad \text{TD: update target is $r_{t+1}+\gamma V_t(s_{t+1})$}
+\end{align}
+ 
 %overview of what will follow
 We begin the following report by first explaining the predator-prey environment and defining it's goal in section~\ref{environment}. Afterwards, we present in section~\ref{methods} the methods that were implemented in the aforementioned environment. The results according to each of these methods as well as the comparison between them are displayed in detail in section~\ref{results} and the brief conclusion is indicated in section~\ref{discussion}.
 
@@ -152,82 +149,79 @@ in any state. The prey has a fixed policy and hence it can be modelled as part o
 
 \section{Methods and Procedures}
 \label{methods}
-\subsection{Implementation overview}
-In our implementation, the agents are encoded as positions through the position class: each entity consists of an x,y coordinate denoting its position in the 11x11 grid. A wrapper method takes care of the grid being toroidal and aformented movements herein by the agent. A state consists of two positions that of the prey and of the predator. Herein we have encoded the end state and methods for giving the conditional next state(s). Policies are encapsulated into the policy interface which ensures each implemented policy to have a getAction() method. In each implemented policy, the statespace is defined by a hashtable of all possible states; visualized as statespace[predator(x,y), prey(x,y)].
-\begin{figure}[H] \centering
-%\includegraphics[scale=0.6]{uml_general.pdf}
-\caption{Predator-prey domain framework} \label{Predator-prey domain framework}
-\end{figure}
-\begin{figure}[H] \centering
-%\includegraphics[scale=0.6]{uml_policies1.pdf}
-\caption{Random policies implemented} \label{Policies1}
-\end{figure}
-\begin{figure}[H] \centering
-%\includegraphics[scale=0.6]{uml_policies2.pdf}
-\caption{Policy evaluation and iteration implemented} \label{Policies2}
-\end{figure}
-\begin{figure}[H] \centering
-%\includegraphics[scale=0.58]{uml_policies3.pdf}
-\caption{Policy value iteration implemented} \label{Policies3}
-\end{figure}
+\subsection{\textbf {Q-learning}}
+\subsubsection*{Q-learning with $\epsilon$-greedy action selection}
+Using $\epsilon$-greedy method underlines the idea of the agent choosing the action that it believes to have the best long-term effect with probability $1-\epsilon$ , and it chooses an action uniformly at random. The action is selected independently of the action-value estimates and the highest estimated reward is called the greediest action . This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered.
 
-\subsection{Iterative Policy Evaluation}
-\label{PEval}
-In Markov Decision Processes, one of the important steps can be represented by the evaluation which consists of finding the state-value functions $V^\pi$ for an arbitrary policy, $\pi$. The state-value functions estimate the value of a state in terms of an expected return that can be obtained from that state. The equation for calculating $V^\pi$ is corresponding to ~\ref{oriV}:
+\subsubsection*{Q-learning with Softmax action selection}
+Considering the Softmax Action Selection,  we have chosen an action $a$ on the $t$-th play with the probability that depends on the value of $Q$ and $\tau$, which represents the temperature and is defined as a positive parameter. Therefore, we can assign the distribution in the following way:
+\begin{figure}[H] \centering
+\includegraphics[scale=0.6]{numeqtmp1.png}
+\end{figure}
+A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavourable.\\
+
+
+\subsection{\textbf {On-Policy Monte Carlo}}
+For on-policy Monte Carlo method we have considered the $\epsilon$-greedy policies, meaning that most of the time the chosen action has the maximal estimated action value, but while considering the probability $\epsilon$ they instead select an action at random. The on-policy method attempt  to estimate the action-value function with respect to the current policy.
+
+\subsubsection*{On-Policy Evaluation}
+On-policy evaluates and improves the policy that is already used by the agent in order to decide which action to pick at a specific state. The policy that is generally used in on-policy control methods is a soft one where the probability is $\pi(s,a) > 0$ for all states and possible actions. The on-policy method implemented in this assignment uses an $\epsilon$-greedy policy, which is an example of an $\epsilon$-soft policy, and this translates into that most of the times the greedy action will be selected, except of some small random probability $\epsilon > 0$ to select a different random action.
+
+On-policy Monte Carlo control behaves like a Generalized Policy Iteration (GPI). The evaluation step is composed by generating random episodes, estimating the action-value function in each one, and then averaging over all of them. First-visit Monte Carlo methods are used in order to estimate the action-value function for each episode derived from the current policy. The returns are computed using the equation~\ref{returnOn}, where $t$ is the state from where we begin to calculate, $k$ is the number of the subsequent states, $r$ is the immediate reward and $\gamma$ is the discount factor.
 \begin{align}
-V^\pi(s)&=E_\pi\left\lbrace r_{t+1}+\gamma V^\pi(s_{s+1})\mid s_t=s \right\rbrace\notag\\
-&=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a[R_{ss'}^a+\gamma V^\pi(s')] \label{oriV}
+R_t = \sum_{k=0}^{K}\gamma^k r_{t+k+1} \label{returnOn}
 \end{align}
-where $\mathbf{\pi(s,a)}$ is the probability of taking action $\mathbf{a}$ in state $\mathbf{s}$ under policy $\mathbf{\pi}$, $P_{ss'}^a$ is the probability of ending up at state $\mathbf{s'}$ after taking action $\mathbf{a}$ in state $\mathbf{s}$, $R_{ss'}^a$ is expected immediate reward on transition from $\mathbf{s}$ to $\mathbf{s'}$ under action $\mathbf{a}$, and $\mathbf{\gamma}$ is a discount factor.\\
+After the processing of each episode, the improvement of the policy occurs by getting the action that produces the highest reward in a state, and updates the probabilities in the $\epsilon$-soft policy according to that action, which becomes the new greedy action. The pseudo code is illustrated in Figure ~\ref{onmc}.
 
-Since the model of the environment is completely known, the equation $\eqref{oriV}$ can be solved using iterative solution methods. According to those methods, we can consider a sequence of $V$, $V_0, V_1, V_2, \dots$, each mapping all states in $S^+$ to $\Re$. The initial values of $V^\pi$ are chosen arbitrarily and the update rule for each successive state-values is gained by following the Bellman equation from ~\ref{iterV} :
-\begin{align}
-V_{k+1}(s) &= E_\pi\left\lbrace r_{t+1}+\gamma V_{k}(s_{t+1}\mid s_t=s) \right\rbrace\notag\\
-&=\sum_{a}\pi(s,a)\sum_{s'}P_{ss'}^a [R_{ss'}^a+\gamma V_k(s')] \label{iterV}
-\end{align}
-Considering the technical implementation, we have used one array to save state-values and have updated the values in place. This implementation is slightly different from $\eqref{iterV}$, because there is a possibility that $V_k(s')$ uses new values  instead of old ones, but this implementation still guarantees to converge to $V^\pi$. Another technical implementation to be considered is the stopping criteria. In formal, iterative policy evaluation will converge only in the limit, but for practical purposes a stopping condition is necessary. One of the common criteria to stop the sweep is when the value $\Delta$, which denotes the difference between the old and the new value, is smaller than $\theta$, a small positive number. A complete pseudo code of the whole processes of the iterative policy evaluation is shown in figure $\ref{Iterative Policy Evaluation Pseudo}$.
-\begin{figure}[H] \centering
-%\fbox{\includegraphics[scale=0.55]{policyIterPseudo.png}}
-\caption{Iterative Policy Evaluation ~\cite{suttonBarto}} \label{Iterative Policy Evaluation Pseudo}
+\begin{figure}[ht] \centering
+\includegraphics[scale=0.6]{pseudotmp5.pdf}
+\caption{On-policy Monte Carlo Control Pseudo-code} \label{onmc}
 \end{figure}
 
-\subsection{Policy Iteration}
-\label{PIter}
-Policy iteration is composed of two steps, the policy evaluation, which was explained above, and the policy improvement. The main reason for calculating the value function for a policy is to use it in order to find better policies. Consequently, if we have determined the value function $V^{\pi}$ for a deterministic policy $\pi$, we can then select a different action $\alpha$ for one state $s$ and afterwards keep on using that specific action for that state. Therefore, we can determine whether the change improved the policy or not by computing the following formula:
-\begin{align}
-Q^\pi(s,\alpha) & = E_\pi \{r_{t+1} + \gamma V^{\pi} (s_{t+1})| s_t = s, \alpha_t = \alpha\}\notag\\
-& = \sum_{s'}^{}P_{ss'}^{\alpha}[R_{ss'}^{\alpha}+\gamma V^\pi(s')]
-\end{align}
-if this is greater than the value of the existing policy in that state $V^\pi(s)$ then it would be better to continue taking action $\alpha$ every time we encounter state $s$, which results in a new policy $\pi'$. This is true, because it derives from the policy improvement theorem where if we have two deterministic policies $\pi$ and $\pi'$ such that for all states $s \in \mathbf{S}$ the $Q^\pi(s,\pi'(s)) >= V^\pi(s)$ then the policy $\pi'$ must be equal to or better than policy $\pi$ meaning that it will yield equal or higher values for all state $s$. Thus, if $Q^\pi(s,\alpha) > V^\pi(s)$ then the changed policy $\pi'$ is indeed better than $\pi$. There is one more step needed in order to finish the policy improvement. Since we can acquire a better reward by doing a different action than the one that the policy provide at a given state, then it makes sense to choose the action that maximizes that reward and which is incorporated into the new policy $\pi'$. The formula resulting from this step is:
-\begin{align}
-\pi'(s) &= arg\max_\alpha Q^\pi(s,\alpha)\notag\\
-&= arg\max_\alpha E{r_{t+1} + \gamma V^\pi(s_{t+1})|s_t=s,\alpha_t=\alpha}\notag\\
-&= arg\max_\alpha \sum_{s'}P_{ss'}{\alpha}[R_{ss'}^{\alpha} + \gamma V^\pi(s')]
-\end{align}
-where $arg\max_\alpha$ denotes the action that maximizes the term that is following. Taking all the above into consideration, we can say that the process of making a new policy that improves the existing one by being greedy on the value function of the original policy, is called policy improvement.
+\subsection{\textbf {Off-Policy Monte Carlo}}
+The off-policy Monte Carlo control method follows the behaviour policy while learning and improving the estimation policy. This method requires that the behavior policy have a non-zero probability of selecting all actions that might be selected by the estimation policy. Separating these two functions, namely behavior policy and estimation policy, represents an advantage in establishing that the behavior policy continues to sample all possible actions, while the estimation policy may be deterministic.
 
-The whole pseudo code loop of iterative evaluation and improvement of the current policy in order to produce a better policy $\pi'$ until we converge to the optimal policy is illustrated in figure \ref{Policy Iteration}.
+\subsubsection*{Off-Policy Evaluation}
+In many cases, $V^\pi$ or $Q^\pi$ can be estimated from episodes generated by policy $\pi'$ as long as all actions taken under $\pi$ are also taken under $\pi'$. Therefore, it is required that $\pi(s,a)>0$ implies that $\pi'(s,a)>0$, thus $\pi'$ must be stochastic. $\pi$ is $\textit{a target policy}$ because the target of the learning process is to estimate its value function, and $\pi'$ is $\textit{a behavior policy}$ because it controls the agent and hence generates the behaviour.
+
+To compute the return following the first-visit state $s$ in an  $i$-th episode, the observed return should be weighted by the relative probability of the complete sequence of the episode occurred under $\pi$ called $p_i(s)$ and $\pi'$ which is $p'_i(s)$. Therefore, the Monte Carlo estimation after observing $n_s$ returns from state $s$ is given by:
+\begin{align}
+V(s) &= \frac{\sum_{i=1}^{n_s}\frac{p_i(s)}{p'(s)}R_i(s)}{\sum_{i=1}^{n_s}\frac{p_i(s)}{p'(s)}}
+\end{align} 
+Then, the relative probability $p_i(s)/p'_i(s)$ is obtained from:
+\begin{align}
+\frac{p_i(s_t)}{p'_i(s_t)} &= \frac{\prod_{k=t}^{T_i(s)-1}\pi(s_k,a_k)P_{s_ks_{k+1}}}{\prod_{k=t}^{T_i(s)-1}\pi'(s_k,a_k)P_{s_ks_{k+1}}} \label{eq:relative prob 1} \\
+&= \prod_{k=t}^{T_i(s)-1}\frac{\pi(s_k,a_k)}{\pi'(s_k,a_k)} 
+\end{align}
+where $T_i(s)$ is the termination time of $i$th episode involving $s$, and $t$ is the time of first occurrence of state $s$ in the episode. The transition probability in $\eqref{eq:relative prob 1}$ is unknown, but it can be eliminated since it belongs to the same environment. Thus, the weight for the return depends only on the two policies.
+
+\subsubsection*{Off-Policy Monte Carlo Control}
+The Off-Policy Monte Carlo Control uses off-policy evaluation as mentioned before to estimate the action value function, but it improves the $\textit{target policy}$ instead of the $\textit{behaviour policy}$. An advantage of this method is that the $\textit{target policy}$ may be deterministic whereas the $\textit{behaviour policy}$ remains stochastic in order to keep the chance of exploring all possible actions. The pseudo-code of the whole process of Off-Policy Monte Carlo Control is given by Figure $\ref{figure:offPolicy}$
 
 \begin{figure}[H] \centering
-%\includegraphics[scale=0.55]{pseudotmp1.png}
-\caption{Policy Iteration ~\cite{suttonBarto}} \label{Policy Iteration}
+\includegraphics[scale=0.8]{offPolicyPseudo.png}
+\caption{Off-Policy Monte Carlo Control Pseudo-code} \label{figure:offPolicy}
 \end{figure}
 
-We begin by initializing the values and actions for the policy arbitrarily and afterwards we perform policy evaluation until the difference in the values are smaller than a certain small threshold $\theta$. After this step, we begin the policy improvement step where we find the best possible action for each possible state with respect to maximizing the value. If the resulting actions are the same as the current policy then we have reached the optimal policy, otherwise we perform policy evaluation again on the new policy and keep on the same procedure until we converge to the optimal one. 
 
-\subsection{Value Iteration}
-\label{VIter}
-Value iteration extends on Policy iteration in which the policy evaluation step of policy evaluation is stopped after just one sweep, ie there's one backup of each state. It consists of a backup operation that combines the policy improvement and truncated policy evaluation steps:
+\subsection{\textbf {Sarsa}}
+Sarsa is an on-policy method based on model-free action policy estimation. It determines the optimal policy while controlling the MDP with respect to the algorithm which behaves according to the same policy that has been improved.
+
+\subsection*{Sarsa On-Policy TD Control}
+Sarsa is an on-policy method of TD learning which applies for every iteration the quintuple $Q(s_t, a_t, r_{t+1}, s_{t+1}, a_{t+1})$, where  $\mathbf{s_t, a_t}$ are the original state and action, $\mathbf{r_{t+1}}$ is the reward observed in the following state and $\mathbf{s_{t+1}, a_{t+1}}$ are the new state-action pair.\\
+Following the explanation of the quintuple from above, its update expression for defining the Sarsa method is:
 \begin{align}
-V_{k+1}(s) &= \max_{a} E{r_{t+1} + \gamma V_k(s_{t+1}) | s_t=s, a_t=a}\notag\\
-& = \max_{a} \sum_{s'} P_{ss'}^a [R_{ss'}^a + \gamma V_k(s')]
-\end{align}
-From this we can see it is identical to the Policy evaluation except that it requires the maximum to be taken over all actions. The algorithm, as previous algorithms converge to an optimal policy for discounted finite MPDs. Formally, convergence to $V^{*}$ is only reached when the number of iterations is taken to infinity. In practice we consider $\theta$ as the termination condition of the loop, which keeps track of the changes in value function. The pseudo code for value iteration is shown in the following figure:
+Q(s_t, a_t) \gets Q(s_t, a_t)+\alpha[r_{t+1}+\gamma Q(s_{t+1}, a_{t+1})-Q(s_t, a_t)]
+\end{align}\\
+The steps that should be completed for each iteration according to this method are presented in Figure 2.3 below:
 \begin{figure}[H] \centering
-%\includegraphics[scale=0.55]{sutton4_5valueiteration.png}
-\caption{Value Iteration ~\cite{suttonBarto}} \label{Value Iteration}
+\includegraphics[scale=0.6]{sarsa_algorithm.png}
+\caption{Sarsa Pseudo-code} \label{figure:Sarsa}
 \end{figure}
-As in our implementation of policy evaluation and policy iteration, the backup operation is done "in-place", thus faster convergence is reached. The rate of convergence hereby is very much dependant on the order in which states are backed up during the sweep. In our implementation the order is straightforward; it's aligned with the array[i][j], starting with the x-coordinate $x_i$. From the second row forward the benefit hereby is valued at most $3V_{k}$, leaving at minimum $2V_{k-1}$ still containing the old values, where $k$ denotes the current sweep.
+As in all on-policy methods, we continually estimate $Q^\pi$ for the behavior policy $\pi$, and at the same time change $\pi$ toward greediness with respect to $Q^\pi$. The update is done after every transition from a nonterminal state $s$. If $s'$ is terminal, therefore $Q(s',a')$ will be defined as zero. This rule uses every element of the quintuple of events, that make up a transition from one state-action pair to the next one.\\
+Regarding both Q-learning and Sarsa methods, the major difference between them is that the maximum reward for the next state is not necessarily used for updating the Q-values.
+
+
 
 \subsection{Reducing the state space}
 \label{reduce}
@@ -314,26 +308,63 @@ In the calculated reduced space this projected state[3][8][5][5], which has the 
 \end{table}
 %\label{trans}
 
-\section{Results}
+\section{Experiments and Results}
 \label{results}
 
-\subsection{Random Policy}
-The random policy of the predator is set such as that every action has an equal probability of happening. The set of actions is composed by the $\text{Set}(\alpha) = [\text{north},\text{south},\text{east},\text{west},\text{wait}]$ and the average time in table~\ref{random} is calculated in iterations.
+\subsection{Theoretical Differences}
+
+
+\subsection{Off-Policy Monte Carlo Control}
+The purpose of this experiment was to implement Off-Policy Monte Carlo Control algorithm and to observe the results in terms of the target policy, maximum action value function, and also the number of step that the predator take to catch the prey. We also tried several approaches in the behavior policy in order to get a better results. Firstly we set the $\epsilon$ value in $\epsilon$-greedy policy as a fix number, then we tried a different approach by making it dynamic by reducing the value after each fix number of iterations. The idea behind this approach was to put more chance in exploration at the beginning and slowly become more deterministic time after time. 
+
+Figure $\ref{figure:fixEpsilon}$ shows the number of steps the predator took to catch the prey in every iteration governed by the target policy. The $\epsilon$ value was set to be fix of 0.1. In order to get a consistent measurement, the episodes were generated from fix start points of the predator and the prey, which were (0,0) and (5,5) respectively. The time that the predator took to catch the prey can be used to measure the performance of Off-Policy Monte Carlo Learning after each iteration, because the target policy uses the $Q$ value immediately after each iteration. Since the target policy was greedy, then it always take best action based on the $Q$ value. The better the $Q$ value, the better target policy's performance should be.
+
+\begin{figure}[H] \centering
+\includegraphics[scale=0.5]{target_fix_0_1.png}
+\caption{Catch time with fix epsilon value} \label{figure:fixEpsilon}
+\end{figure}
+
+\begin{figure}[H] \centering
+\includegraphics[scale=0.5]{target_dynamic_0_5_0_8_0_05.png}
+\caption{Catching time with dynamic epsilon value}\label{figure:dynamicEpsilon} \label{figure:dynamicEpsilon}
+\end{figure}
+
+Figure $\ref{figure:dynamicEpsilon}$ was generated from the same setting as before except the value of $\epsilon$ was set to dynamically changed over iteration. First we set the value to 0.5 then after every 500 iterations it was reduced by multiplying with 0.8. In order to maintain the value not become too small, we set the minimum value to 0.1, because if $\epsilon$ is too small then it will become greedy and almost never explore anymore. As a consequence, learning processes will stop because both behavior and target policy always agree on actions taken in the generated episodes.
+
+Even though the difference between the two figures above is not very significant, but we can still see the influence of setting the $\epsilon$ value to a fix and to a dynamic value. For fix value approach, the number of time drop quicker than the one from dynamic approach. This is because the fix value approach exploited more even from beginning due to the probability of exploiting much larger than exploring. On the other hand,the dynamic approach give the same probability between exploiting and exploring, so at the beginning it explored more than the fix value approach. Now let us see the last 3000 iterations from the two figures, it can be seen that dynamic value approach shows a slightly better performance, it fluctuates less than that in the other one.
+
+
+\begin{figure}[H] \centering
+\includegraphics[scale=0.5]{target_fix_different_epsilon.png}
+\caption{Catching time with dynamic epsilon value} \label{figure:dynamicEpsilon}
+\end{figure}
+
+\begin{figure}[H] \centering
+\includegraphics[scale=0.5]{target_fix_0_001.png}
+\caption{Catch time with dynamic epsilon value} 
+\end{figure}
 
 \begin{table}[H]
-\caption{Random policy results}
+\caption{Target Policy Off-Policy Monte Carlo Control}
 \centering
-    \begin{tabular}{| l || l |}
-    \hline
-     For 100 runs & Summary \\ \hline
-    Average time to capture the prey & 336.78\\ \hline
-    Standard deviation & 285.66324859876534 \\
-    \hline
-    \end{tabular}
-    \label{random}
+\begin{tabular}{l|l*{9}{c}r}
+  \hline
+ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline 
+0 & $\rightarrow$&	$\downarrow$&	$\downarrow$&	$\rightarrow$&	$\downarrow$&	$\downarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$\\	
+1&$\rightarrow$&	$\rightarrow$&	$\rightarrow$&	$\rightarrow$&	$\downarrow$&	$\downarrow$&	$\leftarrow$&	$\downarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$	\\
+2&$\downarrow$&	$\rightarrow$&	$\downarrow$&	$\rightarrow$&	$\downarrow$&	$\downarrow$&	$\downarrow$&	$\downarrow$&	$\leftarrow$&	$\leftarrow$&	$\downarrow$\\	
+3&$\downarrow$	&$\downarrow$&	$\rightarrow$&	$\rightarrow$&	$\downarrow$&	$\downarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\downarrow$&	$\downarrow$\\	
+4&$\rightarrow$&	$\rightarrow$&	$\rightarrow$&	$\rightarrow$  &	$\downarrow$&	$\downarrow$&	$\downarrow$&	$\downarrow$&	$\downarrow$&	$\leftarrow$&	$\leftarrow$\\	
+5&$\rightarrow$  &	$\rightarrow$  &	$\rightarrow$  &	$\rightarrow$ &	$\rightarrow$ &	P&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$\\	
+6&$\rightarrow$ &	$\rightarrow$ &	$\uparrow$&	$\rightarrow$ &	$\rightarrow$ &	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\uparrow$&	$\leftarrow$\\	
+7&$\rightarrow$ &	$\rightarrow$ &	$\rightarrow$ &	$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$\\	
+8&$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$\\	
+9&$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\uparrow$&	$\uparrow$\\	
+10&$\uparrow$&	$\uparrow$&	$\rightarrow$ &	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\uparrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$&	$\leftarrow$
+\end{tabular}
+\label{rVIt}
 \end{table}
 
-\subsection{Iterative Policy Evaluation}
 The goal of the experiment in this algorithm was to evaluate the arbitrary policy, and to measure the number of iterations it took to converge. There were two parameters that should be defined, the discount factor $\mathbf{\gamma}$ and a threshold value for the stopping condition $\mathbf{\theta}$. The values of the parameters along with some results are shown in the following table.
 \begin{table}[H]
 \caption{Policy evaluation results}

@@ -27,7 +27,7 @@ public class EGreedyPolicyTD implements Policy{
 		State key;
 		double qVal;
 		double maxQ=-10;
-		String maxAction=null;
+		String maxAction="wait";
 		for (String action : actionS){
 			key = new State(s, action);
 			qVal = qtable.get(key);

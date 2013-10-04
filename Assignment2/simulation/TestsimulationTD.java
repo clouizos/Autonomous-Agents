@@ -29,10 +29,10 @@ public class TestsimulationTD {
 
     public static void main(String[] args) {
     // State which policies the simulator is run
-    double gamma = 0.7;
-    double alpha = 0.2;
+    double gamma = 0.8;
+    double alpha = 0.1;
     // egreedy with epsilon = 0.1
-    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.000001);
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
     // SoftMax with temperature tau = 0.1
     //SoftMax policy = new SoftMax(0.1);
     // qlearning with input:policy
@@ -71,6 +71,8 @@ public class TestsimulationTD {
     			// reset prey and predator positions
     			currentState = initS();
     			resetGrid = false;
+    			predmove = predPolicy.getAction(currentState);
+    	    	currentState.setAction(predmove);
     			//pauseProg();
     		}
 
@@ -103,7 +105,6 @@ public class TestsimulationTD {
     		}
 			((Sarsa)predPolicy).updateQ(oldState, currentState);
     		predmove = predPolicy.getAction(currentState);
-    		
     		if(currentState.endState()){
     			show("\nPredator catched the prey in "+runs+" runs!");
     			timesRun++;
@@ -171,17 +172,16 @@ public class TestsimulationTD {
     			//show("\nPredator catched the prey in "+runs+" runs!");
     			timesRun++;
     			allRuns.add(runs);
-    			resetGrid = true;/*
-    			if((timesRun%200)==0) {
+    			resetGrid = true;
+    			if((timesRun%500)==0) {
     				TestPolicy optimal = new TestPolicy();
     				HashMap test = ((QLearning)predPolicy).getStateactions();
     				double delta = optimal.optimality(test);
     				show("\nRuns: "+timesRun+ " optimality: "+delta);
     				if(delta>0.80) {
     				((QLearning)predPolicy).printActionsTable(new Position(5,5));
-    				pauseProg();
     				}
-    			}*/
+    			}
     		}else{
     			runs++;
     		}

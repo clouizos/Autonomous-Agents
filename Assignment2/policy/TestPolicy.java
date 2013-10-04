@@ -61,11 +61,11 @@ public class TestPolicy implements Policy {
     	}
     }
     
-    /* policy comparisons
-     * calculates the ratio stateactions/optimal
+    /* Policy comparisons
+     * Calculates the ratio stateactions/optimal
      * to give a measure how much a tested policy differs
-     * from the optimal policy, the closer to 1.0 the more optimal
-     * optimal policy is taken from value iteration
+     * from the optimal policy; the closer to 1.0 the more optimal.
+     * Optimal policy is taken from value iteration
      */
     public double optimality(HashMap<String, String> sa) {
     	int delta = 0;
