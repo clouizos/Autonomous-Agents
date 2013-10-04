@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -52,6 +53,7 @@ public class OffPolicyMC {
 	private ArrayList<String> Actions=new ArrayList<String>();
 	private static ArrayList<Integer> runsEachEpisode = new ArrayList<Integer>();
 	private static ArrayList<Integer> runsEachEpisode2 = new ArrayList<Integer>();
+	private static Map<String, String> bestActioninState;
 	/**
 	 * @param args
 	 */
@@ -142,8 +144,10 @@ public class OffPolicyMC {
 			if (index==this.allStates.size())
 				index = 0;
 			if (counter%500==0)
-				epsilon = epsilon*0.5;
-			epsilon = 0.1;
+				epsilon = epsilon*0.8;
+			if (epsilon<0.05)
+				epsilon=0.05;
+//			epsilon = 0.1;
 			this.PiPrime = new EGreedyPolicy(this.Q,epsilon);
 			int[] initialStart = allStates.get(index);
 			 do{
@@ -256,7 +260,7 @@ public class OffPolicyMC {
 //			 System.out.println("Size D : "+this.D.size());
 			 
 			 
-		}while (counter <20005);
+		}while (counter <20000);
 	}
 	
 	public Policy getPi() {
@@ -325,17 +329,22 @@ public class OffPolicyMC {
 		off.printMaxQ();
 		String key;
 		String action;
+		State state;
+		bestActioninState = new HashMap<String, String>();
 		for (int i=0;i<11;i++){
 			for (int j=0;j<11;j++){
 				key = "["+j+"]["+i+"][5][5]";
 				action = ((ArbitraryPolicy)off.getPi()).getPolicyCollections().get(key);
+				state = new State(new Position(j,i), new Position(5,5));
+				bestActioninState.put(state.toString(), action);
 				System.out.printf("%s\t",action);
 			}
 			System.out.println();
 		}
 		try {
-		    off.output(runsEachEpisode, "convergenceOffMC.data");
-		    off.output(off.runsEachEpisode2, "convergenceOffMC2.data");
+		    off.output(runsEachEpisode, "convergenceOffMC_1.data");
+		    off.output(off.runsEachEpisode2, "convergenceOffMC2_1.data");
+			off.output_policy();
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -345,10 +354,8 @@ public class OffPolicyMC {
 		System.out.println(s);
 	}
 	
-	 public static void write(File file, String string, boolean append) throws Exception
-	    {
-		if(append==false)
-		{
+	public static void write(File file, String string, boolean append) throws Exception{
+		if(append==false){
 		    file.delete();
 		    file.createNewFile();
 		}
@@ -358,8 +365,47 @@ public class OffPolicyMC {
 		WriteBuff.write(string);
 		WriteBuff.close();
 		WriteFile.close();
-	    }
+	}
 	    
+	public void output_policy() throws Exception{
+		File policyfile = new File("policyOffMCFixEpsilon.data");
+		policyfile.delete();
+		policyfile.createNewFile();
+		Set entries = bestActioninState.entrySet();
+		Iterator entryIter = entries.iterator();
+	    //System.out.println("The map contains the following associations:");
+	    while (entryIter.hasNext()) {
+	    	Map.Entry entry = (Map.Entry)entryIter.next();
+	        Object key = entry.getKey();  // Get the key from the entry.
+	        Object value = entry.getValue();  // Get the value.
+	        //System.out.println( "   (" + key + "," + value + ")" );
+	        try{
+	        	 write(policyfile, (String)key+"=>"+(String)value+"\n", true);
+	        }catch(Exception e){
+	        	 
+	        }
+	    }
+	      /*
+		if(!bestActioninState.isEmpty()) {
+				Set<String> keys = bestActioninState.keySet();
+				for(String times : bestActioninState){
+			    //Enumeration enu = stateactions.keys();
+			    //while(enu.hasMoreElements()) {
+				//String state = (String) enu.nextElement();
+				//String action = (String) stateactions.get(state);
+					try {
+						write(policyfile, String.valueOf(times)+"\n", true);
+					} catch (Exception e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				    System.out.println("Cannot write to file");
+				}
+			    }
+			} else
+			    show("\nRuns each episode is empty!!");
+	 		*/
+	}
+	 
 	    // outputs the state actions into a file policy.data
 	    public void output(ArrayList<Integer> runsEachEpisode, String filename) throws Exception {
 		System.out.println(runsEachEpisode.size());
