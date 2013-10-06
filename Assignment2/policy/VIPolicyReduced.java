@@ -48,6 +48,7 @@ public class VIPolicyReduced implements Policy {
         Position prey = new Position(5,5);
         p.printList(prey);
         p.printTable(prey);
+        p.printActions(prey);
         
         long estimatedTime = System.nanoTime() - startTime;
 		System.out.println();
@@ -260,9 +261,28 @@ public class VIPolicyReduced implements Policy {
     	for(int i = 0; i < 11; i++) {
     		if(nextline < i) {show("\n");}
     		for(int j = 0; j < 11; j++) {
-    			State statePrey = new State(new Position(i,j), prey);
+    			State statePrey = new State(new Position(j,i), prey);
     			//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
-    			show(String.format( "%.3f",(double) statevalues.get(statePrey.toString())) + " ");
+    			show(String.format( "%.3f\t",(double) statevalues.get(statePrey.toString())) + " ");
+    		}
+    		nextline = i;
+    	}
+    }
+    
+    /*
+     *  Print methods for table and list of statevalues
+     */    
+    public void printActions(Position prey){
+
+    	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
+    	show("\n======statevalues in grid around prey[5][5]======\n");
+    	int nextline = 0;
+    	for(int i = 0; i < 11; i++) {
+    		if(nextline < i) {show("\n");}
+    		for(int j = 0; j < 11; j++) {
+    			State statePrey = new State(new Position(j,i), prey);
+    			//polEval.show(String.format( "%.20f",(double)statevalues.get(statePrey55.toString())) + " ");
+    			show(String.format( "%s\t",(String) stateactions.get(statePrey.toString())) + " ");
     		}
     		nextline = i;
     	}

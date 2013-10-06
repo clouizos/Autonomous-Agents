@@ -35,13 +35,16 @@ public class TestsimulationTD {
     // egreedy with epsilon
     double epsilon = 0.1;
     double alpha = 0.2;
-    double gamma = 0.9;
-    EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
-    // SoftMax with temperature tau = 0.1
-    //SoftMax policy = new SoftMax(0.1);
+    double gamma = 0.1;
+    String arg = "softmax";
+    double tau = 0.0001;
+    double parameter = tau;
+    //EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
+    // SoftMax with temperature tau
+    SoftMax policy = new SoftMax(tau);
     // qlearning with input:policy
-    QLearning predPolicy = new QLearning(gamma, alpha, policy);
-    //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
+    //QLearning predPolicy = new QLearning(gamma, alpha, policy);
+    Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	/* fill look up table if Value iteration Policy is run
@@ -55,12 +58,12 @@ public class TestsimulationTD {
 	
     boolean verbose=false;
     int nrRuns = 20000;
-    testQ(predPolicy, preyPolicy, verbose, nrRuns);
-    //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
+    //testQ(predPolicy, preyPolicy, verbose, nrRuns);
+    testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     //predPolicy.printTable(new Position(5,5));
     //predPolicy.printActionsTable(new Position(5,5));
 	try {
-	    output(epsilon, alpha, gamma);
+	    output(parameter, alpha, gamma, arg);
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -73,6 +76,7 @@ public class TestsimulationTD {
     	State oldState;
     	String predmove = predPolicy.getAction(currentState);
     	currentState.setAction(predmove);
+    	TestPolicy optimal = new TestPolicy();
     	String preymove;
     	while(timesRun < nrRuns) {
     		if(resetGrid){
@@ -120,16 +124,10 @@ public class TestsimulationTD {
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
-    			if((timesRun%200)==0) {
-    				TestPolicy optimal = new TestPolicy();
-    				HashMap test = ((QLearning)predPolicy).getStateactions();
-    				delta = optimal.optimality(test);
-    				show("\nRuns: "+timesRun+ " optimality: "+delta);
-    				optimalities.add(delta);
-    				//if(delta>0.80) {
-    				//((QLearning)predPolicy).printActionsTable(new Position(5,5));
-    				//}
-    			}
+    			HashMap test = ((QLearning)predPolicy).getStateactions();
+    			delta = optimal.optimality(test);
+    			show("\nRuns: "+timesRun+ " optimality: "+delta);
+    			optimalities.add(delta);
     		}else{
     			runs++;
     		}
@@ -143,7 +141,6 @@ public class TestsimulationTD {
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
-	TestPolicy optimal = new TestPolicy();
 	HashMap test = ((QLearning)predPolicy).getStateactions();
 	double delta = optimal.optimality(test);
 	show("\nRuns: "+timesRun+ " optimality: "+delta);
@@ -152,6 +149,7 @@ public class TestsimulationTD {
     public static void testQ(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
+		TestPolicy optimal = new TestPolicy();
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
@@ -197,16 +195,10 @@ public class TestsimulationTD {
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
-    			if((timesRun%200)==0) {
-    				TestPolicy optimal = new TestPolicy();
-    				HashMap test = ((QLearning)predPolicy).getStateactions();
-    				delta = optimal.optimality(test);
-    				show("\nRuns: "+timesRun+ " optimality: "+delta);
-    				optimalities.add(delta);
-    				//if(delta>0.80) {
-    				//((QLearning)predPolicy).printActionsTable(new Position(5,5));
-    				//}
-    			}
+    			HashMap test = ((QLearning)predPolicy).getStateactions();
+    			delta = optimal.optimality(test);
+    			show("\nRuns: "+timesRun+ " optimality: "+delta);
+    			optimalities.add(delta);
     		}else{
     			runs++;
     		}
@@ -220,7 +212,6 @@ public class TestsimulationTD {
 	
 	double stdDev = getStdDev(allRuns);
 	System.out.println("The standard deviation is: "+stdDev);
-	TestPolicy optimal = new TestPolicy();
 	HashMap test = ((QLearning)predPolicy).getStateactions();
 	double delta = optimal.optimality(test);
 	show("\nRuns: "+timesRun+ " optimality: "+delta);
@@ -288,11 +279,11 @@ public class TestsimulationTD {
     }
     
     // outputs the state actions into a file policy.data
-    public static void output(double epsilon, double a, double g) throws Exception {
-	File policyfile = new File("convergenceQLearning_"+epsilon+'_'+a+'_'+g+".data");
+    public static void output(double parameter, double a, double g, String arg) throws Exception {
+	File policyfile = new File("convS_"+parameter+'_'+a+'_'+g+arg+".data");
 	policyfile.delete();
 	policyfile.createNewFile();
-	File optfile = new File("optimality_"+epsilon+'_'+a+'_'+g+".data");
+	File optfile = new File("optimalityS_"+parameter+'_'+a+'_'+g+arg+".data");
 	optfile.delete();
 	optfile.createNewFile();
 	//System.out.println("trying to write");
