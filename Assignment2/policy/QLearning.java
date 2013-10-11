@@ -19,18 +19,20 @@ public class QLearning implements Policy {
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     //private static EGreedyPolicyTD policy;
-    private static SoftMax policy;
+    //private static SoftMax policy;
+    private static PolicySelect policy;
     private static ArrayList<String> actions = ArbitraryPolicy.getAllActions();
     
     /*
      *  Constructors; inherits from policy evaluation
      */	
 
-	public QLearning(double g, double a, Policy p){
+	public QLearning(double g, double a, PolicySelect p){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
-	    policy = (SoftMax) p;
+	    //policy = (SoftMax) p;
+		policy = p;
 	    /* qtable init
 	     * qtable consist of all possible states+actions
 	     * we consider the reduced q(s,a) where the statespace is reduced;
@@ -38,7 +40,7 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(15);
+		initQ(-10.0);
 	    gamma = g;
 	    alpha = a;	      
 	}
@@ -140,6 +142,11 @@ public class QLearning implements Policy {
         if(s.endState())
             return 10.0;
 	return 0.0;
+    }
+    
+    // set action selection policy
+    public void setSelectPolicy(PolicySelect p) {
+    	PolicySelect policy = p;
     }
 	
     public static void show(String s) {
@@ -268,4 +275,8 @@ public class QLearning implements Policy {
 	} else
 	    show("State actions table is empty!!");
     }
+
+	public static void setPolicyA(PolicySelect policy) {
+		QLearning.policy = policy;
+	}    
 }

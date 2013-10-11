@@ -153,16 +153,14 @@ In order to do that, we have structured the report in 4 sections comprising: sec
 \label{methods}
 \subsection{\textbf {Action selection}}
 \subsubsection*{$\epsilon$-greedy action selection}
-Using $\epsilon$-greedy method underlines the idea of the agent choosing the action that it believes to have the best long-term effect with probability $1-\epsilon$ , and it chooses an action uniformly at random. The action is selected independently of the action-value estimates and the highest estimated reward is called the greediest action. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered.
+$\epsilon$-greedy methods are policies, where non greedy actions are taken at random with a probability of $\epsilon$, a small positive number. The remaining bulk of the probability, $1-\epsilon + \frac{\epsilon}{|A(s)|}$ is assigned to the greedy action. Thus, most of the time an action is chosen that has maximal estimated action value (exploitation), yet $\epsilon$ allows the discovery of more optimal actions - exploration.
 
 \subsubsection*{Softmax action selection}
-Considering the Softmax Action Selection,  we have chosen an action $a$ on the $t$-th play with the probability that depends on the value of $Q$ and $\tau$, which represents the temperature and is defined as a positive parameter. Therefore, we can assign the distribution in the following way:
+The temperature $\tau$ in Softmax serves a similar purpose as $\epsilon$ in $\epsilon$-greedy - it governs the rate of exploration. High temperatures cause the actions to be all (nearly) equiprobable and low temperatures cause a greater difference in selection probability. It's distribution is given as:
 \begin{align}
 P(a) &= \frac{e^{Q_t(a)/\tau}}{\sum_{b=1}^{n} e^{Q_t(b)/\tau}}
 \end{align}
-It is important to note that high temperatures cause the actions to be all (nearly) equiprobable, whereas low temperatures cause a greater difference in selection probability for actions that differ in their value estimates. In the limit as $\tau \to 0 $  , softmax action selection becomes the same as greedy action selection. \\
-A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavourable.\\
-
+When $\tau$ reaches 0 in the limit, the action selection becomes the same as greedy action selection. The difference with $\epsilon$-greedy is that it varies the action probabilities as a graded function of the estimated value, meaning the worst actions are unlikely to be chosen, where as the aforementioned chooses equally among all actions when in exploring mode.This is a good approach to take when the worst actions are very unfavorable.
 
 \subsection{\textbf {On-Policy Monte Carlo}}
 For on-policy Monte Carlo method we have considered the $\epsilon$-greedy policies, meaning that most of the time the chosen action has the maximal estimated action value, but while considering the probability $\epsilon$ they instead select an action at random. The on-policy method attempt  to estimate the action-value function with respect to the current policy.
@@ -208,7 +206,7 @@ The Off-Policy Monte Carlo Control uses off-policy evaluation as mentioned befor
 
 
 \subsection{\textbf {Sarsa}}
-Sarsa is an on-policy method based on model-free action policy estimation. It determines the optimal policy while controlling the MDP with respect to the algorithm which behaves according to the same policy that has been improved.
+Sarsa is an on-policy method based on model-free action policy estimation. It attempts to evaluate or improve the policy which is simultaneously used to make decisions.
 
 \subsection*{Sarsa On-Policy TD Control}
 Sarsa is an on-policy method of TD learning, whose name (State-Action-Reward-State-Action) is derived from the quintuple $Q(s_t, a_t, r_{t+1}, s_{t+1}, a_{t+1})$, where  $\mathbf{s_t, a_t}$ are the original state and action, $\mathbf{r_{t+1}}$ is the reward observed in the following state and $\mathbf{s_{t+1}, a_{t+1}}$ are the new state-action pair. It expresses the transition from one state-action pair to the next and its update rule is as follow:
@@ -224,9 +222,9 @@ As in all on-policy methods, we continually estimate $Q^\pi$ for the behavior po
 
 
 \subsection{\textbf {Q-learning}}
-Q-learning is a model-free method which works by learning an action-value function that ultimately gives the expected utility of taking a given action in a given state and following the optimal policy thereafter.  The optimal policy can be constructed by selecting the action with the highest value in each state.
+Q-learning is a model-free method in the class of Temporal-Difference Learning methods. The main difference with the aforementioned MC methods is that TD methods also bootstrap. They update estimates based on other learned estimates, without waiting for a final outcome.
 \subsection*{Q-learning Off-policy TD Control}
-Q-learning is an off-policy TD control algorithm. It directly approximates the optimal policy $Q^*$ independent from the policy being followed. Its update rule is as follows:
+Q-learning is an off-policy TD control algorithm, unlike Sarsa. It directly approximates the optimal policy $Q^*$ independent from the policy being followed. Its update rule is as follows:
 \begin{align}
 Q(s_t,a_t) \leftarrow Q(s_t,a_t)+\alpha[r_{t+1}+\gamma \max_a Q(s_{t+1},a)-Q(s_t,a_t)]
 \end{align}
@@ -326,7 +324,7 @@ The influence of the policy is still in determining which state-action pairs are
 
 \subsection{Theoretical Differences}
 The differences that appear while considering the off-policy Monte Carlo and on-policy Monte Carlo methods are related to the theoretical contrast between an off-policy and an on-policy. In the on-policy method, the agent commits to always exploring and tries to find the best policy that still explores. In off-policy method, the agent also explores, but learns a deterministic optimal policy that may be unrelated to the policy followed. If the on-policy  method is generally soft (e.g. $\epsilon$-soft policy) and improves the policy that is used to make decision, then the off-policy method is composed of two separated functions (behavior policy and target policy) which can be considered an advantage, because the target policy may be deterministic (e.g. greedy), while the behavior policy can continue to sample all possible actions. \\
-The same differentiation can be applied between Sarsa and Q-learning. Sarsa is useful when you want to optimize a bounded exploratory policy of an agent while exploring - it is on-policy. When it's possible to separate the policies, meaning the policy being learned could be unrelated to the one followed, it might be more advantageous to use Q-learning, which is an off-policy method. Difference between TD and MC methods are that the aforementioned bootstrap; they update estimates based on other learned estimates, without waiting for a final outcome like MC.
+The same differentiation can be applied between Sarsa and Q-learning. Sarsa is useful when you want to optimize a bounded exploratory policy of an agent while exploring - it is on-policy. When it's possible to separate the policies, meaning the policy being learned could be unrelated to the one followed, it might be more advantageous to use Q-learning, which is an off-policy method. Difference between TD and MC methods are that the aforementioned bootstrap; they update estimates based on other learned estimates, without waiting for a final outcome like MC. This lends to a naturally implementation in an on-line, fully incremental fashion.
 
 \subsection{Q-learning with $\epsilon$-greedy: experiments on $\alpha$ and $\gamma$}
 \subsubsection*{Q-learning with $\epsilon$-greedy: experiments on $\alpha$}
@@ -378,13 +376,13 @@ The results from the experiments are displayed below. In order to give a compreh
 \caption{Convergence for different values of $\alpha$ in the last 2000 runs.} 
 \label{figure:alphalast20}
 \end{figure}
-Since we acquired the optimal policy from value iteration in the first assignment, displayed in Table \ref{table:optimalPolicy}, we could plot the performance in terms of a ratio from the optimal policy. We take the argmax of the Q-table after a test run and compare that to the aforementioned optimal policy. Its ratio will define its optimality:
+Since we acquired the optimal policy from value iteration in the first assignment, displayed in Table \ref{table:optimalPolicy}, we could plot the performance in terms of a ratio from the optimal policy. We take the argmax of the Q-table after a test run and compare that to the optimal policy. Its ratio will define its optimality:
 \begin{align}
 Optimality = \frac{Diff(\text{nr of optimal actions})}{Total(\text{number of actions from the optimal policy})}
 \end{align}
 
 \begin{table}[H]
-\caption{Optimal policy in the reduced state space from Value Iteration given the prey at (5,5).}
+\caption{Optimal policy in the reduced state space from Value Iteration given the prey at position (5,5).}
 \centering
 \begin{tabular}{l|l*{9}{c}r}
   \hline
@@ -406,7 +404,7 @@ Optimality = \frac{Diff(\text{nr of optimal actions})}{Total(\text{number of act
 
 The results, plotted as the average of batches of a 100 over the 20000, are displayed in Figure \ref{figure:alphaOpti}. For the initial stage of the runs we see that convergence confirm that what was expected and earlier graphed in the average capture times. Far more interesting is the performance in the long run for different values of $\alpha$. By comparing directly in the optimal policy space we essentially reduce the noise from the output of the many runs, and thereby reducing the effect of the random element of the prey and the initial start conditions within each run. Since the latter could randomly favor a run, and thereby it's capture time, regardless of the policy following. 
 
-In a state space this small, all policies would converge to similar capture times in the end, caused by the stochastic elements in which each run is initiated. Looking directly at the optimality graph however, we can say that, although its initial convergence is slower, an $\alpha$ value of 0.2 actually performs better in the end. Further tests below would present us, whether this claim withholds or there might be more interesting interactions between the parameters tested.
+In a state space this small, all of the tested policies would converge to similar capture times in the end, caused by the stochastic elements in which each run is initiated. Looking directly at the optimality graph however, we can say that, although its initial convergence is slower, an $\alpha$ value of 0.2 actually performs better in the end. Further tests below would present us, whether this claim withholds or there might be more interesting interactions between the parameters tested.
 \begin{figure}[H] \centering
 \includegraphics[scale=0.6]{alphaOptimality.pdf}
 \caption{Optimality for different values of $\alpha$ as a ratio to the optimal policy.} 
@@ -427,7 +425,7 @@ $N$ runs & 20000\\\hline
 \end{tabular}
 \label{expSetupGamma}
 \end{table}
-Again, the results are plotted with the average of batches of a 100 over the 20000, which can be assumed for all of the future experiments, unless stated otherwise. The outcome is comparable to that of $\alpha$; lower values of $\gamma$ give slower convergence as expected, which is clearly illustrated in Figure \ref{figure:gammafirst20}. Interesting is the out-lier start of $\gamma$ value 0.9, see Figure \ref{figure:gammafirst20}. This might be caused by unfavorable stochastic conditions or too greedy initial faulty learning. However, it quickly adapts and makes a sharp dive, overtaking the other values after 200 runs.
+Again, the results are plotted with the average of batches of a 100 over the 20000, which can be assumed for all of the following experiments, unless stated otherwise. The outcome is comparable to that of $\alpha$; lower values of $\gamma$ give slower convergence as expected, which is clearly illustrated in Figure \ref{figure:gammafirst20}. Interesting is the out-lier start of $\gamma$ value 0.9, see Figure \ref{figure:gammafirst20}. This might be caused by unfavorable stochastic conditions or too greedy initial faulty learning. However, it quickly adapts and makes a sharp dive, overtaking the other values after 200 runs.
 
 All of the values converge to average sub 10 capture times after about 1250 runs, saying very little of the optimality of the policy being learned in the long run. Capture times are eventually bouncing between values of 5 and 6, apart of an out-lier value of 7 for $\gamma$ value 0.7, which might be due to effects as earlier described, see Figure \ref{figure:gammalast20}.
 \begin{figure}[H] \centering
@@ -459,6 +457,7 @@ If we look directly into policy optimality space, we see that lower values of $\
 Indeed, higher values of $\alpha$ have a much greater impact as earlier foretold (overall inclusive influence on the update). We see a fast initial climb, but in the long run will impair further convergence and the negating effect of a lower $\gamma$ has little influence.
 
 \subsection{Q-learning with $\epsilon$-greedy: experiments on $\epsilon$ and optimistic initialization}
+
 \subsubsection*{Q-learning with $\epsilon$-greedy: experiments on $\epsilon$}
 We experiment with the following values for $\epsilon$: 0.001, 0.1, 0.2, 0.3, and 0.5, with the following conditions on the experimental setup:
 \begin{table}[H]
@@ -474,7 +473,7 @@ $N$ runs & 20000\\\hline
 \end{tabular}
 \label{expSetupEpsilon}
 \end{table}
-$\epsilon$ in $\epsilon$-greedy controls the probability in which a random action is selected. Lower values of $\epsilon$ will steer its policy to a greedy action selection, while higher values will favor exploration more, thus a faster initial  convergence, yet a less optimal policy in the end. With the earlier chosen values of $\epsilon$ we try to reflect that in our graphs. From the results below, we see that high values of $\epsilon$ show fast initial convergence due to exploration, but give a slow convergence rate in the second stage. They even converge to a less optimal policy in the end. The average capture times are higher overall and its policy is highly fluctuating, as can be seen in Figure \ref{figure:epsilonOpti}. Without discount of $\epsilon$ in the long run the algorithm is always stuck in exploration mode due to the fixed degree of $\epsilon$.
+$\epsilon$ in $\epsilon$-greedy controls the probability in which a random action is selected. Lower values of $\epsilon$ will steer its policy to a greedy action selection, while higher values will favor exploration more, thus a faster initial  convergence, yet a less optimal policy in the end. With the earlier chosen values of $\epsilon$ we shall see if that's reflected in our graphs. From the results below, we see that high values of $\epsilon$ show fast initial convergence due to exploration, but give a slow convergence rate in the second stage. They even converge to a less optimal policy in the end. The average capture times are higher overall and its policy is highly fluctuating, as can be seen in Figure \ref{figure:epsilonOpti}. Without discount of $\epsilon$ in the long run the algorithm is always stuck in exploration mode due to the fixed degree of $\epsilon$.
 
 On the other hand the relatively extreme low value of 0.001 for $\epsilon$ causes the algorithm to slowly climb and stabilize much more in the long run, giving it the best final average capture time, even though it is not peaking in the ratio of its optimality. The low value gives the algorithm its robustness in the end, not "being tempted" by exploration.
 \begin{figure}[H] \centering
@@ -497,6 +496,7 @@ On the other hand the relatively extreme low value of 0.001 for $\epsilon$ cause
 \caption{Optimality for different values of $\epsilon$ as a ratio to the optimal policy} 
 \label{figure:epsilonOpti}
 \end{figure}
+
 \subsubsection*{Q-learning with $\epsilon$-greedy: experiments on optimistic initialization}
 For the optimistic initialization of the Q-table we decided to start with the values derived from the optimal policy acquired from Value Iteration, see Table \ref{table:vi}. Actions corresponding to those of the optimal policy, see Table \ref{table:optimalPolicy}, will get its assigned value, while others are given the value 0. Further tests are done with initialization values of 0, 5 and 10, added to the value of 15 of earlier experiments. Conditions on the experimental setup are as follow:
 \begin{table}[H]
@@ -513,7 +513,7 @@ $N$ runs & 20000\\\hline
 \label{expSetupOptimInit}
 \end{table}
 \begin{table}[H]
-\caption{Values from value iteration when the prey is at [5][5]}
+\caption{Values from value iteration when the prey is positioned at [5][5]}
 \centering
 \begin{tabular}{l|l*{9}{c}r}
   \hline
@@ -552,12 +552,11 @@ $N$ runs & 20000\\\hline
 \caption{Divergence from the optimal policy after optimal initialization in case of VI.} 
 \label{figure:optiOpti}
 \end{figure}
-Results for the optimal policy initialization are not surprising, as it confirms our earlier notion that fixed exploration by its parameters will not allow the algorithm to converge back to its optimal policy. We see a sharp drop in its optimality and climbing initial average capture times, due to its straying from the aforementioned. In the end its performance is comparable to the other initialization values and reaches a certain equilibrium governed by the parameters of $\alpha$, $\epsilon$ and $\gamma$. 
-
+Results for the optimal policy initialization are not surprising, as it confirms our earlier notion that fixed exploration by its parameters will not allow the algorithm to converge back to its optimal policy. We see a sharp drop in its optimality and climbing initial average capture times, due to its straying from the aforementioned. In the end its performance is comparable to the other initialization values and reaches a certain equilibrium governed by the parameters of $\alpha$, $\epsilon$ and $\gamma$. \\
 In the initialization value of 0 it's interesting to see that the relatively large difference from the maximum reward of 10, allows it to converge a lot faster in comparison to the other initialization values, but quickly loses that advantage when the difference in the value of initialization and maximum reward become smaller. It seems that greediness can also be achieved by an initialization of values with a large $\delta$ from the reward.
 
 \subsection{Q-learning with Softmax action selection: experiments on $\tau$ and comparison with $\epsilon$-greedy}
-As in $\epsilon$ for $\espilon$-greedy $\tau$ (temperature) governs the rate of exploration. High temperatures cause the actions to be all (nearly) equiprobable and low temperatures cause a greater difference in selection probability. When $\tau$ reaches 0 in the limit, the action selection becomes the same as greedy action selection. The difference with $\epsilon$-greedy is that it varies the action probabilities as a graded function of the estimated value, where as the aforementioned chooses equally among all actions when in exploring mode. With this notion we expect Softmax to "degrade" more gracefully than $\epsilon$-greedy. Experiments on $\tau$ are done with values of $0.1, 1 \times 10^{-2}, 1 \times 10^{-3}, 1 \times 10^{-4}$ and $1 \times 10^{-5}$, in the following experimental setup:
+As in $\epsilon$ for $\epsilon$-greedy, $\tau$ (temperature) governs the rate of exploration. High temperatures cause the actions to be all (nearly) equiprobable and low temperatures cause a greater difference in selection probability. When $\tau$ reaches 0 in the limit, the action selection becomes the same as greedy action selection. The difference with $\epsilon$-greedy is that it varies the action probabilities as a graded function of the estimated value, where as the aforementioned chooses equally among all actions when in exploring mode. With this notion we expect Softmax to "degrade" more gracefully than $\epsilon$-greedy. Experiments on $\tau$ are done with values of $0.1, 1 \times 10^{-2}, 1 \times 10^{-3}, 1 \times 10^{-4}$ and $1 \times 10^{-5}$, in the following experimental setup:
 \begin{table}[H]
 \caption{Experimental setup for testing $\tau$}
 \centering
@@ -592,9 +591,8 @@ We compare the results with $\epsilon$-greedy with the same setup as in Table \r
 \caption{Optimality for different values of $\tau$ as a ratio to the optimal policy in comparison to $\epsilon$-greedy.} 
 \label{figure:softmxOpti}
 \end{figure}
-From the results we see that Softmax has similar behavior to $\epsilon$ when its parameters are high valued. High temperatures favor exploration and give a very fast climb to optimality, but due to the fixation of the parameters, it's "stuck" in exploration mode and its policy is highly fluctuating with an fluctuating high average capture time as a consequence. As in the case of $\epsilon$-greedy would a discounted $\tau$, inverse proportional to the run sequences, benefit further convergence.
-
-In answering the graceful deterioration, we plot different values of $\tau$ against $\epsilon$-greedy with aforementioned parameters in the experimental setup after initialization with the optimal policy, see Figure \ref{figure:softmxGrace}. We can see that while these values of $\tau$ didn't outperform in the average capture times with initialization of 15, see Figure \ref{figure:softmaxOverview}, they do show a much more graceful degradation in its optimality:
+From the results we see that Softmax has similar behavior to $\epsilon$ when its parameters are high valued. High temperatures favor exploration and give a very fast climb to optimality, but due to the fixation of the parameters, it's "stuck" in exploration mode and its policy is highly fluctuating with an fluctuating high average capture time as a consequence. As in the case of $\epsilon$-greedy a discounted $\tau$, inverse proportional to the run sequences, would benefit further convergence, as it allows the policy to gradually switch from exploration to exploitation. \\
+In answering the graceful deterioration, we plot different values of $\tau$ against $\epsilon$-greedy with aforementioned parameters in the experimental setup after initialization with the optimal policy, see Figure \ref{figure:softmxGrace}. We can see that while these values of $\tau$ didn't outperform in the average capture times with initialization of 15, see Figure \ref{figure:softmaxOverview} and being less greedy, they do show a much more graceful degradation in its optimality:
 \begin{figure}[H] \centering
 \includegraphics[scale=0.6]{softmaxGrace.pdf}
 \caption{Deterioration from the optimal policy for different values of $\tau$ in comparison to $\epsilon$-greedy.} 
@@ -602,7 +600,7 @@ In answering the graceful deterioration, we plot different values of $\tau$ agai
 \end{figure}
 
 \subsection{Sarsa: a comparison with Q-learning in $\epsilon$-greedy and Softmax action selection}
-The main difference between Sarsa and Q-learning is that Sarsa being an on-policy method, actually follows the policy being taken and updates its value in respect to that transition. Q-learning, however is directly approximating the optimal policy, regardless of the policy being followed. With this notion we expect Sarsa to converge slower than Q-learning. We'll try to reflect this by plotting comparisons graphs for Q-learning and Sarsa, both with Softmax and $\epsilon$-greedy action selection. The experimental setup is as follow:
+The main difference between Sarsa and Q-learning is that Sarsa being an on-policy method, actually follows the policy being taken and updates its value in respect to that transition. Q-learning, however is directly approximating the optimal policy, regardless of the policy being followed. With this notion we expect Sarsa to converge slower than Q-learning. Experiments will show it that's reflected by the plotted comparisons between Q-learning and Sarsa, conditioned on Softmax and $\epsilon$-greedy action selection. The experimental setup is as follow:
 \begin{table}[H]
 \caption{Experimental setup for Sarsa and Q-learning comparisons.}
 \centering
@@ -638,7 +636,7 @@ $N$ runs & 20000\\\hline
 \caption{Optimality for for Sarsa and Q-learning in $\epsilon$-greedy and Softmax action selection as a ratio to the optimal policy.} 
 \label{figure:sarsaOpti}
 \end{figure}
-From the results we can see that Sarsa indeed converge slower than its counterpart in Q-learning. Softmax action selection with Sarsa seems to increase its  tendency to explore. We see highly fluctuating high average run times, comparable to Q-learning with large valued $\epsilon$ with $\epsilon$-greedy or even that of large temperature $\tau$ with Softmax, see earlier Figures, while its value here is actually small, $1 \times 10^{-4}$. This exploration mode does favor a fast  convergence to the optimal policy, yet it is not following it, being hindered by its tendency to explore.
+From the results we see that Sarsa is indeed converging slower than its counterpart in Q-learning. Softmax action selection with Sarsa seems to increase its tendency to explore. We see highly fluctuating high average run times, comparable to Q-learning with large valued $\epsilon$ with $\epsilon$-greedy or even with that of large temperature $\tau$ with Softmax, see earlier Figures, while its value here is actually small, $1 \times 10^{-4}$. This exploration mode does favor a fast  convergence to the optimal policy, yet it is not exploiting it, being hindered by its tendency to explore.
 
 \subsection{On-Policy Monte Carlo Control}
 By performing this experiment the goal was to see the performance of the On-policy Monte Carlo control in the predator prey environment. The maximum number of control iterations was fixed at $20000$ for every run with different parameters. Additionally the final outcome of the optimal policy was recorded as well as the final values of the function $Q(s,a)$. The metric used in order to determine the performance between different approaches has the size of the episode that was generated each time in the algorithm. A smaller size, between $[1,15]$, shows that the predator catches the prey faster, whereas a bigger size denotes the opposite. Different values for the $\epsilon$ parameter for the $\epsilon$-soft policy were tested, since $\epsilon$ directly influences the amount of exploring and exploiting the agent performs. Additionally, we also experimented on runs with optimistic initial values, namely $15$, for the state-action function $Q(s,a)$, since it also influences the amount of exploration. Only fixed $\epsilon$ values were tested with optimistic initial values of $Q(s,a)$ since they performed better than the adaptive ones, as we will see in the following section. The discount rate $\gamma$ for the returns, was fixed at 0.8.
@@ -650,8 +648,7 @@ The values that we tested were fixed $\epsilon$ at 0.7, 0.5, 0.3, and 0.1, as we
 \includegraphics[scale=0.65]{on_policy_mc.pdf}
 \caption{On Policy MC catching time with different epsilon value} \label{figure:differentFixEpsilonOn}
 \end{figure}
-
-The value of $\epsilon$ directly influences the amount of time it takes for the agent to find a good estimate for the $Q(s,a)$ value. Fixed $\epsilon$ performs better than adaptive $\epsilon$ and this is expected since the degree of exploration is minimized as the number of iterations increases. The effect becomes worser when the initial value of $\epsilon$ is turning lower, since the degree of exploration is limited quite early, hence the agent cannot explore and get a better estimate for the $Q$ value. However higher values allow more exploring, thus getting better results. Fixed $\epsilon$ achieves higher performance since the ratio of exploration/exploitation is consistenly kept during all the control iterations, essentially making the agent explore even in later iterations of the control loop.  We can see from~\ref{figure:differentFixEpsilonOn} that higher  values of $\epsilon$ achieve a sharper decrease in the episode size in the beginning, since there is a bigger episode size which derives from the high exploration probability, but they perform worse in later iterations since they don't exploit as much as lower values of $\epsilon$. The overal best choice seems to be a fixed $\epsilon$ of $0.1$ since it might converge slower to a better policy, but it produces more consistent results in the later iterations, due to the increased rate of exploitation. 
+The value of $\epsilon$ directly influences the amount of time it takes for the agent to find a good estimate for the $Q(s,a)$ value. Fixed $\epsilon$ performs better than adaptive $\epsilon$ and this is expected since the degree of exploration is minimized as the number of iterations increases. The effect becomes worser when the initial value of $\epsilon$ is turning lower, since the degree of exploration is limited quite early, hence the agent cannot explore and get a better estimate for the $Q$ value. However higher values allow more exploring, thus getting better results. Fixed $\epsilon$ achieves higher performance since the ratio of exploration/exploitation is consistently kept during all the control iterations, essentially making the agent explore even in later iterations of the control loop.  We can see from~\ref{figure:differentFixEpsilonOn} that higher  values of $\epsilon$ achieve a sharper decrease in the episode size in the beginning, since there is a bigger episode size which derives from the high exploration probability, but they perform worse in later iterations since they don't exploit as much as lower values of $\epsilon$. The overal best choice seems to be a fixed $\epsilon$ of $0.1$ since it might converge slower to a better policy, but it produces more consistent results in the later iterations, due to the increased rate of exploitation. 
 
 \subsubsection*{Experiment with optimistic initial value of $Q(s,a)$}
 Having an optimistic initial value of $Q$ just forces the agent to explore in the begining which creates episodes with an extremely big size, which results in a sharper drop after that since the Q values have a reasonable value again. This approach didn't provide better results though since the estimated values were not obtained through episodes of a reasonable size, hence they were not very accurate. The results can be seen in figure~\ref{figure:differentFixEpsilonOnOpt} where we performed an average of the episode size for every 100 iterations again, in order to produce a clearer visualization.
@@ -704,13 +701,11 @@ As we have seen in figure~\ref{figure:differentFixEpsilonOn} the algorithm seems
 \label{table:valueFunctionOn}
 \end{table}
 
-
 \subsection{Off-Policy Monte Carlo Control}
 The purpose of this experiment was to implement Off-Policy Monte Carlo Control algorithm and to observe the results in terms of the target policy, maximum action value function, and also the number of steps the predator take to catch the prey. We tried two different approaches of setting the $\epsilon$ of the behavior policy, fixed value and dynamic value which will be explained in the next part. Different fixed $\epsilon$ value of $\epsilon$-greedy policy also were tested to show how this parameter, which represents the probability of exploring and exploiting, affect the learning processes of action value function. We organize this subsection starting from presenting the results of using different approach of setting $\epsilon$ value of behavior policy, then we show the result of using several different fixed values of $\epsilon$, and finally we will show the convergence of the target policy. 
 
 \subsubsection*{Experiment with different approaches of setting $\epsilon$ value}
-Firstly we set the $\epsilon$ value in $\epsilon$-greedy policy as a fix number, then we tried a different approach by making it dynamic by reducing the value after each fix number of iterations. The idea behind this approach was to put more chance in exploration at the beginning and slowly reduced the chance thus it started to exploit more time after time, but also maintained it to be stochastic in order to keep the learning process run.
-
+Firstly we set the $\epsilon$ value in $\epsilon$-greedy policy as a fix number, then we tried a different approach by making it dynamic by reducing the value after each fix number of iterations. The idea behind this approach was to put more chance in exploration at the beginning and slowly reduced the chance thus it started to exploit more time after time, but also maintained it to be stochastic in order to keep the learning process run. \\
 Figure $\ref{figure:fixEpsilon}$ shows the number of steps the predator took to catch the prey in every iteration governed by the target policy. The $\epsilon$ value was set to be fix of 0.1. In order to get a consistent measurement, the episodes were generated from fix start points of the predator and the prey, which were (0,0) and (5,5) respectively. The time that the predator took to catch the prey can be used to measure the performance of Off-Policy Monte Carlo Learning after each iteration, because the target policy uses the $Q$ value immediately after each iteration. Since the target policy was greedy, then it always take best action based on the $Q$ value. The better the $Q$ value, the better target policy's performance should be.
 
 \begin{figure}[H] \centering
@@ -797,8 +792,8 @@ Regarding on and off policy Monte Carlo control, in the case of the best paramet
 \begin{tabular}{|l|r|}
 \hline
 Method & Average \\\hline
-Q-Learning& 0 \\\hline
-Sarsa& 0 \\\hline
+Q-Learning& 5 \\\hline
+Sarsa& 11 \\\hline
 On-policy MC& 7\\\hline
 Off-policy MC& 12\\\hline
 \end{tabular}

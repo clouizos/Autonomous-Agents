@@ -4,7 +4,7 @@ import statespace.State;
 
 public class Sarsa extends QLearning{
 
-	public Sarsa(double g, double a, Policy p) {
+	public Sarsa(double g, double a, PolicySelect p) {
 		super(g, a, p);
 	}
 	

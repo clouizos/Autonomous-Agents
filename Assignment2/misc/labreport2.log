@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  7 OCT 2013 00:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.9)  11 OCT 2013 21:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -694,82 +694,76 @@ Underfull \hbox (badness 10000) in paragraph at lines 136--138
 
 LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <12> not available
 (Font)              Font shape `T1/futs/b/sc' tried instead on input line 154.
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 162--165
-
- []
-
-[3] <pseudotmp5.pdf, id=18, 501.875pt x 384.43625pt>
+[2] <pseudotmp5.pdf, id=14, 501.875pt x 384.43625pt>
 File: pseudotmp5.pdf Graphic file (type pdf)
  <use pseudotmp5.pdf>
-Package pdftex.def Info: pseudotmp5.pdf used on input line 180.
+Package pdftex.def Info: pseudotmp5.pdf used on input line 178.
 (pdftex.def)             Requested size: 301.12732pt x 230.66351pt.
 
-[4 <./pseudotmp5.pdf>] <offPolicyPseudo.png, id=23, 404.26031pt x 304.88907pt>
+[3] [4 <./pseudotmp5.pdf>]
+<offPolicyPseudo.png, id=23, 404.26031pt x 304.88907pt>
 File: offPolicyPseudo.png Graphic file (type png)
 
 <use offPolicyPseudo.png>
-Package pdftex.def Info: offPolicyPseudo.png used on input line 205.
+Package pdftex.def Info: offPolicyPseudo.png used on input line 203.
 (pdftex.def)             Requested size: 323.40869pt x 243.91158pt.
- [5 <./offPolicyPseudo.png>]
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <8.3> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 214.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 212.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <6> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 214.
-
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 212.
+ [5 <./offPolicyPseudo.png>]
 <sarsa_algorithm.png, id=27, 590.205pt x 242.9075pt>
 File: sarsa_algorithm.png Graphic file (type png)
  <use sarsa_algorithm.png>
-Package pdftex.def Info: sarsa_algorithm.png used on input line 220.
+Package pdftex.def Info: sarsa_algorithm.png used on input line 218.
 (pdftex.def)             Requested size: 354.12573pt x 145.7456pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--224
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
 
  []
 
-[6 <./sarsa_algorithm.png>] <pseudotmp9.png, id=32, 580.1675pt x 218.8175pt>
+<pseudotmp9.png, id=28, 580.1675pt x 218.8175pt>
 File: pseudotmp9.png Graphic file (type png)
-
-<use pseudotmp9.png>
-Package pdftex.def Info: pseudotmp9.png used on input line 235.
+ <use pseudotmp9.png>
+Package pdftex.def Info: pseudotmp9.png used on input line 233.
 (pdftex.def)             Requested size: 348.10316pt x 131.2915pt.
- [7 <./pseudotmp9.png>]
+ [6 <./sarsa_algorithm.png>]
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 11.03998pt on input line 331.
+(Font)              scaled to size 11.03998pt on input line 329.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 8.27998pt on input line 331.
+(Font)              scaled to size 8.27998pt on input line 329.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 6.43999pt on input line 331.
+(Font)              scaled to size 6.43999pt on input line 329.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <12> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 331.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 329.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <9> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 331.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 329.
 LaTeX Font Info:    Font shape `T1/futs/bx/n' in size <7> not available
-(Font)              Font shape `T1/futs/b/n' tried instead on input line 331.
+(Font)              Font shape `T1/futs/b/n' tried instead on input line 329.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 11.03998pt on input line 331.
+(Font)              scaled to size 11.03998pt on input line 329.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 8.27998pt on input line 331.
+(Font)              scaled to size 8.27998pt on input line 329.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 6.43999pt on input line 331.
-
+(Font)              scaled to size 6.43999pt on input line 329.
+ [7 <./pseudotmp9.png>]
 <alphaOverview.pdf, id=38, 578.16pt x 433.62pt>
 File: alphaOverview.pdf Graphic file (type pdf)
  <use alphaOverview.pdf>
-Package pdftex.def Info: alphaOverview.pdf used on input line 367.
+Package pdftex.def Info: alphaOverview.pdf used on input line 365.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <alphafirst20x100.pdf, id=39, 578.16pt x 433.62pt>
 File: alphafirst20x100.pdf Graphic file (type pdf)
  <use alphafirst20x100.pdf>
-Package pdftex.def Info: alphafirst20x100.pdf used on input line 372.
+Package pdftex.def Info: alphafirst20x100.pdf used on input line 370.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 [8] <alphalast20x100.pdf, id=43, 578.16pt x 433.62pt>
 File: alphalast20x100.pdf Graphic file (type pdf)
 
 <use alphalast20x100.pdf>
-Package pdftex.def Info: alphalast20x100.pdf used on input line 377.
+Package pdftex.def Info: alphalast20x100.pdf used on input line 375.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [9 <./alphaOverview.pdf> <./alphafirst20x100.pdf
 
@@ -779,39 +773,39 @@ pdfTeX warning: pdflatex (file ./alphafirst20x100.pdf): PDF inclusion: multiple
 <alphaOptimality.pdf, id=133, 578.16pt x 433.62pt>
 File: alphaOptimality.pdf Graphic file (type pdf)
  <use alphaOptimality.pdf>
-Package pdftex.def Info: alphaOptimality.pdf used on input line 411.
+Package pdftex.def Info: alphaOptimality.pdf used on input line 409.
 (pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
 
 [11 <./alphaOptimality.pdf>] <gammaOverview.pdf, id=166, 578.16pt x 433.62pt>
 File: gammaOverview.pdf Graphic file (type pdf)
 
 <use gammaOverview.pdf>
-Package pdftex.def Info: gammaOverview.pdf used on input line 434.
+Package pdftex.def Info: gammaOverview.pdf used on input line 432.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  <gammafirst20x100.pdf, id=167, 578.16pt x 433.62pt>
 File: gammafirst20x100.pdf Graphic file (type pdf)
 
 <use gammafirst20x100.pdf>
-Package pdftex.def Info: gammafirst20x100.pdf used on input line 439.
+Package pdftex.def Info: gammafirst20x100.pdf used on input line 437.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  <gammalast20x100.pdf, id=168, 578.16pt x 433.62pt>
 File: gammalast20x100.pdf Graphic file (type pdf)
 
 <use gammalast20x100.pdf>
-Package pdftex.def Info: gammalast20x100.pdf used on input line 444.
+Package pdftex.def Info: gammalast20x100.pdf used on input line 442.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [12 <./gammaOverview.pdf>]
 <gammaOptimality.pdf, id=201, 578.16pt x 433.62pt>
 File: gammaOptimality.pdf Graphic file (type pdf)
  <use gammaOptimality.pdf>
-Package pdftex.def Info: gammaOptimality.pdf used on input line 450.
+Package pdftex.def Info: gammaOptimality.pdf used on input line 448.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <alphaGammaOptimality.pdf, id=202, 578.16pt x 433.62pt>
 File: alphaGammaOptimality.pdf Graphic file (type pdf)
 
 <use alphaGammaOptimality.pdf>
-Package pdftex.def Info: alphaGammaOptimality.pdf used on input line 455.
+Package pdftex.def Info: alphaGammaOptimality.pdf used on input line 453.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [13 <./gammafirst20x100.pdf> <./gammalast20x100.pdf
 
@@ -825,28 +819,28 @@ iple pdfs with page group included in a single page
 File: epsilonOverview.pdf Graphic file (type pdf)
 
 <use epsilonOverview.pdf>
-Package pdftex.def Info: epsilonOverview.pdf used on input line 481.
+Package pdftex.def Info: epsilonOverview.pdf used on input line 480.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <epsilonfirst20x100.pdf, id=326, 578.16pt x 433.62pt>
 File: epsilonfirst20x100.pdf Graphic file (type pdf)
 
 <use epsilonfirst20x100.pdf>
-Package pdftex.def Info: epsilonfirst20x100.pdf used on input line 486.
+Package pdftex.def Info: epsilonfirst20x100.pdf used on input line 485.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [15]
 <epsilonlast20x100.pdf, id=330, 578.16pt x 433.62pt>
 File: epsilonlast20x100.pdf Graphic file (type pdf)
 
 <use epsilonlast20x100.pdf>
-Package pdftex.def Info: epsilonlast20x100.pdf used on input line 491.
+Package pdftex.def Info: epsilonlast20x100.pdf used on input line 490.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <epsilonOptimality.pdf, id=331, 578.16pt x 433.62pt>
 File: epsilonOptimality.pdf Graphic file (type pdf)
 
 <use epsilonOptimality.pdf>
-Package pdftex.def Info: epsilonOptimality.pdf used on input line 496.
+Package pdftex.def Info: epsilonOptimality.pdf used on input line 495.
 (pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
  [16 <./epsilonOverview.pdf> <./epsilonfirst20x100.pdf
 
@@ -895,81 +889,70 @@ ple pdfs with page group included in a single page
 
 pdfTeX warning: pdflatex (file ./optimalityOptimistic.pdf): PDF inclusion: mult
 iple pdfs with page group included in a single page
->]
-! Undefined control sequence.
-<recently read> \espilon 
-                         
-l.560 As in $\epsilon$ for $\espilon
-                                    $-greedy $\tau$ (temperature) governs th...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-<softmaxOverview.pdf, id=574, 578.16pt x 433.62pt>
+>] <softmaxOverview.pdf, id=574, 578.16pt x 433.62pt>
 File: softmaxOverview.pdf Graphic file (type pdf)
- <use softmaxOverview.pdf>
-Package pdftex.def Info: softmaxOverview.pdf used on input line 576.
+
+<use softmaxOverview.pdf>
+Package pdftex.def Info: softmaxOverview.pdf used on input line 575.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <softmaxfirst20x100.pdf, id=575, 578.16pt x 433.62pt>
 File: softmaxfirst20x100.pdf Graphic file (type pdf)
 
 <use softmaxfirst20x100.pdf>
-Package pdftex.def Info: softmaxfirst20x100.pdf used on input line 581.
+Package pdftex.def Info: softmaxfirst20x100.pdf used on input line 580.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [21]
 <softmaxlast20x100.pdf, id=579, 578.16pt x 433.62pt>
 File: softmaxlast20x100.pdf Graphic file (type pdf)
 
 <use softmaxlast20x100.pdf>
-Package pdftex.def Info: softmaxlast20x100.pdf used on input line 586.
+Package pdftex.def Info: softmaxlast20x100.pdf used on input line 585.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 <softmaxOptimality.pdf, id=580, 578.16pt x 433.62pt>
 File: softmaxOptimality.pdf Graphic file (type pdf)
 
 <use softmaxOptimality.pdf>
-Package pdftex.def Info: softmaxOptimality.pdf used on input line 591.
+Package pdftex.def Info: softmaxOptimality.pdf used on input line 590.
 (pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
  [22 <./softmaxOverview.pdf> <./softmaxfirst20x100.pdf
 
 pdfTeX warning: pdflatex (file ./softmaxfirst20x100.pdf): PDF inclusion: multip
 le pdfs with page group included in a single page
->] [23 <./softmaxlast20x100.pdf> <./softmaxOptimality.pdf
+>] <softmaxGrace.pdf, id=642, 578.16pt x 433.62pt>
+File: softmaxGrace.pdf Graphic file (type pdf)
+ <use softmaxGrace.pdf>
+Package pdftex.def Info: softmaxGrace.pdf used on input line 597.
+(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
+
+[23 <./softmaxlast20x100.pdf> <./softmaxOptimality.pdf
 
 pdfTeX warning: pdflatex (file ./softmaxOptimality.pdf): PDF inclusion: multipl
 e pdfs with page group included in a single page
->] <softmaxGrace.pdf, id=706, 578.16pt x 433.62pt>
-File: softmaxGrace.pdf Graphic file (type pdf)
- <use softmaxGrace.pdf>
-Package pdftex.def Info: softmaxGrace.pdf used on input line 599.
-(pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
-
-<sarsaOverview.pdf, id=707, 578.16pt x 433.62pt>
+>] <sarsaOverview.pdf, id=707, 578.16pt x 433.62pt>
 File: sarsaOverview.pdf Graphic file (type pdf)
  <use sarsaOverview.pdf>
-Package pdftex.def Info: sarsaOverview.pdf used on input line 622.
+Package pdftex.def Info: sarsaOverview.pdf used on input line 620.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
 [24 <./softmaxGrace.pdf>] <sarsafirst20x100.pdf, id=743, 578.16pt x 433.62pt>
 File: sarsafirst20x100.pdf Graphic file (type pdf)
 
 <use sarsafirst20x100.pdf>
-Package pdftex.def Info: sarsafirst20x100.pdf used on input line 627.
+Package pdftex.def Info: sarsafirst20x100.pdf used on input line 625.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  <sarsalast20x100.pdf, id=744, 578.16pt x 433.62pt>
 File: sarsalast20x100.pdf Graphic file (type pdf)
 
 <use sarsalast20x100.pdf>
-Package pdftex.def Info: sarsalast20x100.pdf used on input line 632.
+Package pdftex.def Info: sarsalast20x100.pdf used on input line 630.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
  [25 <./sarsaOverview.pdf>]
 <sarsaOptimality.pdf, id=782, 578.16pt x 433.62pt>
 File: sarsaOptimality.pdf Graphic file (type pdf)
  <use sarsaOptimality.pdf>
-Package pdftex.def Info: sarsaOptimality.pdf used on input line 637.
+Package pdftex.def Info: sarsaOptimality.pdf used on input line 635.
 (pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
 
 [26 <./sarsafirst20x100.pdf> <./sarsalast20x100.pdf
@@ -980,17 +963,17 @@ pdfs with page group included in a single page
 <on_policy_mc.pdf, id=884, 578.16pt x 433.62pt>
 File: on_policy_mc.pdf Graphic file (type pdf)
  <use on_policy_mc.pdf>
-Package pdftex.def Info: on_policy_mc.pdf used on input line 650.
+Package pdftex.def Info: on_policy_mc.pdf used on input line 648.
 (pdftex.def)             Requested size: 375.79955pt x 281.84966pt.
  [28 <./on_policy_mc.pdf>] <optQOnpolicy.pdf, id=928, 526.66763pt x 327.92514pt
 >
 File: optQOnpolicy.pdf Graphic file (type pdf)
 
 <use optQOnpolicy.pdf>
-Package pdftex.def Info: optQOnpolicy.pdf used on input line 659.
+Package pdftex.def Info: optQOnpolicy.pdf used on input line 656.
 (pdftex.def)             Requested size: 342.3299pt x 213.1488pt.
  [29 <./optQOnpolicy.pdf>]
-Overfull \hbox (16.97055pt too wide) in paragraph at lines 689--705
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 686--702
  [][] 
  []
 
@@ -998,14 +981,14 @@ Overfull \hbox (16.97055pt too wide) in paragraph at lines 689--705
 File: target_fix_0_1.png Graphic file (type png)
 
 <use target_fix_0_1.png>
-Package pdftex.def Info: target_fix_0_1.png used on input line 717.
+Package pdftex.def Info: target_fix_0_1.png used on input line 712.
 (pdftex.def)             Requested size: 289.07928pt x 215.72542pt.
 
 <target_dynamic_0_5_0_8_0_05.png, id=975, 578.16pt x 431.4519pt>
 File: target_dynamic_0_5_0_8_0_05.png Graphic file (type png)
 
 <use target_dynamic_0_5_0_8_0_05.png>
-Package pdftex.def Info: target_dynamic_0_5_0_8_0_05.png used on input line 722
+Package pdftex.def Info: target_dynamic_0_5_0_8_0_05.png used on input line 717
 .
 (pdftex.def)             Requested size: 289.07928pt x 215.72542pt.
  [31 <./target_fix_0_1.png>]
@@ -1014,10 +997,10 @@ File: target_fix_different_epsilon4.png Graphic file (type png)
 
 <use target_fix_different_epsilon4.png>
 Package pdftex.def Info: target_fix_different_epsilon4.png used on input line 7
-36.
+31.
 (pdftex.def)             Requested size: 346.89867pt x 258.87314pt.
  [32 <./target_dynamic_0_5_0_8_0_05.png>]
-Overfull \hbox (16.97055pt too wide) in paragraph at lines 748--764
+Overfull \hbox (16.97055pt too wide) in paragraph at lines 743--759
  [][] 
  []
 
@@ -1025,7 +1008,7 @@ Overfull \hbox (16.97055pt too wide) in paragraph at lines 748--764
 <onOffComp.pdf, id=990, 578.16pt x 433.62pt>
 File: onOffComp.pdf Graphic file (type pdf)
  <use onOffComp.pdf>
-Package pdftex.def Info: onOffComp.pdf used on input line 790.
+Package pdftex.def Info: onOffComp.pdf used on input line 785.
 (pdftex.def)             Requested size: 346.89867pt x 260.17401pt.
  [34] [35 <./onOffComp.pdf>] [36] (./labreport2.aux)
 
@@ -1033,20 +1016,20 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7308 strings out of 493311
- 110625 string characters out of 6143651
- 221950 words of memory out of 5000000
- 10291 multiletter control sequences out of 15000+600000
+ 7307 strings out of 493311
+ 110618 string characters out of 6143651
+ 222950 words of memory out of 5000000
+ 10290 multiletter control sequences out of 15000+600000
  191693 words of font info for 337 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 47i,13n,47p,1427b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 47i,13n,47p,1428b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
 ts/type1/public/fourier/fourier-mex.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/fourier/fourier-mlit.pfb></usr/share/texmf-dist/fonts/type1/public/fourier/f
 ourier-ms.pfb></usr/share/texmf-dist/fonts/type1/adobe/utopia/putb8a.pfb></usr/
 share/texmf-dist/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texmf-dist/fon
 ts/type1/adobe/utopia/putri8a.pfb>
-Output written on labreport2.pdf (36 pages, 722033 bytes).
+Output written on labreport2.pdf (36 pages, 722108 bytes).
 PDF statistics:
  1059 PDF objects out of 1200 (max. 8388607)
  264 compressed objects within 3 object streams

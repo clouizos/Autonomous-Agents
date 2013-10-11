@@ -7,23 +7,19 @@ import java.util.Random;
 
 import statespace.State;
 
-public class EGreedyPolicyTD implements Policy{
-	private double epsilon;
+public class EGreedyPolicyTD extends PolicySelect {
 	
-	public EGreedyPolicyTD(double e){
-		epsilon = e;
+	public EGreedyPolicyTD(double epsilon){
+		super(epsilon);
 	}
 	
-	// dummymethod
-	public String getAction(State dummystate) {
-		return "wait";
-	}
-	
+	@Override
 	public String getAction(State s, Map<State, Double> qtable){
 		ArrayList<String> actionS = ArbitraryPolicy.getAllActions();
 		// randomized list, so no move will get selected by default/preference at init stage
 		long seed = System.nanoTime();
 		Collections.shuffle(actionS, new Random(seed));
+		double epsilon = super.parameter;
 		State key;
 		double qVal;
 		double maxQ=-10;

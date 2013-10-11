@@ -2,7 +2,6 @@ package simulation;
 
 import java.util.*;
 import java.io.*;
-import policy.TestPolicy;
 
 import policy.*;
 import statespace.*;
@@ -23,7 +22,10 @@ public class TestsimulationTD {
 	static Position predator;
 	static Position prey;
 	static boolean resetGrid = false;
-	
+	static boolean discount = true;
+	static double parameter;
+	//static String arg = "softmax";
+    static String arg = "egreedy";
 	 
     public TestsimulationTD() {
 	// TODO Auto-generated constructor stub
@@ -34,17 +36,16 @@ public class TestsimulationTD {
        
     // egreedy with epsilon
     double epsilon = 0.1;
-    double alpha = 0.2;
-    double gamma = 0.1;
-    String arg = "softmax";
+    double alpha = 0.45;
+    double gamma = 0.45;
     double tau = 0.0001;
-    double parameter = tau;
-    //EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
+    parameter = epsilon;
+    EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
     // SoftMax with temperature tau
-    SoftMax policy = new SoftMax(tau);
+    //SoftMax policy = new SoftMax(tau);
     // qlearning with input:policy
-    //QLearning predPolicy = new QLearning(gamma, alpha, policy);
-    Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
+    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+    //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     Policy preyPolicy = new RandomPolicyPrey();
 	
 	/* fill look up table if Value iteration Policy is run
@@ -58,8 +59,8 @@ public class TestsimulationTD {
 	
     boolean verbose=false;
     int nrRuns = 20000;
-    //testQ(predPolicy, preyPolicy, verbose, nrRuns);
-    testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
+    testQ(predPolicy, preyPolicy, verbose, nrRuns);
+    //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     //predPolicy.printTable(new Position(5,5));
     //predPolicy.printActionsTable(new Position(5,5));
 	try {
@@ -71,7 +72,7 @@ public class TestsimulationTD {
     }
     
     // TODO: Change to Sarsa
-    public static void testSarsa(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
+    public static void testSarsa(Sarsa predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
     	String predmove = predPolicy.getAction(currentState);
@@ -80,6 +81,7 @@ public class TestsimulationTD {
     	String preymove;
     	while(timesRun < nrRuns) {
     		if(resetGrid){
+    			if(discount) predPolicy.setSelectPolicy(discounted(nrRuns));
     			runs = 0;
     			show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
@@ -146,12 +148,13 @@ public class TestsimulationTD {
 	show("\nRuns: "+timesRun+ " optimality: "+delta);
     }
     
-    public static void testQ(Policy predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
+    public static void testQ(QLearning predPolicy, Policy preyPolicy, boolean verbose, int nrRuns) {
     	State currentState = initS();
     	State oldState;
 		TestPolicy optimal = new TestPolicy();
     	while(timesRun < nrRuns) {
     		if(resetGrid){
+    			if(discount&&timesRun%20==0) predPolicy.setSelectPolicy(discounted(nrRuns));
     			runs = 0;
     			//show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
@@ -227,6 +230,16 @@ public class TestsimulationTD {
 		prey = new Position(gen.nextInt(11), gen.nextInt(11));
 		State start = new State(predator, prey);
 		return start;
+	}
+	
+	public static PolicySelect discounted(double nrRuns) {
+		double stepsize = parameter/Math.pow(timesRun,2);
+		show("stepsize: "+stepsize);
+		if(arg.equals("softmax"))
+			return new SoftMax(stepsize);
+		else
+			return new EGreedyPolicyTD(stepsize);
+		
 	}
     
     static double getAverage(ArrayList<Integer> allRuns){
