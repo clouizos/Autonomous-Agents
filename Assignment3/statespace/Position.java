@@ -5,18 +5,21 @@ package statespace;
 public class Position {
 	// absolute coordinates
     private int x, y;
+    private String agent;
 
     /*
      *  Constructors
      */
-    public Position(int a, int b) {
+    public Position(int a, int b, String entity) {
 	this.x = wrap(a);
 	this.y = wrap(b);
+	agent = entity;
     }
 
     public Position(Position pos) {
 	this.x = pos.getX();
 	this.y = pos.getY();
+	agent = pos.getAgent();
     }
 
     public int absDistance() {
@@ -43,14 +46,14 @@ public class Position {
      */
     public Position move(String move) {
 	if(move.equals("north"))
-	    return new Position(x, y-1);
+	    return new Position(x, y-1, agent);
 	if(move.equals("south"))
-	    return new Position(x, y+1);
+	    return new Position(x, y+1, agent);
 	if(move.equals("west"))
-	    return new Position(x-1, y);
+	    return new Position(x-1, y, agent);
 	if(move.equals("east"))
-	    return new Position(x+1, y);
-	return new Position(x, y);
+	    return new Position(x+1, y, agent);
+	return new Position(x, y, agent);
     }
     
     /* transforms its position(predator) of given actual prey position to
@@ -59,11 +62,11 @@ public class Position {
     public Position transformPrey55(Position prey) {
     	int projx = 5-prey.getX()+this.getX();
     	int projy = 5-prey.getY()+this.getY();
-    	return new Position(projx, projy);
+    	return new Position(projx, projy, agent);
     }
     
     public boolean equals(Position p) {
-	if(x==p.getX()&&y==p.getY())
+	if(x==p.getX()&&y==p.getY()&&agent==p.getAgent())
 	    return true;
 	return false;
     }
@@ -88,4 +91,12 @@ public class Position {
 	int[] position = {x, y};
 	return position;
     }
+
+	public String getAgent() {
+		return agent;
+	}
+
+	public void setAgent(String agent) {
+		this.agent = agent;
+	}
 }

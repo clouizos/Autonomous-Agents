@@ -1,25 +1,24 @@
 package statespace;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.*;
 /*
  * A state is defined by 2 Positions, that of prey and predator
  */
 public class State {
     
-    // State is defined on position prey and predator
+/*    // State is defined on position prey and predator
     private Position predator;
-    private Position prey;
+    private Position prey;*/
+	private ArrayList<Position> agents;
     
     private String action;
-    //private String preyAction;
     
-    public State(Position pred, Position prey) {
-    predator = pred;
-    this.prey = prey;
+    public State() {
+    	agents = new ArrayList<Position>();
 	}
     
-    // constructor with prey move
+/*    // constructor with prey move
     public State(Position pred, Position prey, String a) {
     predator = pred;
     this.prey = prey;
@@ -41,10 +40,14 @@ public class State {
 	public void updatePosition(Position predator, Position prey){
     	this.predator = predator;
     	this.prey = prey;
+    }*/
+    
+    public void addAgent(Position p) {
+    	agents.add(p);
     }
     
 	/*
-	 * Encodes the endstate
+	 * TODO: needs changes for assign3. Encodes the endstate
 	 */
     public boolean endState() {
 	if(prey.equals(predator)) {
