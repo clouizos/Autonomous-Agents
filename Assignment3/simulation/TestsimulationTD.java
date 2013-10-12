@@ -18,6 +18,7 @@ public class TestsimulationTD {
 	static int timesRun = 0;
 	static double delta;
 	static ArrayList<Double> optimalities = new ArrayList<Double>();
+	static ArrayList<QLearning> predpolicies = new ArrayList<QLearning>();
 
 	//static Position predator;
 	//static Position prey;
@@ -46,8 +47,12 @@ public class TestsimulationTD {
     // SoftMax with temperature tau
     //SoftMax policy = new SoftMax(tau);
     // qlearning with input:policy
-    QLearning predPolicy1 = new QLearning(gamma, alpha, policy, nrPred);
-    QLearning predPolicy2 = new QLearning(gamma, alpha, policy, nrPred);
+    for (int i=0;i<2;i++){
+    	QLearning predpolicy = new QLearning(gamma, alpha, policy, nrPred);
+    	predpolicies.add(predpolicy);
+    }
+    //QLearning predPolicy1 = new QLearning(gamma, alpha, policy, nrPred);
+    //QLearning predPolicy2 = new QLearning(gamma, alpha, policy, nrPred);
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     
     //todo: implement separate qlearning for the prey
@@ -66,7 +71,7 @@ public class TestsimulationTD {
 	
     boolean verbose=true;
     int nrRuns = 20000;
-    testQ(predPolicy, preyPolicy, verbose, nrRuns, nrPred);
+    testQ(predpolicies, preyPolicy, verbose, nrRuns, nrPred);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     //predPolicy.printTable(new Position(5,5));
     //predPolicy.printActionsTable(new Position(5,5));
@@ -155,7 +160,7 @@ public class TestsimulationTD {
 	show("\nRuns: "+timesRun+ " optimality: "+delta);
     }*/
     
-    public static void testQ(QLearningPrey predPolicy, QLearningPrey preyPolicy, boolean verbose, int nrRuns, int nrPred) {
+    public static void testQ(ArrayList<QLearning> predpolicies, QLearningPrey preyPolicy, boolean verbose, int nrRuns, int nrPred) {
     	State currentState = initS(nrPred);
     	State oldState;
 		//TestPolicy optimal = new TestPolicy();
@@ -172,7 +177,10 @@ public class TestsimulationTD {
     	}
     	while(timesRun < nrRuns) {
     		if(resetGrid){
-    			if(discount&&timesRun%20==0) predPolicy.setSelectPolicy(discounted(nrRuns));
+    			if(discount&&timesRun%20==0) {
+    				for (QLearning predPolicy : predpolicies)
+    					predPolicy.setSelectPolicy(discounted(nrRuns));
+    			}
     			runs = 0;
     			//show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
