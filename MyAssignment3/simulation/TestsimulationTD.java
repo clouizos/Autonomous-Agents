@@ -42,7 +42,7 @@ public class TestsimulationTD {
     double alpha = 0.2;
     double gamma = 0.1;
     double tau = 0.0001;
-    int nrPred = 3;
+    int nrPred = 2;
     parameter = epsilon;
     EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
     // SoftMax with temperature tau
@@ -462,7 +462,7 @@ public class TestsimulationTD {
     		average += allRuns.get(i);
     	}
     	average = average/allRuns.size();
-    	System.out.println("Average time for the predator to catch the prey is: "+ average+" !");
+    	System.out.println("Average is: "+ average+" !");
     	return average;
     }
     
