@@ -46,11 +46,12 @@ public class TestsimulationTD {
     // SoftMax with temperature tau
     //SoftMax policy = new SoftMax(tau);
     // qlearning with input:policy
-    QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred);
+    QLearning predPolicy1 = new QLearning(gamma, alpha, policy, nrPred);
+    QLearning predPolicy2 = new QLearning(gamma, alpha, policy, nrPred);
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     
     //todo: implement separate qlearning for the prey
-    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred);
+    QLearningPrey preyPolicy = new QLearningPrey(gamma, alpha, policy, nrPred);
     
     //Policy preyPolicy = new RandomPolicyPrey();
 	
@@ -154,7 +155,7 @@ public class TestsimulationTD {
 	show("\nRuns: "+timesRun+ " optimality: "+delta);
     }*/
     
-    public static void testQ(QLearning predPolicy, QLearning preyPolicy, boolean verbose, int nrRuns, int nrPred) {
+    public static void testQ(QLearningPrey predPolicy, QLearningPrey preyPolicy, boolean verbose, int nrRuns, int nrPred) {
     	State currentState = initS(nrPred);
     	State oldState;
 		//TestPolicy optimal = new TestPolicy();
@@ -241,7 +242,7 @@ public class TestsimulationTD {
     		show("prey move: "+move);
     		show("Prey: " + prey.toString());
     		}*/
-    		((QLearning)predPolicy).updateQ(oldState, currentState);
+    		((QLearningPrey)predPolicy).updateQ(oldState, currentState);
     		
     		
     		if(currentState.endState() == 1 || currentState.endState() == 2){

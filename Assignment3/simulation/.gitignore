@@ -7,3 +7,5 @@ PolicyIterReduced.class
 PolicyEvalReduced.class
 /TestsimulationTD.class
 /MultiSim.class
+/QLearning.class
+/QLearningPrey.class
