@@ -39,8 +39,8 @@ public class TestsimulationTD {
        
     // egreedy with epsilon
     double epsilon = 0.1;
-    double alpha = 0.45;
-    double gamma = 0.45;
+    double alpha = 0.2;
+    double gamma = 0.1;
     double tau = 0.0001;
     int nrPred = 1;
     parameter = epsilon;
@@ -71,9 +71,10 @@ public class TestsimulationTD {
 		e.printStackTrace();
 	}*/
 	
-    boolean verbose=true;
-    //boolean verbose=false;
-    int nrRuns = 20000;
+    //boolean verbose=true;
+    boolean verbose=false;
+    //int nrRuns = 20000;
+    int nrRuns = 1000;
     testQ(predpolicy, preyPolicy, verbose, nrRuns, nrPred);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     //predPolicy.printTable(new Position(5,5));
@@ -303,6 +304,7 @@ public class TestsimulationTD {
     		for(int j=0;j<predators.size();j++){
     			predpolicy.updateQ(oldState, moves.get(j), currentState, predators.get(j));
     		}
+    		preyPolicy.updateQ(oldState, preymove, currentState, prey);
     		
     		
     		if(currentState.endState() == 1 || currentState.endState() == 2){
@@ -313,12 +315,13 @@ public class TestsimulationTD {
     				show(""+timesRun);
     			}
     			else{
+    				show("final state:"+currentState.toString());
     				show("prey captured after "+runs+" runs!");
     				allRuns.add(runs);
     				show(""+timesRun);
     			}
     			timesRun++;
-    			allRuns.add(runs);
+    			//allRuns.add(runs);
     			resetGrid = true;
     			//HashMap test = ((QLearning)predPolicy).getStateactions();
     			//delta = optimal.optimality(test);
@@ -327,12 +330,12 @@ public class TestsimulationTD {
     		}else{
     			runs++;
     			//show("currentState:"+currentState.toString());
-    			show("type something!");
-    			Scanner scan = new Scanner(System.in);
-    			if(scan.hasNext()){
+    			//show("type something!");
+    			//Scanner scan = new Scanner(System.in);
+    			//if(scan.hasNext()){
     				if(verbose)
     				show("new iteration");
-    			}
+    			//}
     			
     			/*show("before: "+predators.toString());
     			show("bef agent: "+agents_new.toString());
@@ -355,8 +358,11 @@ public class TestsimulationTD {
 	//System.out.println("\nAll runs overview:");
 	//System.out.println(allRuns);
 	
-	//double stdDev = getStdDev(allRuns);
-	//System.out.println("The standard deviation is: "+stdDev);
+	double stdDev = getStdDev(allRuns);
+	System.out.println("The standard deviation for catching is: "+stdDev);
+	
+	double stdDev2 = getStdDev(allRunsconf);
+	System.out.println("The standard deviation for confused is: "+stdDev2);
 	//HashMap test = ((QLearning)predPolicy).getStateactions();
 	//double delta = optimal.optimality(test);
 	//show("\nRuns: "+timesRun+ " optimality: "+delta);

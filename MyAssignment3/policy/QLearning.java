@@ -164,7 +164,7 @@ public class QLearning /*implements Policy*/ {
 		if(agent.equals("prey")){
 			double trip = Math.random();
 			if (trip < 0.2){
-				show("prey tripped!\n");
+				//show("prey tripped!\n");
 				return "wait";
 			}
 		}
@@ -177,8 +177,12 @@ public class QLearning /*implements Policy*/ {
 	public void updateQ(State cs, String oldAction, State nextS, Position agent) {			
 		//State currentState = cs.projectState();
 		//State nextState = nextS.projectState();
+		ArrayList<Position> test = new ArrayList<Position>();
+		test.add(new Position(5,5,"predator"));
+		test.add(new Position(5,5,"prey"));
 		State currentState = cs;
 		State nextState = nextS;
+		//show(test.toString()+"\n");
 		double[] rewards;
 		double reward;
 		if(currentState.endState() == 0) {	
@@ -189,7 +193,8 @@ public class QLearning /*implements Policy*/ {
 			}else{
 				reward = rewards[0];
 			}
-			if(nextState.toString().equals("[[5][5], [5][5]]"))
+			//show(nextState.toString()+"\n");
+			if(nextState.toString().equals(test.toString()))
 				show("reward for "+agent.getAgent()+":"+reward);
 			double qUpdated = currentQ + alpha*(reward 
 						+ gamma*argmaxQ(nextState,agent) - currentQ);
