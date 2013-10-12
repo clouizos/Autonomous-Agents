@@ -22,3 +22,6 @@ PolicyEvalReduced.class
 /QLearning.class
 /TestSimulation.class
 /TestPolicy.class
+/TestsimulationTD.class
+/TestsimulationMultTD.class
+/QLearningMult.class

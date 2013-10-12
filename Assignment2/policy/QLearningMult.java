@@ -6,7 +6,7 @@ import statespace.*;
 
 import java.util.Random;
 
-public class QLearning implements Policy {
+public class QLearningMult implements Policy {
 	
 	/* reduced statespace state[i][j][5][5]
 	 * where predator[i][j] prey[5][5]
@@ -15,7 +15,7 @@ public class QLearning implements Policy {
 	/* gamma = discount factor (0.8)
 	 * alpha = small positive number; learning rate
 	 */
-    protected HashMap<State, Double> qtable;
+    protected HashMap<String, Double> qtable;
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     private static EGreedyPolicyTD policy;
@@ -26,7 +26,7 @@ public class QLearning implements Policy {
      *  Constructors; inherits from policy evaluation
      */	
 
-	public QLearning(double g, double a, Policy p){
+	public QLearningMult(double g, double a, Policy p, int nrPred){
 		
 		// policy could be e-greedy or softmax
 	    policy = (EGreedyPolicyTD) p;
@@ -36,29 +36,41 @@ public class QLearning implements Policy {
 	     * we consider the reduced q(s,a) where the statespace is reduced;
 	     * predator[i][j]prey[5][5]moves[k]
 	     */
-		qtable = new HashMap<State, Double>();
+		qtable = new HashMap<String, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(15.0);
+		initQ(15.0, nrPred);
 	    gamma = g;
 	    alpha = a;	      
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
-	public void initQ(double value) {
+	public void initQ(double value, int nrPred) {
 	    // prey fixed at (5,5)
 	    Position prey = new Position(5, 5);
-		for(int i = 0; i < 11; i++) {
-		    for(int j = 0; j < 11; j++) {
-		    	for (String action : actions){
-			    	State s = new State(new Position(i, j), prey, action);
-			    	// init Q(s,a) = 0 
-			    	if(s.endState())
-			    		qtable.put(s, 0.0);
-			    	else
-			    		qtable.put(s, value);	
-		    	}
-		    }
-		}
+	    ArrayList<ArrayList<Position>> preds = new ArrayList<ArrayList<Position>>();
+	    
+	    //for (int k=0;k<nrPred; k++){
+	    	ArrayList<Position> pred = new ArrayList<Position>();
+	    	for(int i = 0; i < 11; i++) {
+	    		for(int j = 0; j < 11; j++) {
+	    			pred.add(new Position(i,j));
+	    			for (int k=1; k<nrPred; k++){
+	    				pred.add(new Position(i,j));
+	    				
+	    			/*
+	    			for (String action : actions){
+	    				State s = new State(new Position(i, j), prey, action);
+	    				// init Q(s,a) = 0 
+	    				if(s.endState())
+	    					qtable.put(s, 0.0);
+	    				else
+	    					qtable.put(s, value);	
+	    			}*/
+	    			}
+	    		}
+	    	}
+	    	//preds.add(pred);
+	    //}
 	}
 	
 	// initializes with values from valueiteration
@@ -169,7 +181,7 @@ public class QLearning implements Policy {
 	    // SoftMax with temperature tau = 0.1
 	    SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+	    QLearningMult predPolicy = new QLearningMult(gamma, alpha, policy);
 	    predPolicy.printTable(new Position(5,5));
 	}
     
