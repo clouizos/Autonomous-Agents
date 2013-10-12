@@ -14,6 +14,7 @@ public class TestsimulationTD {
 	// init 
 	static int runs = 0;
 	static ArrayList<Integer> allRuns = new ArrayList<Integer>();
+	static ArrayList<Integer> allRunsconf = new ArrayList<Integer>();
 	static double averageRuns = 0;
 	static int timesRun = 0;
 	static double delta;
@@ -41,7 +42,7 @@ public class TestsimulationTD {
     double alpha = 0.45;
     double gamma = 0.45;
     double tau = 0.0001;
-    int nrPred = 2;
+    int nrPred = 1;
     parameter = epsilon;
     EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
     // SoftMax with temperature tau
@@ -179,28 +180,29 @@ public class TestsimulationTD {
     	}
     	while(timesRun < nrRuns) {
     		if(resetGrid){
-    			if(discount&&timesRun%20==0) predpolicy.setSelectPolicy(discounted(nrRuns));
+    			//if(discount&&timesRun%20==0) predpolicy.setSelectPolicy(discounted(nrRuns));
     				//for (QLearning predPolicy : predpolicies)
     					
     			//}
     			runs = 0;
     			//show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
-    			currentState = initS(nrPred, predpolicy);
-    			show("currentState:"+currentState.toString());
-    			agents = currentState.getAgents();
-    			show("agents size:"+agents.size());
+    			currentState = initS2(predators, prey);
+    			
+    			//show("currentState:"+currentState.toString());
+    			//agents = currentState.getAgents();
+    			//show("agents size:"+agents.size());
     			//predators = new ArrayList<Position>();
-    			predators.clear();
-    			show("inside reset:"+predators.toString());
-    	    	prey = null;
-    	    	for (Position agent : agents){
+    			//predators.clear();
+    			//show("inside reset:"+predators.toString());
+    	    	//prey = null;
+    	    	/*for (Position agent : agents){
     	    		if (agent.getAgent().equals("prey"))
     	    			prey = agent;
     	    		else
     	    			predators.add(agent);
-    	    	}
-    	    	show("after reset:"+predators.toString());
+    	    	}*/
+    	    	//show("after reset:"+predators.toString());
     			resetGrid = false;
     			//pauseProg();
     		}
@@ -215,11 +217,11 @@ public class TestsimulationTD {
     		//updates the state according to predator move
     		//agents.clear();
     		ArrayList<String> moves = new ArrayList<String>();
-    		show("pred before move:"+predators.toString());
+    		//show("pred before move:"+predators.toString());
     		for(int i=0;i<predators.size();i++){
     			//System.out.println(currentState.toString());
     			//String move = predpolicies.get(i).getAction(currentState);
-    			String move = predpolicy.getAction(currentState,predators.get(i).getQtable());
+    			String move = predpolicy.getAction(currentState,predators.get(i).getQtable(),"predator");
     			predators.get(i).move(move);// = predator.move(move);
     			moves.add(move);
     			//if(agents_new.size() == nrPred+1){
@@ -228,10 +230,18 @@ public class TestsimulationTD {
     			//	agents_new.add(predators.get(i));
     			//agents.set(predator);
     		}
-    		show("pred after move:"+predators.toString());
-    		String preymove = preyPolicy.getAction(currentState, prey.getQtable());
+    		if(verbose) {
+        		show("\npredators moved: "+moves.toString());
+        		show("predators: " + predators.toString());
+        	}
+    		//show("pred after move:"+predators.toString());
+    		String preymove = preyPolicy.getAction(currentState, prey.getQtable(),"prey");
     		//show("prey move: "+preymove);
     		prey.move(preymove);
+    		if(verbose) {
+        		show("prey move: "+preymove);
+        		show("Prey: " + prey.toString());
+        	}
     		for(Position predator: predators){
     			predator.transformPrey55(prey);
     		}
@@ -297,10 +307,16 @@ public class TestsimulationTD {
     		
     		if(currentState.endState() == 1 || currentState.endState() == 2){
     			//show("\nPredator catched the prey in "+runs+" runs!");
-    			if (currentState.endState() == 1)
+    			if (currentState.endState() == 1){
     				show("predators confused after "+runs+" runs!");
-    			else
+    				allRunsconf.add(runs);
+    				show(""+timesRun);
+    			}
+    			else{
     				show("prey captured after "+runs+" runs!");
+    				allRuns.add(runs);
+    				show(""+timesRun);
+    			}
     			timesRun++;
     			allRuns.add(runs);
     			resetGrid = true;
@@ -310,14 +326,20 @@ public class TestsimulationTD {
     			//optimalities.add(delta);
     		}else{
     			runs++;
-    			if(verbose)
+    			//show("currentState:"+currentState.toString());
+    			show("type something!");
+    			Scanner scan = new Scanner(System.in);
+    			if(scan.hasNext()){
+    				if(verbose)
     				show("new iteration");
+    			}
+    			
     			/*show("before: "+predators.toString());
     			show("bef agent: "+agents_new.toString());
     			for (int i=0;i<agents_new.size()-1;i++){
     				predators.set(i,agents_new.get(i));
     			}*/
-    			show("after: "+predators.toString());
+    			//show("after: "+predators.toString());
     			
     			//moves.clear();
     			//predators.clear();
@@ -326,7 +348,8 @@ public class TestsimulationTD {
     		//pauseProg();
     	}
     
-	
+	System.out.println("confused:"+allRunsconf.size());
+	System.out.println("catched:"+allRuns.size());
     //((QLearning)predPolicy).printTable(new Position(5,5));
     //((QLearning)predPolicy).printList(new Position(5,5));
 	//System.out.println("\nAll runs overview:");
@@ -363,6 +386,40 @@ public class TestsimulationTD {
 		State start = new State(agents);
 		return start;
 	}
+    static State initS2(ArrayList<Position> predators, Position prey) {
+		//Random gen = new Random();
+    	ArrayList<Position> agents = new ArrayList<Position>();
+		for (int i=0; i<predators.size(); i++){
+			if (i==0){
+				//agents.add(new Position(0,0, "predator",qobj.initQ(15.00, numPred)));
+				predators.get(i).setX(0);
+				predators.get(i).setY(0);
+				agents.add(predators.get(i));
+			}else if(i==1){
+				//agents.add(new Position(10,0, "predator",qobj.initQ(15.00, numPred)));
+				predators.get(i).setX(10);
+				predators.get(i).setY(0);
+				agents.add(predators.get(i));
+			}else if(i==2){
+				//agents.add(new Position(0,10, "predator",qobj.initQ(15.00, numPred)));
+				predators.get(i).setX(0);
+				predators.get(i).setY(10);
+				agents.add(predators.get(i));
+			}else if (i==3){
+				//agents.add(new Position(10,10, "predator", qobj.initQ(15.00, numPred)));
+				predators.get(i).setX(10);
+				predators.get(i).setY(10);
+				agents.add(predators.get(i));
+			}
+		}
+		agents.add(prey);
+		//predator = new Position(gen.nextInt(11), gen.nextInt(11));
+		//prey = new Position(gen.nextInt(11), gen.nextInt(11));
+		//agents.add(new Position(5,5, "prey", qobj.initQ(15.00, numPred)));
+		State start = new State(agents);
+		return start;
+	}
+   
     /*
 	static State initS(int nrPred) {
 		Random gen = new Random();

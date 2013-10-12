@@ -159,17 +159,26 @@ public class QLearning /*implements Policy*/ {
 		}
 	}
 	*/
-	public String getAction(State s, HashMap<String, Double> qtable){
+	public String getAction(State s, HashMap<String, Double> qtable, String agent){
 		// get action according to policy derived from Q
-		State stateproj = s.projectState();
+		if(agent.equals("prey")){
+			double trip = Math.random();
+			if (trip < 0.2){
+				show("prey tripped!\n");
+				return "wait";
+			}
+		}
+		//State stateproj = s.projectState();
 		//show(stateproj.toString()+"\n");
-		String action = policy.getAction(stateproj, qtable);
+		String action = policy.getAction(s, qtable);
 		return action;
 	}
 	
 	public void updateQ(State cs, String oldAction, State nextS, Position agent) {			
-		State currentState = cs.projectState();
-		State nextState = nextS.projectState();
+		//State currentState = cs.projectState();
+		//State nextState = nextS.projectState();
+		State currentState = cs;
+		State nextState = nextS;
 		double[] rewards;
 		double reward;
 		if(currentState.endState() == 0) {	
@@ -180,6 +189,8 @@ public class QLearning /*implements Policy*/ {
 			}else{
 				reward = rewards[0];
 			}
+			if(nextState.toString().equals("[[5][5], [5][5]]"))
+				show("reward for "+agent.getAgent()+":"+reward);
 			double qUpdated = currentQ + alpha*(reward 
 						+ gamma*argmaxQ(nextState,agent) - currentQ);
 			agent.getQtable().put(currentState.toString()+" "+oldAction, qUpdated);
@@ -234,7 +245,7 @@ public class QLearning /*implements Policy*/ {
         	return ret;
         }
         else if(s.endState() == 2){
-        	double[] ret = {10.00,- 10.00};
+        	double[] ret = {10.00,-10.00};
         	//return 10.0;
         	return ret;
         }

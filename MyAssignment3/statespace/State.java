@@ -87,14 +87,14 @@ public class State {
     	}
     	for (int i=0;i<predators.size()-1;i++){
     		for (int j = i+1; j<predators.size();j++){
-    			if (predators.get(i).equals(predators.get(j))){
+    			if (predators.get(i).toString().equals(predators.get(j).toString())){
     				return 1;
     			}
     		}
     	}
     	//if catched the prey
     	for (Position predator : predators){
-    		if(predator.equals(prey))
+    		if(predator.toString().equals(prey.toString()))
     			return 2;
     	}
     	
