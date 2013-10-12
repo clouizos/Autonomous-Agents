@@ -163,7 +163,7 @@ public class QLearning /*implements Policy*/ {
 		// get action according to policy derived from Q
 		if(agent.equals("prey")){
 			double trip = Math.random();
-			if (trip < 1.2){
+			if (trip < 0.2){
 				//show("prey tripped!\n");
 				return "wait";
 			}
