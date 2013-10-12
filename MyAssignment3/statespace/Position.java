@@ -5,7 +5,7 @@ import java.util.HashMap;
 /*
  *  Position encodes an agent; either prey or predator
  */
-public class Position {
+public class Position implements Cloneable{
 	// absolute coordinates
     private int x, y;
     private String agent;

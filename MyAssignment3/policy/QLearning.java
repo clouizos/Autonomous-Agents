@@ -163,7 +163,7 @@ public class QLearning /*implements Policy*/ {
 		// get action according to policy derived from Q
 		if(agent.equals("prey")){
 			double trip = Math.random();
-			if (trip < 0.2){
+			if (trip < 1.2){
 				//show("prey tripped!\n");
 				return "wait";
 			}
@@ -180,22 +180,37 @@ public class QLearning /*implements Policy*/ {
 		ArrayList<Position> test = new ArrayList<Position>();
 		test.add(new Position(5,5,"predator"));
 		test.add(new Position(5,5,"prey"));
+		State dummyState = new State(test);
+		//show(dummyState.toString()+"\n");
 		State currentState = cs;
 		State nextState = nextS;
 		//show(test.toString()+"\n");
 		double[] rewards;
 		double reward;
+		if(nextState.toString().compareTo(currentState.toString()) == 0){
+			//show("reward for "+agent.getAgent()+":"+reward);
+			//show("Same!\n");
+		}
 		if(currentState.endState() == 0) {	
 			double currentQ = (Double) agent.getQtable().get(currentState.toString()+ " "+oldAction);
 			rewards = getReward(nextState);
 			if(agent.getAgent().equals("prey")){
 				reward = rewards[1];
+				/*if (reward == 10.00){
+					show("nextState:"+nextState.toString()+"\n");
+					show("reward for "+agent.getAgent()+":"+reward+"\n");
+				}*/
 			}else{
 				reward = rewards[0];
+				/*if (reward == -10.00){
+					show("nextState:"+nextState.toString()+"\n");
+					show("reward for "+agent.getAgent()+":"+reward+"\n");
+				}*/
 			}
 			//show(nextState.toString()+"\n");
-			if(nextState.toString().equals(test.toString()))
-				show("reward for "+agent.getAgent()+":"+reward);
+			/*if(nextState.toString().compareTo(dummyState.toString()) == 0){
+				show("reward for "+agent.getAgent()+":"+reward+"\n");
+			}*/
 			double qUpdated = currentQ + alpha*(reward 
 						+ gamma*argmaxQ(nextState,agent) - currentQ);
 			agent.getQtable().put(currentState.toString()+" "+oldAction, qUpdated);

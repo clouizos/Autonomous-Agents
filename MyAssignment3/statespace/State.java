@@ -20,7 +20,13 @@ public class State {
 	}
     
     public State(ArrayList<Position> agents){
-    	this.agents = agents; 
+    	ArrayList<Position> agents_new = new ArrayList<Position>();
+    	for(int i=0;i<agents.size();i++){
+    		Position ag = new Position(agents.get(i).getX(), agents.get(i).getY(),agents.get(i).getAgent());
+    		agents_new.add(ag);
+    		//agents_new.add((Position)agent.clone());
+    	}
+    	this.agents = agents_new;
     }
     
     public State(ArrayList<Position> predators, Position prey){
@@ -36,7 +42,7 @@ public class State {
     //}
     
     public State(State s){
-    	agents = s.getAgents();
+    	this.agents = (ArrayList<Position>)s.getAgents().clone();
     }
     
     //public State(ArrayList<Position> agents, String a){
