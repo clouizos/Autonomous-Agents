@@ -51,6 +51,25 @@ public class QLearning /*implements Policy*/ {
 		HashMap<String, Double> qtable = new HashMap<String, Double>();
 	    Position prey = new Position(5, 5, "prey");
 	    int[] indices = {0,1,2,3,4,5,6,7,8,9,10};
+	    /*ArrayList<Position> agents1 = new ArrayList<Position>();
+	    ArrayList<Position> agents2 = new ArrayList<Position>();
+	    ArrayList<Position> agents3 = new ArrayList<Position>();
+	    for (int i : indices){
+	    	for (int j : indices){
+	    		agents1.add(new Position(i,j, "predator"));
+	    	}
+	    }
+	    for (int i : indices){
+	    	for (int j : indices){
+	    		agents2.add(new Position(i,j, "predator"));
+	    	}
+	    }
+	    for (int i : indices){
+	    	for (int j : indices){
+	    		agents3.add(new Position(i,j, "predator"));
+	    	}
+	    }
+	    */
 	    if (nrPred == 4){
 	    	for(int i = 0; i < 11; i++) 
 			    for(int j = 0; j < 11; j++) 
