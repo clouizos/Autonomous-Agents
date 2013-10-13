@@ -19,7 +19,7 @@ public class State {
     	prey = p;
 	}
     
-    public void addAgent(Position p) {
+    public void addPred(Position p) {
     	predators.add(p);
     }
     
@@ -125,7 +125,7 @@ public class State {
     
     // next state after prey has taken a:preymove
     public State nextStatePrey(String preymove) {
-    	return new State(predators, prey.move(preymove));
+    	return new State(predators, prey.forecast(preymove));
     }
     
 	/*
@@ -147,15 +147,16 @@ public class State {
     }
     
     public String toString() {
-	String state = null;
-	Collections.sort(predators);
+	String state = "";
+	//Collections.sort(predators);
     for(Position pred : predators) {
-    	state.concat(pred.toString());
+    	state+=pred.toString();
     }
-    	return state.concat(prey.toString());
+    state+= prey.toString();
+    return state;
     }
     
-    public void show(String s) {
+    public static void show(String s) {
 	System.out.println(s);
     }
     

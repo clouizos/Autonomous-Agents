@@ -46,7 +46,7 @@ public class Position implements Comparable<Position> {
     /*
      * Gives new position according to move
      */
-    public Position move(String move) {
+    public Position forecast(String move) {
 	if(move.equals("north"))
 	    return new Position(x, y-1);
 	if(move.equals("south"))
@@ -58,6 +58,8 @@ public class Position implements Comparable<Position> {
 	return new Position(x, y);
     }
     /*
+     * Making the actually move
+     */
     public void move(String move){
 	if(move.equals("north")){
 		y = wrap(y - 1);
@@ -71,7 +73,7 @@ public class Position implements Comparable<Position> {
 	if(move.equals("east")){
 		x = wrap(x + 1);
 	}
-    }*/
+    }
     
     /* transforms its position(predator) of given actual prey position to
      * the projected position for prey[5][5]
@@ -117,6 +119,11 @@ public class Position implements Comparable<Position> {
 
     public void setY(int y) {
 	this.y = y;
+    }
+    
+    public void setPos(int a, int b) {
+    	x = a;
+    	y = b;
     }
     
     public int[] getArray() {
