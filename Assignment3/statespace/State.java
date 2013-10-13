@@ -1,25 +1,27 @@
 package statespace;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.*;
 /*
  * A state is defined by 2 Positions, that of prey and predator
  */
 public class State {
     
-    // State is defined on position prey and predator
-    private Position predator;
-    private Position prey;
+	// agents defines the state with order defined in comparator Position
+    protected ArrayList<Position> agents;
     
     private String action;
-    //private String preyAction;
+   
     
-    public State(Position pred, Position prey) {
-    predator = pred;
-    this.prey = prey;
+    public State() {
+    	agents = new ArrayList();
 	}
     
-    // constructor with prey move
+    public void addAgent(Position p) {
+    	agents.add(p);
+    }
+    
+    /* constructor with prey move
     public State(Position pred, Position prey, String a) {
     predator = pred;
     this.prey = prey;
@@ -43,23 +45,12 @@ public class State {
     	this.prey = prey;
     }
     
-	/*
-	 * Encodes the endstate
-	 */
-    public boolean endState() {
-	if(prey.equals(predator)) {
-	    //show("captured!!");
-	    return true;
-	}
-	return false;
-    }
-    
     /* predmove -> preymove
      * Next states is defined on the next position of the predator
      * and the possible positions the prey would get on succession.
      * However the prey would never go to a position already occupied,
      * so that has to be taken into account on the possible next states. 
-     */
+     *
     public Vector nextStates(String predmove) {
 	Vector succstates = new Vector();
 	String[] moves = {"north", "east", "south", "west","wait"};
@@ -87,9 +78,9 @@ public class State {
 	return succstates;
     }
     
-    /*
+    *
      * nextStates are projected to the prey[5][5]
-     */
+     *
     
     public Vector nextStatesReduced(String predmove) {
 	Vector succstates = new Vector();
@@ -133,46 +124,53 @@ public class State {
     // next state after predator has taken a:predmove
     public State nextStatePred(String predmove) {
     	return new State(predator.move(predmove), prey);
+    }*/
+    
+	/*
+	 * Encodes the endstate
+	 */
+    public int endState(){
+    	//if predators are on the same block
+    	ArrayList<Position> predators = new ArrayList<Position>();
+    	Position prey = new Position(5,5);
+    	Collections.sort(agents);
+    	// remove prey from list
+    	for (Position agent : agents){
+    		if (!agent.equals(prey))
+    		predators.add(agent);	
+    	}
+    	// check for collision first
+    	for(int i=0; i<predators.size()-2;i++) {
+    		Position pred1 = predators.get(i);
+    		Position pred2 = predators.get(i+1);
+    		if(pred1.equals(pred2))
+    			return -1;
+    	}
+    	// check for capture
+    	for(Position predator: predators)
+    		if(predator.equals(prey))
+    			return 1;
+    	// no endstate
+    	return 0;
     }
     
     public String toString() {
-	return predator.toString() + prey.toString();
+	String state = null;
+	Collections.sort(agents);
+    for(Position agent: agents) {
+    	state.concat(agent.toString());
+    }
+    	return state;
     }
     
     public void show(String s) {
 	System.out.println(s);
     }
     
-    // setter getters for prey and predator
-    public Position getPrey() {
-        return prey;
-    }
-    
-    public Position getPredator() {
-    	return predator;
-    }
-
-    public void setPrey(Position prey) {
-        this.prey = prey;
-    }
-    
-    public void setPredator(Position predator) {
-        this.predator = predator;
-    }
-    
-    public void setPreyPred(Position predator, Position prey) {
-    	this.predator = predator;
-    	this.prey = prey;
-    }
     
     public void setAction(String move) {
     	action = move;
-    }
-    
-    // used in assignment 1 to calculate prey action probability
-	public String getPreyaction() {
-		return action;
-	}
+    }    
 	
 	// used in assignment 2 for Qstate
 	public String getAction() {
@@ -187,7 +185,7 @@ public class State {
 	@Override
     public boolean equals(Object s2) {
 	State s = (State) s2;
-	if(s.getPredator().equals(predator)&&s.getPrey().equals(prey)&&s.getPreyaction().equals(action))
+	if(s.toString().equals(s2.toString())&&s.getAction().equals(action))
 	    return true;
 	return false;
     }
