@@ -15,7 +15,7 @@ public class QLearning implements Policy {
 	/* gamma = discount factor (0.8)
 	 * alpha = small positive number; learning rate
 	 */
-    protected HashMap<String, Double> qtable;
+    protected HashMap<State, Double> qtable;
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     //private static EGreedyPolicyTD policy;
@@ -27,7 +27,7 @@ public class QLearning implements Policy {
      *  Constructors; inherits from policy evaluation
      */	
 
-	public QLearning(double g, double a, PolicySelect p, int nrPred){
+	public QLearning(double g, double a, PolicySelect p){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
@@ -38,103 +38,31 @@ public class QLearning implements Policy {
 	     * we consider the reduced q(s,a) where the statespace is reduced;
 	     * predator[i][j]prey[5][5]moves[k]
 	     */
-		qtable = new HashMap<String, Double>();
+		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(-10.0, nrPred);
+		initQ(-10.0);
 	    gamma = g;
 	    alpha = a;	      
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
-	public void initQ(double value, int nrPred) {
+	public void initQ(double value) {
 	    // prey fixed at (5,5)
-	    Position prey = new Position(5, 5, "prey");
-	    if (nrPred == 4)
-	    	for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) 
-			    	for(int k=0;k<11;k++)
-			    		for(int l=0;l<11;l++)
-			    			for(int m=0;m<11;m++)
-			    				for(int n=0;n<11;n++)
-			    					for(int o=0;o<11;o++)
-			    						for(int p=0;p<11;p++){
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(new Position(k,l, "predator"));
-			    							agents.add(new Position(m,n, "predator"));
-			    							agents.add(new Position(o,p, "predator"));
-			    							agents.add(prey);
-			    							for (String action : actions){
-			    								State s = new State(agents,action);
-			    								// do we need to put different value according to the type of end
-			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+s.getAction(), 0.0);
-			    								else
-			    									qtable.put(s.toString()+" "+s.getAction(), value);
-			    							}
-			    						}
-			 
-	    if(nrPred == 3)
-	    	for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) 
-			    	for(int k=0;k<11;k++)
-			    		for(int l=0;l<11;l++)
-			    			for(int m=0;m<11;m++)
-			    				for(int n=0;n<11;n++){
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(new Position(k,l, "predator"));
-			    							agents.add(new Position(m,n, "predator"));
-			    							agents.add(prey);
-			    							for (String action : actions){
-			    								State s = new State(agents,action);
-			    								// do we need to put different value according to the type of end
-			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+s.getAction(), 0.0);
-			    								else
-			    									qtable.put(s.toString()+" "+s.getAction(), value);
-			    							}
-			    						}
-	    if(nrPred == 2)
-	    	for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) 
-			    	for(int k=0;k<11;k++)
-			    		for(int l=0;l<11;l++){
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(new Position(k,l, "predator"));
-			    							agents.add(prey);
-			    							for (String action : actions){
-			    								State s = new State(agents,action);
-			    								// do we need to put different value according to the type of end
-			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+s.getAction(), 0.0);
-			    								else
-			    									qtable.put(s.toString()+" "+s.getAction(), value);
-			    							}
-			    						}
-	    if(nrPred == 1)
-	    	for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) {
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(prey);
-			    							for (String action : actions){
-			    								State s = new State(agents,action);
-			    								// do we need to put different value according to the type of end
-			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+s.getAction(), 0.0);
-			    								else
-			    									qtable.put(s.toString()+" "+s.getAction(), value);
-			    							}
-			    						}
-	    }
-		
-	/*
+	    Position prey = new Position(5, 5);
+		for(int i = 0; i < 11; i++) {
+		    for(int j = 0; j < 11; j++) {
+		    	for (String action : actions){
+			    	State s = new State(new Position(i, j), prey, action);
+			    	// init Q(s,a) = 0 
+			    	if(s.endState())
+			    		qtable.put(s, 0.0);
+			    	else
+			    		qtable.put(s, value);	
+		    	}
+		    }
+		}
+	}
+	
 	// initializes with values from valueiteration
 	public void initQVI() {
 		VIPolicyReduced vip = new VIPolicyReduced(0.9, 1.0E-20);
@@ -156,11 +84,10 @@ public class QLearning implements Policy {
 		    }
 		}
 	}
-	*/
+	
 	public String getAction(State s){
 		// get action according to policy derived from Q
 		State stateproj = s.projectState();
-		show(stateproj.toString()+"\n");
 		String action = policy.getAction(stateproj, qtable);
 		return action;
 	}
@@ -168,11 +95,11 @@ public class QLearning implements Policy {
 	public void updateQ(State cs, State nextS) {			
 		State currentState = cs.projectState();
 		State nextState = nextS.projectState();
-		if(currentState.endState() == 0) {					
+		if(!currentState.endState()) {					
 			double currentQ = (Double) qtable.get(currentState);
 			double qUpdated = currentQ + alpha*(getReward(nextState) 
 					+ gamma*argmaxQ(nextState) - currentQ);
-			qtable.put(currentState.toString()+" "+currentState.getAction(), qUpdated);
+			qtable.put(currentState, qUpdated);
 		}
 	}
 	
@@ -180,12 +107,10 @@ public class QLearning implements Policy {
 	public double argmaxQ(State nextState) {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
-		//State key;
-		String key;
+		State key;
 		double temp, max = 0;
 		for(String action : actions) {
-			//key = new State(nextState, action);
-			key = nextState.toString()+" "+action; 
+			key = new State(nextState, action);
 			temp = (Double) qtable.get(key);
     		if(temp>max) {
     			max = temp;
@@ -198,13 +123,11 @@ public class QLearning implements Policy {
 	public String argmaxQaction(State state) {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
-		//State key;
-		String key;
+		State key;
 		double temp, max = 0;
 		String maxAction = "wait";
 		for(String action : actions) {
-			//key = new State(state, action);
-			key = state.toString()+" "+action; 
+			key = new State(state, action);
 			temp = (Double) qtable.get(key);
     		if(temp>max) {
     			max = temp;
@@ -214,14 +137,10 @@ public class QLearning implements Policy {
 		return maxAction;
 	}
 	
-    // implement reward function: 
-	// first check if predators got confused then immediate award = -10
-	// else if captured then immediate award=10, else 0
+    // implement reward function: only when captured the immediate award=10, else 0
     public double getReward(State s) {
-        if(s.endState() == 1)
-            return -10.0;
-        else if(s.endState() == 2)
-        	return 10.0;
+        if(s.endState())
+            return 10.0;
 	return 0.0;
     }
     
@@ -241,17 +160,14 @@ public class QLearning implements Policy {
 	    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
 	    // SoftMax with temperature tau = 0.1
 	    SoftMax policy = new SoftMax(0.1);
-	    // qlearning with policy and nrPred
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 2);
-	    //predPolicy.printTable(new Position(5,5,"prey"));
+	    // qlearning with policy
+	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
+	    predPolicy.printTable(new Position(5,5));
 	}
     
     /*
      *  Print methods for table and list of statevalues
-     */
-	
-	//todo: create new print functions according to each predator
-	/*
+     */    
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
@@ -268,8 +184,8 @@ public class QLearning implements Policy {
     		}
     		nextline = i;
     	}
-    }*/
-    /*
+    }
+    
     public void printList(Position prey){
     	for(int i = 0; i < 11; i++) {
 		    for(int j = 0; j < 11; j++) {
@@ -279,8 +195,8 @@ public class QLearning implements Policy {
 		    	}
 		    }
 		}
-    }*/
-    /*
+    }
+    
     public void printActionsTable(Position prey) {
     State key;
     int nextline = 0;
@@ -296,7 +212,7 @@ public class QLearning implements Policy {
     	}
     	nextline = i;
     }
-	}*/
+	}
     
     /*
      *  IO methods, for writing the state actions into a file, 
@@ -318,14 +234,13 @@ public class QLearning implements Policy {
 	WriteBuff.close();
 	WriteFile.close();
     }
-    //todo : stateactions according to the position of other predators too
-    /*
+    
     public HashMap<String, String> getStateactions() {
     	stateactions = new HashMap<String, String>();
     	State key;
         State s;
         String action;
-        Position prey = new Position(5,5, "prey");
+        Position prey = new Position(5,5);
         for(int i = 0; i < 11; i++) {
         	for(int j = 0; j < 11; j++) {
         		s = new State(new Position(j, i), prey);
@@ -334,10 +249,8 @@ public class QLearning implements Policy {
         	}
         }
     	return stateactions;
-    }*/
+    }
     
-    //todo: according to all agents
-    /*
     // outputs the state actions into a file policy.data
     public void output() throws Exception {
 	File policyfile = new File("policy.data");
@@ -362,7 +275,7 @@ public class QLearning implements Policy {
 	} else
 	    show("State actions table is empty!!");
     }
-*/
+
 	public static void setPolicyA(PolicySelect policy) {
 		QLearning.policy = policy;
 	}    
