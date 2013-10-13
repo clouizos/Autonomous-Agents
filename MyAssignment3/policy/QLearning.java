@@ -50,7 +50,8 @@ public class QLearning /*implements Policy*/ {
 	    // prey fixed at (5,5)
 		HashMap<String, Double> qtable = new HashMap<String, Double>();
 	    Position prey = new Position(5, 5, "prey");
-	    if (nrPred == 4)
+	    int[] indices = {0,1,2,3,4,5,6,7,8,9,10};
+	    if (nrPred == 4){
 	    	for(int i = 0; i < 11; i++) 
 			    for(int j = 0; j < 11; j++) 
 			    	for(int k=0;k<11;k++)
@@ -59,46 +60,65 @@ public class QLearning /*implements Policy*/ {
 			    				for(int n=0;n<11;n++)
 			    					for(int o=0;o<11;o++)
 			    						for(int p=0;p<11;p++){
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(new Position(k,l, "predator"));
-			    							agents.add(new Position(m,n, "predator"));
-			    							agents.add(new Position(o,p, "predator"));
-			    							agents.add(prey);
+			    							//ArrayList<Position> agents = new ArrayList<Position>();
+			    							//agents.add(new Position(i,j, "predator"));
+			    							//agents.add(new Position(k,l, "predator"));
+			    							//agents.add(new Position(m,n, "predator"));
+			    							//agents.add(new Position(o,p, "predator"));
+			    							//agents.add(prey);
 			    							for (String action : actions){
-			    								State s = new State(agents);
+			    								//State s = new State(agents);
 			    								// do we need to put different value according to the type of end
 			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+action, 0.0);
+			    								//if(s.endState() == 1 || s.endState() == 2)
+			    								if((i==k&&j==l)||(i==m&&j==n)||(i==o&&j==p)||(k==m&&l==n)||(k==o&&l==p)||(m==0&&n==p)||(i==5&&j==5)||(k==5&&l==5)||(m==5&&n==5)||(o==5&&p==5))
+			    									//qtable.put(s.toString()+" "+action, 0.0);
+			    									qtable.put("[["+i+"]["+j+"], ["+k+"]["+l+"], ["+m+"]["+n+"], ["+o+"]["+p+"], [5][5]]"+" "+action,0.0);
 			    								else
-			    									qtable.put(s.toString()+" "+action, value);
+			    									//qtable.put(s.toString()+" "+action, value);
+			    									qtable.put("[["+i+"]["+j+"], ["+k+"]["+l+"], ["+m+"]["+n+"], ["+o+"]["+p+"], [5][5]]"+" "+action,value);
 			    							}
 			    						}
+	    	}
 			 
-	    if(nrPred == 3)
-	    	for(int i = 0; i < 11; i++) 
-			    for(int j = 0; j < 11; j++) 
-			    	for(int k=0;k<11;k++)
-			    		for(int l=0;l<11;l++)
-			    			for(int m=0;m<11;m++)
-			    				for(int n=0;n<11;n++){
-			    							ArrayList<Position> agents = new ArrayList<Position>();
-			    							agents.add(new Position(i,j, "predator"));
-			    							agents.add(new Position(k,l, "predator"));
-			    							agents.add(new Position(m,n, "predator"));
-			    							agents.add(prey);
+	    if(nrPred == 3){
+	    	String key = "";
+	    	//for(int i = 0; i < 11; i++) 
+	    	for(int i : indices)
+			    //for(int j = 0; j < 11; j++) 
+	    		for (int j : indices)
+			    	//for(int k=0;k<11;k++)
+	    			for (int k : indices)
+			    		//for(int l=0;l<11;l++)
+	    				for (int l : indices)
+			    			//for(int m=0;m<11;m++)
+	    					for (int m : indices)
+			    				//for(int n=0;n<11;n++){
+	    						for (int n : indices){
+			    							//ArrayList<Position> agents = new ArrayList<Position>();
+			    							//agents.add(new Position(i,j, "predator"));
+			    							//agents.add(new Position(k,l, "predator"));
+			    							//agents.add(new Position(m,n, "predator"));
+			    							//agents.add(prey);
+	    									//show("------------"+i+"\n");
 			    							for (String action : actions){
-			    								State s = new State(agents);
+			    								key = "[["+i+"]["+j+"], ["+k+"]["+l+"], ["+m+"]["+n+"], [5][5]]"+" "+action;
+			    								//State s = new State(agents);
 			    								// do we need to put different value according to the type of end
 			    								// state here?
-			    								if(s.endState() == 1 || s.endState() == 2)
-			    									qtable.put(s.toString()+" "+action, 0.0);
+			    								//[[8][0], [10][2]]
+			    								//show("--------------"+i+"\n");
+			    								if((i==k&&j==l)||(i==m&&j==n)||(k==m&&l==n)||(i==5&&j==5)||(k==5&&l==5)||(m==5&&n==5))
+			    									//qtable.put(s.toString()+" "+action, 0.0);
+			    								//	qtable.put("[["+i+"]["+j+"], ["+k+"]["+l+"], ["+m+"]["+n+"], [5][5]]"+" "+action,0.0);
+			    									qtable.put(key, 0.0);
 			    								else
-			    									qtable.put(s.toString()+" "+action, value);
+			    									//qtable.put(s.toString()+" "+action, value);
+			    									qtable.put(key,value);
 			    							}
 			    						}
-	    if(nrPred == 2)
+	    }
+	    if(nrPred == 2){
 	    	for(int i = 0; i < 11; i++) 
 			    for(int j = 0; j < 11; j++) 
 			    	for(int k=0;k<11;k++)
@@ -117,7 +137,8 @@ public class QLearning /*implements Policy*/ {
 			    									qtable.put(s.toString()+" "+action, value);
 			    							}
 			    						}
-	    if(nrPred == 1)
+	    }
+	    if(nrPred == 1){
 	    	for(int i = 0; i < 11; i++) 
 			    for(int j = 0; j < 11; j++) {
 			    							ArrayList<Position> agents = new ArrayList<Position>();
@@ -133,6 +154,7 @@ public class QLearning /*implements Policy*/ {
 			    									qtable.put(s.toString()+" "+action, value);
 			    							}
 			    						}
+	    }
 	    return qtable;
 	    }
 		
