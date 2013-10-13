@@ -1,10 +1,14 @@
 package simulation;
 
-import java.util.Scanner;
 import java.io.File;
 import java.util.ArrayList;
-import policy.*;
-import statespace.*;
+import java.util.Scanner;
+
+import policy.Policy;
+import policy.RandomPolicyPrey;
+import policy.VIPolicyReduced;
+import statespace.Position;
+import statespace.State;
 /*
  * Implementation of the prey predator domain
  * Each policy can be executed for 100 runs and it will outputs it's preformance.

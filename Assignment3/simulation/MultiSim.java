@@ -86,6 +86,7 @@ public class MultiSim {
     			resetGrid = false;
     			//pauseProg();
     		}
+    		// make every agent do a move
     		for (Map.Entry<Position, Policy> entry : agentPolicies.entrySet()) {
     		    Position agent = entry.getKey();
     		    Policy policy = entry.getValue();
@@ -130,26 +131,30 @@ public class MultiSim {
 	 */
 	static State reset(int nrPred) {
 		agentPolicies.clear();
-		State start = new State();
 		Policy predPolicy = new RandomPolicyPredator();
 		Policy preyPolicy = new RandomPolicyPrey();
+		Position prey = new Position(5,5);
+		State start = new State(prey);
+		agentPolicies.put(prey, preyPolicy);
 		for (int i=0; i< nrPred; i++){
 			if (i==0){
-				agentPolicies.put(new Position(0,0), predPolicy);
-				start.addAgent(new Position(0,0));
+				Position pred1 = new Position(0,0);
+				agentPolicies.put(pred1, predPolicy);
+				start.addAgent(pred1);
 			}else if(i==1){
-				agentPolicies.put(new Position(10,0), predPolicy);
-				start.addAgent(new Position(10,0));
+				Position pred2 = new Position(0,10);
+				agentPolicies.put(pred2, predPolicy);
+				start.addAgent(pred2);
 			}else if(i==2){
-				agentPolicies.put(new Position(0,10), predPolicy);
-				start.addAgent(new Position(0,10));
+				Position pred3 = new Position(10,0);
+				agentPolicies.put(pred3, predPolicy);
+				start.addAgent(pred3);
 			}else if (i==3){
-				agentPolicies.put(new Position(10,10), predPolicy);
-				start.addAgent(new Position(10,10));
+				Position pred4 = new Position(10,10);
+				agentPolicies.put(pred4, predPolicy);
+				start.addAgent(pred4);
 			}
 		}
-		agentPolicies.put(new Position(5,5), preyPolicy);
-		start.addAgent(new Position(5,5));
 		return start;
 	}
 	

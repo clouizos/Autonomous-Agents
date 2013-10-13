@@ -8,17 +8,24 @@ import java.util.*;
 public class State {
     
 	// agents defines the state with order defined in comparator Position
-    protected ArrayList<Position> agents;
+    protected ArrayList<Position> predators;
+    protected Position prey;
     
     private String action;
    
     
-    public State() {
-    	agents = new ArrayList();
+    public State(Position p) {
+    	predators = new ArrayList();
+    	prey = p;
 	}
     
     public void addAgent(Position p) {
-    	agents.add(p);
+    	predators.add(p);
+    }
+    
+    public State(ArrayList<Position> preds, Position p) {
+    	predators = preds;
+    	prey = p;
     }
     
     /* constructor with prey move
@@ -33,7 +40,7 @@ public class State {
     	predator = s.getPredator();
     	prey = s.getPrey();
     	action = a;
-    }
+    }s
     
     public State(State s) {
     	predator = s.getPredator();
@@ -76,7 +83,7 @@ public class State {
 		succstates.add(nextstate);
 	}
 	return succstates;
-    }
+    }s
     
     *
      * nextStates are projected to the prey[5][5]
@@ -86,7 +93,7 @@ public class State {
 	Vector succstates = new Vector();
 	String[] moves = {"north", "east", "south", "west", "wait"};
 	Position preDnext, preYnext;
-	// the next position of the predator when taken a:predmove
+	// the next position of the predator when taken a:psredmove
 	preDnext = predator.move(predmove);
 	State nextstate = new State(preDnext, prey);
 	if(nextstate.endState()){
@@ -114,31 +121,17 @@ public class State {
     	Position predproj = predator.transformPrey55(prey);
     	State stateproj = new State(predproj, new Position(5,5), action);
     	return stateproj;
-    }
+    }*/
     
     // next state after prey has taken a:preymove
     public State nextStatePrey(String preymove) {
-    	return new State(predator, prey.move(preymove));
+    	return new State(predators, prey.move(preymove));
     }
-    
-    // next state after predator has taken a:predmove
-    public State nextStatePred(String predmove) {
-    	return new State(predator.move(predmove), prey);
-    }*/
     
 	/*
 	 * Encodes the endstate
 	 */
     public int endState(){
-    	//if predators are on the same block
-    	ArrayList<Position> predators = new ArrayList<Position>();
-    	Position prey = new Position(5,5);
-    	Collections.sort(agents);
-    	// remove prey from list
-    	for (Position agent : agents){
-    		if (!agent.equals(prey))
-    		predators.add(agent);	
-    	}
     	// check for collision first
     	for(int i=0; i<predators.size()-2;i++) {
     		Position pred1 = predators.get(i);
@@ -146,9 +139,8 @@ public class State {
     		if(pred1.equals(pred2))
     			return -1;
     	}
-    	// check for capture
-    	for(Position predator: predators)
-    		if(predator.equals(prey))
+    	for(Position pred : predators)
+    		if(pred.equals(prey))
     			return 1;
     	// no endstate
     	return 0;
@@ -156,11 +148,11 @@ public class State {
     
     public String toString() {
 	String state = null;
-	Collections.sort(agents);
-    for(Position agent: agents) {
-    	state.concat(agent.toString());
+	Collections.sort(predators);
+    for(Position pred : predators) {
+    	state.concat(pred.toString());
     }
-    	return state;
+    	return state.concat(prey.toString());
     }
     
     public void show(String s) {
@@ -175,6 +167,22 @@ public class State {
 	// used in assignment 2 for Qstate
 	public String getAction() {
 		return action;
+	}
+
+	public ArrayList<Position> getPredators() {
+		return predators;
+	}
+
+	public void setPredators(ArrayList<Position> predators) {
+		this.predators = predators;
+	}
+
+	public Position getPrey() {
+		return prey;
+	}
+
+	public void setPrey(Position prey) {
+		this.prey = prey;
 	}
 
 	@Override

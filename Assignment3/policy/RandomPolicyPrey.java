@@ -17,7 +17,7 @@ public class RandomPolicyPrey implements Policy{
 		for(int i=0;i<actions.length;i++){
 			State nextState = cs.nextStatePrey(actions[i]);
 			// prey can't move to an occupied position
-			if(!nextState.endState()){
+			if(!(nextState.endState()==1)){
 				possibleActions.add(actions[i]);
 			}
 		}

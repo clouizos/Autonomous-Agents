@@ -1,10 +1,23 @@
 package simulation;
 
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Scanner;
 
-import policy.*;
-import statespace.*;
+import policy.EGreedyPolicyTD;
+import policy.Policy;
+import policy.PolicySelect;
+import policy.QLearning;
+import policy.RandomPolicyPrey;
+import policy.Sarsa;
+import policy.SoftMax;
+import policy.TestPolicy;
+import statespace.Position;
+import statespace.State;
 /*
  * Implementation of the prey predator domain
  * Each policy can be executed for 100 runs and it will outputs it's preformance.
