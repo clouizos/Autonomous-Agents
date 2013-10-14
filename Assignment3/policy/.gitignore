@@ -24,3 +24,4 @@ PolicyEvalReduced.class
 /TestPolicy.class
 /PolicySelect.class
 /QLearningPrey.class
+/MinimaxQLearning.class
