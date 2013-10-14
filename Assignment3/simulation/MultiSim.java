@@ -22,7 +22,7 @@ public class MultiSim {
 
 	static boolean resetGrid = false;
 	//static boolean discount = true;
-	//static double parameter;
+	static double parameter;
 	//static String arg = "softmax";
     //static String arg = "egreedy";
 	static HashMap<Position, Policy> predPolicies;
@@ -36,34 +36,26 @@ public class MultiSim {
     // State which policies the simulator is run
        
     // egreedy with epsilon
-    /*
+    
     double epsilon = 0.1;
-    double alpha = 0.45;
-    double gamma = 0.45;
+    double alpha = 0.2;
+    double gamma = 0.1;
     double tau = 0.0001;
     parameter = epsilon;
     EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
-    */
+    
     // SoftMax with temperature tau
     //SoftMax policy = new SoftMax(tau);
-    // qlearning with input:policy
-    //QLearning predPolicy = new QLearning(gamma, alpha, policy);
-    //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
-    //Policy preyPolicy = new RandomPolicyPrey();
-	
-	/* fill look up table if Value iteration Policy is run
-	File file = new File("policy.data");
-	try {
-		predPolicy.filltable(file);
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}*/
-	
-    boolean verbose=true;
+    		
+    boolean verbose=false;
     int nrRuns = 20000;
-    int nrPred = 4;
-    testRandom(verbose, nrRuns, nrPred);
+    int nrPred = 3;
+    // qlearning with input:policy
+    QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
+    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
+    //testRandom(verbose, nrRuns, nrPred);
+    testQ(verbose, nrRuns, nrPred, predPolicy, preyPolicy);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
     //predPolicy.printTable(new Position(5,5));
     //predPolicy.printActionsTable(new Position(5,5));
@@ -75,16 +67,95 @@ public class MultiSim {
 	    e.printStackTrace();
 	}*/
     }
-       
-    public static void testRandom(boolean verbose, int nrRuns, int nrPred) {
-    	State currentState = init(nrPred);
-    	Policy preyPolicy = new RandomPolicyPrey();
+    
+    public static void testQ(boolean verbose, int nrRuns, int nrPred, Policy predPolicy, Policy preyPolicy) {
+    	State currentState = init(nrPred, predPolicy);
+    	currentState.sortPreds();
     	while(timesRun < nrRuns) {
     		if(resetGrid){
     			runs = 0;
     			//show("\nResetting Grid for the "+timesRun+" run!");
     			// reset prey and predator positions
-    			currentState = reset(nrPred);
+    			reset(nrPred);
+    			currentState.sortPreds();
+    			resetGrid = false;
+    			//pauseProg();
+    		}
+    		if(verbose) {
+    		show("\n===========\nAt beginloop: "+currentState.toString());
+    		show("predators: "+currentState.getPredators().size());
+    		}
+    		
+    		// make every predator do a move
+    		for (Map.Entry<Position, Policy> entry : predPolicies.entrySet()) {
+    		    Position predator = entry.getKey();
+    		    Policy policy = entry.getValue();
+    		    String predmove = policy.getAction(currentState);
+    		    predator.move(predmove);
+        		if(verbose) {
+            		show("predator move: " + predmove);
+            	}
+    		}
+    		
+    		// make prey do a move
+    		String preymove = preyPolicy.getAction(currentState);
+    		prey.move(preymove);
+    		if(verbose) {
+        		show("prey move: " + preymove);
+        	}
+    		// update the predator positions
+    		ArrayList<Position> predators;
+    		predators = new ArrayList<Position>(predPolicies.keySet());
+    		currentState.setPredators(predators);
+    		currentState.sortPreds();
+    		
+    		if(verbose) {
+    		show("\n===========\nAt endloop: "+currentState.toString());
+    		}
+    		
+     		if(currentState.endState() == -1 || currentState.endState() == 1){
+    			if (currentState.endState() == -1){
+    				show("predators confused after "+runs+" runs!");
+    				allRunsconf.add(runs);
+    				show(""+timesRun);
+    			}
+    			else{
+    				show("prey captured after "+runs+" runs!");
+    				allRuns.add(runs);
+    				show(""+timesRun);
+    			}
+    			timesRun++;
+    			resetGrid = true;
+    		}else{
+    			runs++;
+    				if(verbose)
+    				show("new iteration");
+    		}
+    		//pauseProg();
+    	}
+	
+    	System.out.println("confused:"+allRunsconf.size());
+    	System.out.println("catched:"+allRuns.size());
+        //((QLearning)predPolicy).printTable(new Position(5,5));
+        //((QLearning)predPolicy).printList(new Position(5,5));
+    	
+    	double stdDev = getStdDev(allRuns);
+    	System.out.println("The standard deviation for catching is: "+stdDev);
+    	
+    	double stdDev2 = getStdDev(allRunsconf);
+    	System.out.println("The standard deviation for confused is: "+stdDev2);
+    }
+       
+    public static void testRandom(boolean verbose, int nrRuns, int nrPred) {
+    	Policy preyPolicy = new RandomPolicyPrey();
+    	Policy predPolicy = new RandomPolicyPredator();
+    	State currentState = init(nrPred, predPolicy);
+    	while(timesRun < nrRuns) {
+    		if(resetGrid){
+    			runs = 0;
+    			//show("\nResetting Grid for the "+timesRun+" run!");
+    			// reset prey and predator positions
+    			reset(nrPred);
     			resetGrid = false;
     			//pauseProg();
     		}
@@ -154,37 +225,35 @@ public class MultiSim {
 	 * initializes S; choose a start state from the qtable
 	 * 
 	 */
-	static State init(int nrPred) {
+	static State init(int nrPred, Policy p) {
 		predPolicies = new HashMap<Position, Policy>();
 		// with independent learning every predator should have its own policy
-		Policy predPolicy = new RandomPolicyPredator();
 		prey = new Position(5,5);
 		State start = new State(prey);
 		for (int i=0; i< nrPred; i++){
 			if (i==0){
 				Position pred1 = new Position(0,0);
-				predPolicies.put(pred1, predPolicy);
+				predPolicies.put(pred1, p);
 				start.addPred(pred1);
 			}else if(i==1){
 				Position pred2 = new Position(0,10);
-				predPolicies.put(pred2, predPolicy);
+				predPolicies.put(pred2, p);
 				start.addPred(pred2);
 			}else if(i==2){
 				Position pred3 = new Position(10,0);
-				predPolicies.put(pred3, predPolicy);
+				predPolicies.put(pred3, p);
 				start.addPred(pred3);
 			}else if (i==3){
 				Position pred4 = new Position(10,10);
-				predPolicies.put(pred4, predPolicy);
+				predPolicies.put(pred4, p);
 				start.addPred(pred4);
 			}
 		}
 		return start;
 	}
 	
-	static State reset(int nrPred) {
+	static void reset(int nrPred) {
 		prey.setPos(5, 5);
-		State start = new State(prey);
 		int i = 0;
 		for (Position key : predPolicies.keySet()) {
 			if (i==0){
@@ -197,7 +266,6 @@ public class MultiSim {
 				key.setPos(10,10);
 			}i++;
 		}
-		return start;
 	}
 	
 	/*

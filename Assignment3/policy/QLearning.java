@@ -21,13 +21,14 @@ public class QLearning implements Policy {
     //private static EGreedyPolicyTD policy;
     //private static SoftMax policy;
     private static PolicySelect policy;
-    private static ArrayList<String> actions = ArbitraryPolicy.getAllActions();
+    private static ArrayList<String> actions = PolicySelect.getAllActions();
+    protected String agent;
     
     /*
      *  Constructors; inherits from policy evaluation
      */	
 
-	public QLearning(double g, double a, PolicySelect p, int nrPred){
+	public QLearning(double g, double a, PolicySelect p, int nrPred, String entity){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
@@ -42,7 +43,8 @@ public class QLearning implements Policy {
 		// initializes Q(s,a) with input:value
 		initQ(-10.0, nrPred);
 	    gamma = g;
-	    alpha = a;	      
+	    alpha = a;
+	    agent = entity;
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
@@ -50,105 +52,82 @@ public class QLearning implements Policy {
 	    // prey fixed at (5,5)
 	    Position prey = new Position(5, 5);
 	    if(nrPred==1) {
-	    	for(int i = 0; i < 11; i++) {
-	    		for(int j = 0; j < 11; j++) {
+	    	for(int i = 0; i < 11; i++) 
+	    		for(int j = 0; j < 11; j++) 
 	    			for (String action : actions){
 	    				State s = new State(prey, action);
 	    				s.addPred(new Position(i,j));
 	    				// init Q(s,a) = 0 
-	    				if(s.endState()==1)
+	    				if(s.endState()==(1|-1))
 	    					qtable.put(s, 0.0);
 	    				else
 	    					qtable.put(s, value);	
-	    			}
-	    		}
-	    	}
+	    			}	    			    	
 	    }
 	    
 	    if(nrPred==2) {
-	    	// x
-	    	for(int i = 0; i < 11; i++) {
-	    		for(int j = i+1; j < 11; j++) {
-	    			// y
-	    			for(int k = 0; k < 11; k++) {
-	    				for(int l = k+1; l < 11; l++) {
+	    	for(int i = 0; i < 11; i++) 
+	    		for(int j = 0; j < 11; j++) 
+	    			for(int k = 0; k < 11; k++) 
+	    				for(int l = 0; l < 11; l++) 
 	    					for (String action : actions){
 	    	    				State s = new State(prey, action);
-	    	    				s.addPred(new Position(i,k));
-	    	    				s.addPred(new Position(j,l));
+	    	    				s.addPred(new Position(i,j));
+	    	    				s.addPred(new Position(k,l));
+	    	    				s.sortPreds();
 	    	    				// init Q(s,a) = 0 
-	    	    				if(s.endState()==1)
+	    	    				if(s.endState()==(1|-1))
 	    	    					qtable.put(s, 0.0);
 	    	    				else
 	    	    					qtable.put(s, value);	
-	    	    			}
-	    				}
-	    			}
-	    		}
-	    	}
+	    	    			}	    			    			    	
 	    }
 	    
 	    if(nrPred==3) {
 	    	// x
-	    	for(int i = 0; i < 11; i++) {
-	    		for(int j = i+1; j < 11; j++) {
-	    			for(int k = j+1; k < 11; k++) {
-	    				// y
-	    				for(int l = 0; l < 11; l++) {
-	    					for(int m = l+1; m < 11;m++) {
-	    						for(int n = m+1; n < 11;n++) {
+	    	for(int i = 0; i < 11; i++) 
+	    		for(int j = 0; j < 11; j++) 
+	    			for(int k = 0; k < 11; k++) 
+	    				for(int l = 0; l < 11; l++) 
+	    					for(int m = 0; m < 11;m++) 
+	    						for(int n = 0; n < 11;n++) 
 	    							for (String action : actions){
 	    								State s = new State(prey, action);
-	    								s.addPred(new Position(i,l));
-	    								s.addPred(new Position(j,m));
-	    								s.addPred(new Position(k,n));
+	    								s.addPred(new Position(i,j));
+	    								s.addPred(new Position(k,l));
+	    								s.addPred(new Position(m,n));
+	    								s.sortPreds();
 	    								// init Q(s,a) = 0 
-	    								if(s.endState()==1)
+	    								if(s.endState()==(1|-1))
 	    									qtable.put(s, 0.0);
 	    								else
 	    									qtable.put(s, value);
-	    							}
-	    						}	
-	    					}
-	    				}
-	    			}
-	    		}
-	    	}
+	    							}	    								    						    					    				    			  
 	    }
 	    
 	    if(nrPred==4) {
-	    	// x
-	    	for(int i = 0; i < 11; i++) {
-	    		for(int j = i+1; j < 11; j++) {
-	    			for(int k = j+1; k < 11; k++) {
-	    				for(int l = k+1; l < 11; l++) {
-	    					// y
-	    					for(int m = 0; m < 11;m++) {
-	    						for(int n = m+1; n < 11;n++) {
-	    							for(int o = n+1; o < 11;o++) {
-	    								for(int p = o+1; p < 11;p++) {
+	    	for(int i = 0; i < 11; i++) 
+	    		for(int j = 0; j < 11; j++) 
+	    			for(int k = 0; k < 11; k++) 
+	    				for(int l = 0; l < 11; l++) 
+	    					for(int m = 0; m < 11;m++) 
+	    						for(int n = 0; n < 11;n++) 
+	    							for(int o = 0; o < 11;o++) 
+	    								for(int p = 0; p < 11;p++) 
 	    									for (String action : actions){
 	    										State s = new State(prey, action);
-	    										s.addPred(new Position(i,m));
-	    										s.addPred(new Position(j,n));
-	    										s.addPred(new Position(k,o));
-	    										s.addPred(new Position(l,p));
+	    										s.addPred(new Position(i,j));
+	    										s.addPred(new Position(k,l));
+	    										s.addPred(new Position(m,n));
+	    										s.addPred(new Position(o,p));
+	    										s.sortPreds();
 	    										// init Q(s,a) = 0 
-	    												if(s.endState()==1)
+	    												if(s.endState()==(1|-1))
 	    													qtable.put(s, 0.0);
 	    												else
 	    													qtable.put(s, value);
 	    									}
-	    								}
-	    							}	
-	    						}
-	    					}
-	    				}
-	    			}
-	    		}
-	    	}
 	    }
-	    
 	}
 	
 	/* initializes with values from valueiteration
@@ -171,10 +150,17 @@ public class QLearning implements Policy {
 		    	}
 		    }
 		}
-	} 
+	}*/ 
 	
 	public String getAction(State s){
 		// get action according to policy derived from Q
+		if(agent.equals("prey")){
+			double trip = Math.random();
+			if (trip < 0.2){
+				//show("prey tripped!\n");
+				return "wait";
+			}
+		}
 		State stateproj = s.projectState();
 		String action = policy.getAction(stateproj, qtable);
 		return action;
@@ -183,9 +169,15 @@ public class QLearning implements Policy {
 	public void updateQ(State cs, State nextS) {			
 		State currentState = cs.projectState();
 		State nextState = nextS.projectState();
-		if(!currentState.endState()) {					
+		double[] rewards = getReward(nextState);
+		double reward;
+		if(!(currentState.endState()==(-1|1))) {					
 			double currentQ = (Double) qtable.get(currentState);
-			double qUpdated = currentQ + alpha*(getReward(nextState) 
+			if(agent.equals("prey"))
+				reward = rewards[1];
+			else
+				reward = rewards[0];
+			double qUpdated = currentQ + alpha*(reward 
 					+ gamma*argmaxQ(nextState) - currentQ);
 			qtable.put(currentState, qUpdated);
 		}
@@ -225,17 +217,27 @@ public class QLearning implements Policy {
 		return maxAction;
 	}
 	
-    // implement reward function: only when captured the immediate award=10, else 0
-    public double getReward(State s) {
-        if(s.endState())
-            return 10.0;
-	return 0.0;
+    // implement reward function: 
+	// first check if predators got confused then immediate award = -10
+	// else if captured then immediate award=10, else 0
+    public double[] getReward(State s) {
+        if(s.endState() == -1){
+        	double[] ret = {-10.00,10.00};
+        	return ret;
+        }
+        else if(s.endState() == 1){
+        	double[] ret = {10.00,-10.00};
+        	return ret;
+        }
+     double[] ret = {0.0,0.0};
+	return ret;
     }
+    
     
     // set action selection policy
     public void setSelectPolicy(PolicySelect p) {
     	PolicySelect policy = p;
-    }*/
+    }
 	
     public static void show(String s) {
         System.out.print(s);
@@ -289,12 +291,13 @@ public class QLearning implements Policy {
     	nextline = i;
     }
 	}
+*/
     
     /*
      *  IO methods, for writing the state actions into a file, 
      *  which can be used to fill up a lookup table when the policy 
      *  is executed within the simulator 
-     *
+     */
     
     public static void write(File file, String string, boolean append) throws Exception
     {
@@ -311,6 +314,7 @@ public class QLearning implements Policy {
 	WriteFile.close();
     }
     
+    /*
     public HashMap<String, String> getStateactions() {
     	stateactions = new HashMap<String, String>();
     	State key;
@@ -372,7 +376,7 @@ public class QLearning implements Policy {
 	    // SoftMax with temperature tau = 0.1
 	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 4);
+	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 3, "prey");
 	    show("qtable size: "+predPolicy.getQtable().size());
 	    //predPolicy.printTable(new Position(5,5));
 	}

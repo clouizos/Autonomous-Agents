@@ -8,7 +8,7 @@ import java.util.*;
 public class State {
     
 	// agents defines the state with order defined in comparator Position
-    protected ArrayList<Position> predators = new ArrayList();
+    protected ArrayList<Position> predators;
     protected Position prey;
     
     private String action;
@@ -23,16 +23,28 @@ public class State {
     	predators.add(p);
     }
     
+    public State(ArrayList<Position> preds, Position p, String move) {
+    	predators = preds;
+    	prey = p;
+    	action = move;
+    }
+    
+    // Only used with random
     public State(ArrayList<Position> preds, Position p) {
     	predators = preds;
     	prey = p;
     }
     
     
-    // constructor used in TD
     public State(Position p, String a) {
     	predators = new ArrayList();
     	prey = p;
+    	action = a;
+    }
+    
+    public State(State s, String a) {
+    	predators = s.getPredators();
+    	prey = s.getPrey();
     	action = a;
     }
     
@@ -109,16 +121,25 @@ public class State {
 		succstates.add(nextstate);
 	}
 	return succstates;
+    }*/
+    public void sortPreds() {
+    	Collections.sort(predators);
     }
     
     // returns projected state for prey at (5,5)
     public State projectState() {
-    	Position predproj = predator.transformPrey55(prey);
-    	State stateproj = new State(predproj, new Position(5,5), action);
+    	ArrayList<Position> preds = new ArrayList<Position>();
+		for(Position pred : predators) {
+    	Position predproj = pred.transformPrey55(prey);
+    	preds.add(predproj);
+		}
+		Collections.sort(preds);
+    	State stateproj = new State(preds, new Position(5,5), action);
     	return stateproj;
-    }*/
+    }
     
     // next state after prey has taken a:preymove
+    // only used with random
     public State nextStatePrey(String preymove) {
     	return new State(predators, prey.forecast(preymove));
     }
@@ -173,7 +194,7 @@ public class State {
 		this.predators = predators;
 	}
 
-	public Position getPrey() {predators = new ArrayList();
+	public Position getPrey() {
 		return prey;
 	}
 

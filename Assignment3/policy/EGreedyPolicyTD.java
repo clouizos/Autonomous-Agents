@@ -15,20 +15,17 @@ public class EGreedyPolicyTD extends PolicySelect {
 	
 	@Override
 	public String getAction(State s, Map<State, Double> qtable){
-		ArrayList<String> actionS = ArbitraryPolicy.getAllActions();
+		ArrayList<String> actionS = PolicySelect.getAllActions();
 		// randomized list, so no move will get selected by default/preference at init stage
 		long seed = System.nanoTime();
 		Collections.shuffle(actionS, new Random(seed));
 		double epsilon = super.parameter;
-		//State key;
-		String key;
+		State key;
 		double qVal;
 		double maxQ=-10;
 		String maxAction="wait";
 		for (String action : actionS){
-			//key = new State(s, action);
-			key = s.toString()+" "+action;
-			System.out.println(key);
+			key = new State(s, action);
 			qVal = qtable.get(key);
 			if (maxQ<qVal){
 				maxQ = qVal;

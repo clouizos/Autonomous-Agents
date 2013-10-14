@@ -140,7 +140,9 @@ public class Position implements Comparable<Position> {
 		Position p1 = new Position(7, 4);
 		Position p2 = new Position(3,4);
 		Position p3 = new Position(10,5);
-		ArrayList<Position> agents = new ArrayList<>();
+
+		Position prey = new Position(5,5);
+		/*ArrayList<Position> agents = new ArrayList<>();
 		agents.add(p1);
 		agents.add(p2);
 		agents.add(p3);
@@ -151,6 +153,22 @@ public class Position implements Comparable<Position> {
 		show("p1 p2: " + p1.compareTo(p2));
 		show("p2 p3: " + p2.compareTo(p3));
 		show("p3 p1: " + p3.compareTo(p1));
+		*/
+		State s = new State(prey, "wait");
+		s.addPred(p1);
+		s.addPred(p2);
+		s.addPred(p3);
+		State s2 = new State(prey, "wait");
+		s2.addPred(p3);
+		s2.addPred(p1);
+		s2.addPred(p2);
+		HashMap<State, Double> qtable = new HashMap<State, Double>();
+		qtable.put(s, 0.0);
+		qtable.put(s2, 0.0);
+		show("\ns1 equals s2: " + s.equals(s2));
+		show("\nqtable size: "+qtable.size());
+		show("\nState s1: "+s.toString());
+		show("\nState s1: "+s.toString());
 	}
 	
     public static void show(String s) {

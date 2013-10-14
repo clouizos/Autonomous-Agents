@@ -1,5 +1,7 @@
 package policy;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import statespace.*;
@@ -25,5 +27,11 @@ public class PolicySelect {
 
 	public void setParameter(double parameter) {
 		this.parameter = parameter;
-	} 
+	}
+	
+	public static ArrayList<String> getAllActions(){
+		String[] actions = {"north","south","west","east","wait"};
+		ArrayList<String> allActions = new ArrayList(Arrays.asList(actions));
+		return allActions;
+	}
 }
