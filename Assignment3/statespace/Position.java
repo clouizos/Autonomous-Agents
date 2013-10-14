@@ -105,6 +105,11 @@ public class Position implements Comparable<Position> {
     	return -1;
     }
     
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
     public int getX() {
 	return x;
     }

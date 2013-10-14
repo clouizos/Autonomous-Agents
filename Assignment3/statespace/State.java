@@ -8,7 +8,7 @@ import java.util.*;
 public class State {
     
 	// agents defines the state with order defined in comparator Position
-    protected ArrayList<Position> predators;
+    protected ArrayList<Position> predators = new ArrayList();
     protected Position prey;
     
     private String action;
@@ -28,20 +28,15 @@ public class State {
     	prey = p;
     }
     
-    /* constructor with prey move
-    public State(Position pred, Position prey, String a) {
-    predator = pred;
-    this.prey = prey;
-    action = a;
-	}
     
     // constructor used in TD
-    public State(State s, String a) {
-    	predator = s.getPredator();
-    	prey = s.getPrey();
+    public State(Position p, String a) {
+    	predators = new ArrayList();
+    	prey = p;
     	action = a;
-    }s
+    }
     
+    /*
     public State(State s) {
     	predator = s.getPredator();
     	prey = s.getPrey();   	
@@ -148,7 +143,7 @@ public class State {
     
     public String toString() {
 	String state = "";
-	//Collections.sort(predators);
+	Collections.sort(predators);
     for(Position pred : predators) {
     	state+=pred.toString();
     }
@@ -178,7 +173,7 @@ public class State {
 		this.predators = predators;
 	}
 
-	public Position getPrey() {
+	public Position getPrey() {predators = new ArrayList();
 		return prey;
 	}
 

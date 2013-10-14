@@ -27,7 +27,7 @@ public class QLearning implements Policy {
      *  Constructors; inherits from policy evaluation
      */	
 
-	public QLearning(double g, double a, PolicySelect p){
+	public QLearning(double g, double a, PolicySelect p, int nrPred){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
@@ -40,30 +40,118 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(-10.0);
+		initQ(-10.0, nrPred);
 	    gamma = g;
 	    alpha = a;	      
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
-	public void initQ(double value) {
+	public void initQ(double value, int nrPred) {
 	    // prey fixed at (5,5)
 	    Position prey = new Position(5, 5);
-		for(int i = 0; i < 11; i++) {
-		    for(int j = 0; j < 11; j++) {
-		    	for (String action : actions){
-			    	State s = new State(new Position(i, j), prey, action);
-			    	// init Q(s,a) = 0 
-			    	if(s.endState())
-			    		qtable.put(s, 0.0);
-			    	else
-			    		qtable.put(s, value);	
-		    	}
-		    }
-		}
+	    if(nrPred==1) {
+	    	for(int i = 0; i < 11; i++) {
+	    		for(int j = 0; j < 11; j++) {
+	    			for (String action : actions){
+	    				State s = new State(prey, action);
+	    				s.addPred(new Position(i,j));
+	    				// init Q(s,a) = 0 
+	    				if(s.endState()==1)
+	    					qtable.put(s, 0.0);
+	    				else
+	    					qtable.put(s, value);	
+	    			}
+	    		}
+	    	}
+	    }
+	    
+	    if(nrPred==2) {
+	    	// x
+	    	for(int i = 0; i < 11; i++) {
+	    		for(int j = i+1; j < 11; j++) {
+	    			// y
+	    			for(int k = 0; k < 11; k++) {
+	    				for(int l = k+1; l < 11; l++) {
+	    					for (String action : actions){
+	    	    				State s = new State(prey, action);
+	    	    				s.addPred(new Position(i,k));
+	    	    				s.addPred(new Position(j,l));
+	    	    				// init Q(s,a) = 0 
+	    	    				if(s.endState()==1)
+	    	    					qtable.put(s, 0.0);
+	    	    				else
+	    	    					qtable.put(s, value);	
+	    	    			}
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	    
+	    if(nrPred==3) {
+	    	// x
+	    	for(int i = 0; i < 11; i++) {
+	    		for(int j = i+1; j < 11; j++) {
+	    			for(int k = j+1; k < 11; k++) {
+	    				// y
+	    				for(int l = 0; l < 11; l++) {
+	    					for(int m = l+1; m < 11;m++) {
+	    						for(int n = m+1; n < 11;n++) {
+	    							for (String action : actions){
+	    								State s = new State(prey, action);
+	    								s.addPred(new Position(i,l));
+	    								s.addPred(new Position(j,m));
+	    								s.addPred(new Position(k,n));
+	    								// init Q(s,a) = 0 
+	    								if(s.endState()==1)
+	    									qtable.put(s, 0.0);
+	    								else
+	    									qtable.put(s, value);
+	    							}
+	    						}	
+	    					}
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	    
+	    if(nrPred==4) {
+	    	// x
+	    	for(int i = 0; i < 11; i++) {
+	    		for(int j = i+1; j < 11; j++) {
+	    			for(int k = j+1; k < 11; k++) {
+	    				for(int l = k+1; l < 11; l++) {
+	    					// y
+	    					for(int m = 0; m < 11;m++) {
+	    						for(int n = m+1; n < 11;n++) {
+	    							for(int o = n+1; o < 11;o++) {
+	    								for(int p = o+1; p < 11;p++) {
+	    									for (String action : actions){
+	    										State s = new State(prey, action);
+	    										s.addPred(new Position(i,m));
+	    										s.addPred(new Position(j,n));
+	    										s.addPred(new Position(k,o));
+	    										s.addPred(new Position(l,p));
+	    										// init Q(s,a) = 0 
+	    												if(s.endState()==1)
+	    													qtable.put(s, 0.0);
+	    												else
+	    													qtable.put(s, value);
+	    									}
+	    								}
+	    							}	
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	    
 	}
 	
-	// initializes with values from valueiteration
+	/* initializes with values from valueiteration
 	public void initQVI() {
 		VIPolicyReduced vip = new VIPolicyReduced(0.9, 1.0E-20);
 		vip.multisweep();
@@ -83,7 +171,7 @@ public class QLearning implements Policy {
 		    	}
 		    }
 		}
-	}
+	} 
 	
 	public String getAction(State s){
 		// get action according to policy derived from Q
@@ -147,27 +235,15 @@ public class QLearning implements Policy {
     // set action selection policy
     public void setSelectPolicy(PolicySelect p) {
     	PolicySelect policy = p;
-    }
+    }*/
 	
     public static void show(String s) {
         System.out.print(s);
     }
-    
-	public static void main(String[] args) {
-	    double gamma = 0.5;
-	    double alpha = 0.1;
-	    // egreedy with epsilon = 0.1
-	    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
-	    // SoftMax with temperature tau = 0.1
-	    SoftMax policy = new SoftMax(0.1);
-	    // qlearning with policy
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy);
-	    predPolicy.printTable(new Position(5,5));
-	}
-    
+      
     /*
      *  Print methods for table and list of statevalues
-     */    
+     *    
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
@@ -218,7 +294,7 @@ public class QLearning implements Policy {
      *  IO methods, for writing the state actions into a file, 
      *  which can be used to fill up a lookup table when the policy 
      *  is executed within the simulator 
-     */
+     *
     
     public static void write(File file, String string, boolean append) throws Exception
     {
@@ -274,9 +350,30 @@ public class QLearning implements Policy {
 	    }
 	} else
 	    show("State actions table is empty!!");
-    }
-
+    }*/
+		
 	public static void setPolicyA(PolicySelect policy) {
 		QLearning.policy = policy;
-	}    
+	}
+
+	public HashMap<State, Double> getQtable() {
+		return qtable;
+	}
+
+	public void setQtable(HashMap<State, Double> qtable) {
+		this.qtable = qtable;
+	} 
+	
+	public static void main(String[] args) {
+	    double gamma = 0.5;
+	    double alpha = 0.1;
+	    // egreedy with epsilon = 0.1
+	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+	    // SoftMax with temperature tau = 0.1
+	    //SoftMax policy = new SoftMax(0.1);
+	    // qlearning with policy
+	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 4);
+	    show("qtable size: "+predPolicy.getQtable().size());
+	    //predPolicy.printTable(new Position(5,5));
+	}
 }
