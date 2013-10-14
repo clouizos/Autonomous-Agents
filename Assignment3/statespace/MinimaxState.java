@@ -9,9 +9,21 @@ public class MinimaxState extends State{
     
 
 	// agents defines the state with order defined in comparator Position
-    private String action_opponent;
+	private String action_opponent;
+   
 
-    public String getAction_opponent() {
+	public MinimaxState(Position p, String action, String action_opponent) {
+		super(p, action);
+		this.action_opponent = action_opponent;
+	}
+    
+	public MinimaxState(MinimaxState s, String a, String b) {
+		super(s, a);
+    	action_opponent = b;
+    }
+
+
+	public String getAction_opponent() {
 		return action_opponent;
 	}
 
@@ -19,11 +31,6 @@ public class MinimaxState extends State{
 		this.action_opponent = action_opponent;
 	}
 
-	public MinimaxState(Position p, String action, String action_opponent) {
-		super(p, action);
-		this.action_opponent = action_opponent;
-	}
-    
     @Override
 	public int hashCode() {
 		return (toString()+super.getAction()+action_opponent).hashCode();
@@ -32,9 +39,10 @@ public class MinimaxState extends State{
 	@Override
     public boolean equals(Object s2) {
 	MinimaxState s = (MinimaxState) s2;
-	if(s.super.toString().equals(s2.super.toString())&&s.super.getAction().equals(super.getAction())&&s.getAction_opponent().equals(getAction_opponent()))
+	if(super.equals(s)&&s.getAction_opponent().equals(action_opponent))
 	    return true;
 	return false;
     }
+	
     
 }
