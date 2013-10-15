@@ -71,6 +71,7 @@ public class MultiSim {
     public static void testQ(boolean verbose, int nrRuns, int nrPred, Policy preyPolicy) {
     	String method = "q";
     	State currentState = init(nrPred, method);
+    	ArrayList<String> predmoves = new ArrayList<String>();
     	//currentState.sortPreds();
     	HashMap<State, QLearning> oldStatesPolicies; //= new ArrayList<State>();
     	State oldstate; // = new State(currentState.getPredators(), currentState.getPrey(), "wait");
@@ -95,20 +96,28 @@ public class MultiSim {
     		for (Map.Entry<Position, Policy> entry : predPolicies.entrySet()) {
     		    Position predator = entry.getKey();
     		    Policy policy = entry.getValue();
-    		    String predmove = policy.getAction(currentState);
+    		    String predmove = policy.getAction(oldstate);
     		    oldStatesPolicies.put(new State(oldstate.getPredators(), prey, predmove), (QLearning) policy);
-    		    predator.move(predmove);
+    		    predmoves.add(predmove);
         		if(verbose) {
             		show("predator move: " + predmove);
             	}
     		}
     		
     		// make prey do a move
-    		String preymove = preyPolicy.getAction(currentState);
-    		prey.move(preymove);
+    		String preymove = preyPolicy.getAction(oldstate);
+    		
     		if(verbose) {
         		show("prey move: " + preymove);
         	}
+    		
+    		// doing actual move
+    		int i = 0;
+    		for(Position pred : predPolicies.keySet()) {
+    			pred.move(predmoves.get(i++));
+    		}
+    		
+    		prey.move(preymove);
     		
     		for (Map.Entry<State, QLearning> entry : oldStatesPolicies.entrySet()) {
     		    State oldState = entry.getKey();
