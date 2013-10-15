@@ -154,11 +154,11 @@ public class Position implements Comparable<Position> {
 		show("p2 p3: " + p2.compareTo(p3));
 		show("p3 p1: " + p3.compareTo(p1));
 		*/
-		State s = new State(prey, "wait");
+		State s = new MinimaxState(prey, "wait", "South");
 		s.addPred(p1);
 		s.addPred(p2);
 		s.addPred(p3);
-		State s2 = new State(prey, "wait");
+		State s2 = new MinimaxState(prey, "wait", "South");
 		s2.addPred(p3);
 		s2.addPred(p1);
 		s2.addPred(p2);

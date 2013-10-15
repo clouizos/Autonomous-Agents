@@ -376,7 +376,7 @@ public class QLearning implements Policy {
 	    // SoftMax with temperature tau = 0.1
 	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy
-	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 3, "prey");
+	    QLearning predPolicy = new QLearning(gamma, alpha, policy, 4, "prey");
 	    show("qtable size: "+predPolicy.getQtable().size());
 	    //predPolicy.printTable(new Position(5,5));
 	}
