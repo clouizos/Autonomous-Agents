@@ -124,6 +124,9 @@ public class MultiSim {
     		    ((QLearning)policy).updateQ(oldState, currentState);
     		}
     		
+    		// predmoves clear
+    		predmoves.clear();
+    		
     		if(verbose) {
     		show("\n===========\nAt endloop: "+currentState.toString());
     		}
@@ -146,7 +149,7 @@ public class MultiSim {
     				if(verbose)
     				show("new iteration");
     		}
-    		pauseProg();
+    		//pauseProg();
     	}
 	
     	System.out.println("confused:"+allRunsconf.size());

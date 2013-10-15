@@ -41,7 +41,7 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(-10.0, nrPred);
+		initQ(15.0, nrPred);
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
