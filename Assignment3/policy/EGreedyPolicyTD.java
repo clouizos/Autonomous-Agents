@@ -8,9 +8,11 @@ import java.util.Random;
 import statespace.State;
 
 public class EGreedyPolicyTD extends PolicySelect {
+	private double initQValue;
 	
-	public EGreedyPolicyTD(double epsilon){
+	public EGreedyPolicyTD(double epsilon, double initQValue){
 		super(epsilon);
+		this.initQValue = initQValue;
 	}
 	
 	@Override
@@ -21,12 +23,16 @@ public class EGreedyPolicyTD extends PolicySelect {
 		Collections.shuffle(actionS, new Random(seed));
 		double epsilon = super.parameter;
 		State key;
-		double qVal;
+		Double qVal;
 		double maxQ=-10;
 		String maxAction="wait";
 		for (String action : actionS){
 			key = new State(s, action);
 			qVal = qtable.get(key);
+			if(qVal == null){
+				qtable.put(key, initQValue);
+				qVal = initQValue;
+			}
 			if (maxQ<qVal){
 				maxQ = qVal;
 				maxAction = action;

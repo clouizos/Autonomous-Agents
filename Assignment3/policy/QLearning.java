@@ -23,6 +23,7 @@ public class QLearning implements Policy {
     private static PolicySelect policy;
     private static ArrayList<String> actions = PolicySelect.getAllActions();
     protected String agent;
+    double initValue;
     
     /*
      *  Constructors; inherits from policy evaluation
@@ -41,7 +42,8 @@ public class QLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(15.0, nrPred);
+		//initQ(15.0, nrPred);
+		initValue = 15.0;
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
@@ -74,7 +76,7 @@ public class QLearning implements Policy {
 	    	    				State s = new State(prey, action);
 	    	    				s.addPred(new Position(i,j));
 	    	    				s.addPred(new Position(k,l));
-	    	    				s.sortPreds();
+	    	    				//s.sortPreds();
 	    	    				// init Q(s,a) = 0 
 	    	    				if(s.endState()==(1|-1))
 	    	    					qtable.put(s, 0.0);
@@ -96,7 +98,7 @@ public class QLearning implements Policy {
 	    								s.addPred(new Position(i,j));
 	    								s.addPred(new Position(k,l));
 	    								s.addPred(new Position(m,n));
-	    								s.sortPreds();
+	    								//s.sortPreds();
 	    								// init Q(s,a) = 0 
 	    								if(s.endState()==(1|-1))
 	    									qtable.put(s, 0.0);
@@ -120,7 +122,7 @@ public class QLearning implements Policy {
 	    										s.addPred(new Position(k,l));
 	    										s.addPred(new Position(m,n));
 	    										s.addPred(new Position(o,p));
-	    										s.sortPreds();
+	    										//s.sortPreds();
 	    										// init Q(s,a) = 0 
 	    												if(s.endState()==(1|-1))
 	    													qtable.put(s, 0.0);
@@ -172,7 +174,11 @@ public class QLearning implements Policy {
 		double[] rewards = getReward(nextState);
 		double reward;
 		if(!(currentState.endState()==(-1|1))) {					
-			double currentQ = (Double) qtable.get(currentState);
+			Double currentQ = (Double) qtable.get(currentState);
+			if(currentQ == null){
+				qtable.put(currentState, initValue);
+				currentQ = initValue;
+			}
 			if(agent.equals("prey"))
 				reward = rewards[1];
 			else
@@ -188,10 +194,15 @@ public class QLearning implements Policy {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
 		State key;
-		double temp, max = 0;
+		Double temp; 
+		double max = 0;
 		for(String action : actions) {
 			key = new State(nextState, action);
 			temp = (Double) qtable.get(key);
+			if(temp == null){
+				qtable.put(key, initValue);
+				temp = initValue;
+			}
     		if(temp>max) {
     			max = temp;
     		}
@@ -204,11 +215,16 @@ public class QLearning implements Policy {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
 		State key;
-		double temp, max = 0;
+		Double temp; 
+		double max = 0;
 		String maxAction = "wait";
 		for(String action : actions) {
 			key = new State(state, action);
 			temp = (Double) qtable.get(key);
+			if(temp == null){
+				qtable.put(key, initValue);
+				temp = initValue;
+			}
     		if(temp>max) {
     			max = temp;
     			maxAction = action;
@@ -372,7 +388,7 @@ public class QLearning implements Policy {
 	    double gamma = 0.5;
 	    double alpha = 0.1;
 	    // egreedy with epsilon = 0.1
-	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1, 15.0);
 	    // SoftMax with temperature tau = 0.1
 	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy

@@ -419,7 +419,7 @@ public class MinimaxQLearning implements Policy {
 	    double gamma = 0.5;
 	    double alpha = 0.1;
 	    // egreedy with epsilon = 0.1
-	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1);
+	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1,15.0);
 	    // SoftMax with temperature tau = 0.1
 	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy

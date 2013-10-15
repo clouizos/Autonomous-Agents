@@ -29,10 +29,11 @@ public class MultiSim {
 	static Position prey;
 	
 	static double epsilon = 0.1;
+	static double initQ = 15.0;
     static double alpha = 0.2;
     static double gamma = 0.1;
     static double tau = 0.0001;
-    static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon);
+    static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -49,7 +50,7 @@ public class MultiSim {
     		
     boolean verbose=false;
     int nrRuns = 20000;
-    int nrPred = 2;
+    int nrPred = 4;
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
     QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
