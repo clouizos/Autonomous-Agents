@@ -178,9 +178,9 @@ public class MinimaxQLearning implements Policy {
 		return action;
 	}
 	
-	public void updateQ(State cs, State nextS) {			
-		State currentState = cs.projectState();
-		State nextState = nextS.projectState();
+	public void updateQ(MinimaxState cs, MinimaxState nextS) {			
+		MinimaxState currentState = (MinimaxState) cs.projectState();
+		MinimaxState nextState = (MinimaxState) nextS.projectState();
 		double[] rewards = getReward(nextState);
 		double reward;
 		if(!(currentState.endState()==(-1|1))) {					
@@ -251,34 +251,33 @@ public class MinimaxQLearning implements Policy {
     	for(int i=0; i<actions.size();i++){
     		for (int j=0; j<actions.size(); j++){
     			MinimaxState key = new MinimaxState(s, actions.get(i), actions.get(j));
-    			Q[i][j] = qtable.get(key);
+    			Q[j][i] = qtable.get(key);
     		}
     	}
     	
-    	LinearProgram f = new LinearProgram(new double[] { 0, 0, 0, 0, 0, 1 });
+    	LinearProgram f = new LinearProgram(new double[] {0, 0, 0, 0, 0, - 1});
+    	f.setMinProblem(true);
     	
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[0][0], Q[0][1], Q[0][2], Q[0][3], Q[0][4], -1} , 0, "c1"));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[1][0], Q[1][1], Q[1][2], Q[1][3], Q[1][1], -1} , 0, "c2"));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[2][0], Q[2][1], Q[2][2], Q[2][3], Q[2][2], -1} , 0, "c3"));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[3][0], Q[3][1], Q[3][2], Q[3][3], Q[3][3], -1} , 0, "c4"));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[4][0], Q[4][1], Q[4][2], Q[4][3], Q[4][4], -1} , 0, "c5"));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[0][0], Q[0][1], Q[0][2], Q[0][3], Q[0][4], -1}, 0, "c1"));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[1][0], Q[1][1], Q[1][2], Q[1][3], Q[1][1], -1}, 0, "c2"));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[2][0], Q[2][1], Q[2][2], Q[2][3], Q[2][2], -1}, 0, "c3"));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[3][0], Q[3][1], Q[3][2], Q[3][3], Q[3][3], -1}, 0, "c4"));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[4][0], Q[4][1], Q[4][2], Q[4][3], Q[4][4], -1}, 0, "c5"));
     	
     	f.addConstraint(new LinearEqualsConstraint(new double[] {1,1,1,1,1,0}, 1, "c6" ));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {1,0,0,0,0,0}, 0, "c7" ));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,1,0,0,0,0}, 0, "c8" ));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,1,0,0,0}, 0, "c9" ));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,1,0,0}, 0, "c10" ));
-    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,0,1,0}, 0, "c11" ));
-    	f.setMinProblem(true);
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {1,0,0,0,0, 0}, 0, "c7" ));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,1,0,0,0, 0}, 0, "c8" ));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,1,0,0, 0}, 0, "c9" ));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,1,0, 0}, 0, "c10" ));
+    	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,0,1, 0}, 0, "c11" ));
+    	
     	LinearProgramSolver solver  = SolverFactory.getSolver("LPSOLVE");
     	double[] sol = solver.solve(f);
+    	for (double sols : sol){
+    		System.out.println(sols);
+    	}
     	
     	return sol;
-		//constraints.add(new LinearConstraint(new double[] { Qa[0][0], Qa[0][1], Qa[0][2], Qa[0][3], Qa[0][4], -1 }, Relationship.GEQ, 0));
-		//constraints.add(new LinearConstraint(new double[] { Qa[1][0], Qa[1][1], Qa[1][2], Qa[1][3], Qa[1][4], -1 }, Relationship.GEQ, 0));
-		//constraints.add(new LinearConstraint(new double[] { Qa[2][0], Qa[2][1], Qa[2][2], Qa[2][3], Qa[2][4], -1 }, Relationship.GEQ, 0));
-		//constraints.add(new LinearConstraint(new double[] { Qa[3][0], Qa[3][1], Qa[3][2], Qa[3][3], Qa[3][4], -1 }, Relationship.GEQ, 0));
-		//constraints.add(new LinearConstraint(new double[] { Qa[4][0], Qa[4][1], Qa[4][2], Qa[4][3], Qa[4][4], -1 }, Relationship.GEQ, 0));
 
     }
     
