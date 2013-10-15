@@ -23,12 +23,6 @@ public class State {
     	predators.add(p);
     }
     
-    public State(ArrayList<Position> preds, Position p, String move) {
-    	predators = preds;
-    	prey = p;
-    	action = move;
-    }
-    
     // Only used with random
     public State(ArrayList<Position> preds, Position p) {
     	predators = preds;
@@ -45,6 +39,19 @@ public class State {
     public State(State s, String a) {
     	predators = s.getPredators();
     	prey = s.getPrey();
+    	action = a;
+    }
+    
+    public State(ArrayList<Position> preds, Position p, String a){
+    	ArrayList<Position> preds_new = new ArrayList<Position>();
+    	Position prey = new Position(p.getX(),p.getY());
+    	this.prey = prey;
+    	for(int i=0;i<preds.size();i++){
+    		Position pred = new Position(preds.get(i).getX(), preds.get(i).getY());
+    		preds_new.add(pred);
+    		//agents_new.add((Position)agent.clone());
+    	}
+    	predators = preds_new;
     	action = a;
     }
     
