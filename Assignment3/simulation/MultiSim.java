@@ -104,6 +104,7 @@ public class MultiSim {
     		
     		// make prey do a move
     		String preymove = preyPolicy.getAction(oldstate);
+    		prey.move(preymove);
     		
     		if(verbose) {
         		show("prey move: " + preymove);
@@ -114,9 +115,7 @@ public class MultiSim {
     		for(Position pred : predPolicies.keySet()) {
     			pred.move(predmoves.get(i++));
     		}
-    		
-    		prey.move(preymove);
-    		
+    		    		
     		// update qtable according to oldstate, currentState
     		i = 0;
     		for (Policy policy : predPolicies.values()) {
