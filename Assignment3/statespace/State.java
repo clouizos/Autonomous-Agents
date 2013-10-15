@@ -152,8 +152,8 @@ public class State {
     }
     
 	/*
-	 * Encodes the endstate
-	 */
+	 * Encodes the endstate, only for sorted preds
+	 *
     public int endState(){
     	// check for collision first
     	for(int i=0; i<predators.size()-2;i++) {
@@ -166,6 +166,24 @@ public class State {
     		if(pred.equals(prey))
     			return 1;
     	// no endstate
+    	return 0;
+    }*/
+    
+    public int endState(){
+    	//if predators are on the same block
+    	for (int i=0;i<predators.size()-1;i++){
+    		for (int j = i+1; j<predators.size();j++){
+    			if (predators.get(i).toString().equals(predators.get(j).toString())){
+    				return -1;
+    			}
+    		}
+    	}
+    	//if catched the prey
+    	for (Position predator : predators){
+    		if(predator.toString().equals(prey.toString()))
+    			return 1;
+    	}
+    	
     	return 0;
     }
     

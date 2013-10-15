@@ -104,6 +104,7 @@ public class MultiSim {
     		
     		// make prey do a move
     		String preymove = preyPolicy.getAction(oldstate);
+    		prey.move(preymove);
     		
     		if(verbose) {
         		show("prey move: " + preymove);
@@ -114,15 +115,16 @@ public class MultiSim {
     		for(Position pred : predPolicies.keySet()) {
     			pred.move(predmoves.get(i++));
     		}
-    		
-    		prey.move(preymove);
-    		
+    		    		
     		// update qtable according to oldstate, currentState
     		i = 0;
     		for (Policy policy : predPolicies.values()) {
     			State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++));
     		    ((QLearning)policy).updateQ(oldState, currentState);
     		}
+    		
+    		// predmoves clear
+    		predmoves.clear();
     		
     		if(verbose) {
     		show("\n===========\nAt endloop: "+currentState.toString());
@@ -146,7 +148,7 @@ public class MultiSim {
     				if(verbose)
     				show("new iteration");
     		}
-    		pauseProg();
+    		//pauseProg();
     	}
 	
     	System.out.println("confused:"+allRunsconf.size());
