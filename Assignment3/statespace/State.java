@@ -171,7 +171,7 @@ public class State {
     
     public String toString() {
 	String state = "";
-	Collections.sort(predators);
+	//Collections.sort(predators);
     for(Position pred : predators) {
     	state+=pred.toString();
     }
