@@ -14,9 +14,10 @@ public class SoftMax extends PolicySelect {
 	 * for actions that differ in their value estimates. In the limit as, 
 	 * softmax action selection becomes the same as greedy action selection.
 	 */
-	
-	public SoftMax(double tau) {
+	private double initQ;
+	public SoftMax(double tau, double initQ) {
 		super(tau);
+		this.initQ = initQ;
 	}
 	
 	@Override
@@ -27,11 +28,16 @@ public class SoftMax extends PolicySelect {
 		Collections.shuffle(actionS, new Random(seed));
 		double tau = super.parameter;
 		State key;
-		double qVal, temp = 0;
+		Double qVal; 
+		double temp = 0;
 		double[] eQs = {0,0,0,0,0};
 		for (String action : actionS){
 			key = new State(s, action);
 			qVal = qtable.get(key);
+			if(qVal == null){
+				qtable.put(key, initQ);
+				qVal = initQ;
+			}
 			// we distribute the values to [0-1] after normalizing with the sum
 			eQs[actionS.indexOf(action)] = temp + Math.exp(qVal/tau);
 			temp = eQs[actionS.indexOf(action)];
