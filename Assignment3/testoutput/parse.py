@@ -58,8 +58,8 @@ for i in range(nrfiles):
     # Plotting
     #print data
     plt.figure(i)
-    plt.plot(ddata, colors[i], label = method[i]+' '+actionselect[i])
-    plt.ylim([0,1])
+    plt.plot(ddata[i], colors[i], label = method[i]+' '+actionselect[i])
+    plt.ylim([0,8000])
     plt.ylabel('catupre times')
     plt.xlabel('iterations x 100')
     plt.legend(loc=4)

@@ -49,8 +49,8 @@ public class MultiSim {
     // SoftMax with temperature tau
     //SoftMax policy = new SoftMax(tau);
     		
-    boolean verbose=false;
-    int nrRuns = 100;
+    boolean verbose=true;
+    int nrRuns = 200;
     int nrPred = 1;
     parameter = epsilon;
     //parameter = tau;
@@ -266,7 +266,7 @@ public class MultiSim {
     				if(verbose)
     				show("new iteration");
     		}
-    		//pauseProg();
+    		pauseProg();
     	}
 	
     	System.out.println("confused:"+allRunsconf.size());
