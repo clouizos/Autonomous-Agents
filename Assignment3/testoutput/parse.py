@@ -14,13 +14,23 @@ from os.path import basename
 datafiles = glob.glob("*.data")
 print datafiles
 
-datafile = basename(datafiles[0])
-tokens = datafile.split('_')
-method = tokens[0]
-actionselect = tokens[1]
-nr_preds = tokens[2]
-nr_runs = tokens[3]
-# parameter for actionselect(epsilon or tau)
-parameter = tokens[4]
-alpha = tokens[5]
-gamma = tokens[6]
+method = range(len(datafiles))
+actionselect = range(len(datafiles))
+nr_preds = range(len(datafiles))
+nr_runs =  range(len(datafiles))
+parameter = range(len(datafiles))
+alpha = range(len(datafiles))
+gamma = range(len(datafiles))
+
+for i in range(len(datafiles)): 
+    datafile = basename(datafiles[i])
+    tokens = datafile.split('_')
+    # get the parameters for each file
+    method[i] = tokens[0]
+    actionselect[i] = tokens[1]
+    nr_preds[i] = tokens[2]
+    nr_runs[i] = tokens[3]
+    # parameter for actionselect(epsilon or tau)
+    parameter[i] = tokens[4]
+    alpha[i] = tokens[5]
+    gamma[i] = tokens[6]
