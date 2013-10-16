@@ -60,7 +60,7 @@ for i in range(nrfiles):
     plt.figure(i)
     plt.plot(ddata[i], colors[i], label = method[i]+' '+actionselect[i])
     plt.ylim([0,8000])
-    plt.ylabel('catupre times')
+    plt.ylabel('capture times')
     plt.xlabel('iterations x 100')
     plt.legend(loc=4)
 
