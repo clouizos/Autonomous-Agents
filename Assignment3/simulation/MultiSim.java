@@ -33,8 +33,8 @@ public class MultiSim {
     static double tau = 0.0001;
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
-    //static String method = "q";
-    static String method = "mmQ";
+    static String method = "q";
+    //static String method = "mmQ";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -50,8 +50,8 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 100;
-    int nrPred = 1;
+    int nrRuns = 20000;
+    int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
     String arg = "Q_egreedy_"+nrPred+'_'+nrRuns;
