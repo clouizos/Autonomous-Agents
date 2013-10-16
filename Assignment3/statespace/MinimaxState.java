@@ -21,7 +21,22 @@ public class MinimaxState extends State{
 		super(s, a);
     	action_opponent = b;
     }
-
+	
+	public MinimaxState(ArrayList<Position> preds, Position p, String a, String b){
+		super(preds,p,a);
+    	action_opponent =  b;
+    }
+    
+	public MinimaxState projectState() {
+    	ArrayList<Position> preds = new ArrayList<Position>();
+		for(Position pred : predators) {
+    	Position predproj = pred.transformPrey55(prey);
+    	preds.add(predproj);
+		}
+		//Collections.sort(preds);
+    	MinimaxState stateproj = new MinimaxState(preds, new Position(5,5), action, action_opponent);
+    	return stateproj;
+    }
 
 	public String getAction_opponent() {
 		return action_opponent;

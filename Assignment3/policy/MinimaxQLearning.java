@@ -15,6 +15,15 @@ import scpsolver.lpsolver.SolverFactory;
 import scpsolver.problems.LinearProgram;
 import scpsolver.util.SparseVector;
 
+/*import org.apache.commons.math.optimization.RealPointValuePair;
+import org.apache.commons.math.optimization.linear.NoFeasibleSolutionException;
+import org.apache.commons.math.optimization.GoalType;
+import org.apache.commons.math.optimization.RealPointValuePair;
+import org.apache.commons.math.optimization.linear.LinearConstraint;
+import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
+import org.apache.commons.math.optimization.linear.Relationship;
+import org.apache.commons.math.optimization.linear.SimplexSolver;
+*/
 public class MinimaxQLearning implements Policy {
 	
 	/* reduced statespace state[i][j][5][5]
@@ -24,7 +33,7 @@ public class MinimaxQLearning implements Policy {
 	/* gamma = discount factor (0.8)
 	 * alpha = small positive number; learning rate
 	 */
-    protected HashMap<State, Double> qtable;
+    protected HashMap<MinimaxState, Double> qtable;
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     private double initQValue;
@@ -49,10 +58,13 @@ public class MinimaxQLearning implements Policy {
 	     * we consider the reduced q(s,a) where the statespace is reduced;
 	     * predator[i][j]prey[5][5]moves[k]
 	     */
-		qtable = new HashMap<State, Double>();
+		qtable = new HashMap<MinimaxState, Double>();
 		// initializes Q(s,a) with input:value
 		//initQ(-10.0, nrPred);
-		initQValue = -10.0;
+		//initQValue = -10.0;
+		
+		// in the paper it says to initialize Q's with 1
+		initQValue = 1;
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
@@ -89,7 +101,8 @@ public class MinimaxQLearning implements Policy {
 			}
 		}
 		State stateproj = s.projectState();
-		String action = policy.getAction(stateproj, qtable);
+		//String action = policy.getAction(stateproj, qtable);
+		String action = policy.getActionMM(stateproj);
 		return action;
 	}
 	
@@ -115,40 +128,49 @@ public class MinimaxQLearning implements Policy {
 	}
 	
 	// argmax_a' of Q(s',a') output: value
-	public double argmaxQ(State nextState) {
+	public double argmaxQ(MinimaxState nextState) {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
-		State key;
-		double temp, max = 0;
+		MinimaxState key;
+		Double temp; 
+		double max = 0;
 		for(String action : actions) {
-			key = new State(nextState, action);
-			temp = (Double) qtable.get(key);
-    		if(temp>max) {
-    			max = temp;
-    		}
+			for(String opponent_action : actions){
+				key = new MinimaxState(nextState, action, opponent_action);
+				temp = (Double) qtable.get(key);
+				if(temp == null){
+					temp = initQValue;
+					qtable.put(key, initQValue);
+				}
+				if(temp>max) {
+					max = temp;
+				}
+			}
     	}
 		return max;
 	}
 	
 	// argmax_a' of Q(s',a') output: action
-	public String argmaxQaction(State state) {
+	public String argmaxQaction(MinimaxState state) {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
-		State key;
+		MinimaxState key;
 		Double temp;
 		double max = 0;
 		String maxAction = "wait";
 		for(String action : actions) {
-			key = new State(state, action);
-			temp = (Double) qtable.get(key);
-			if(temp == null){
-				temp = initQValue;
-				qtable.put(key, initQValue);
+			for (String opponent_action : actions){
+				key = new MinimaxState(state, action, opponent_action);
+				temp = (Double) qtable.get(key);
+				if(temp == null){
+					temp = initQValue;
+					qtable.put(key, initQValue);
+				}
+				if(temp>max) {
+					max = temp;
+					maxAction = action;
+				}
 			}
-    		if(temp>max) {
-    			max = temp;
-    			maxAction = action;
-    		}
     	}
 		return maxAction;
 	}
@@ -183,8 +205,42 @@ public class MinimaxQLearning implements Policy {
     			Q[j][i] = temp;
     		}
     	}
+    	/*
+    	LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] {0, 0, 0, 0, 0, -1}, 0);
+    	Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
+    	constraints.add(new LinearConstraint(new double[] {Q[0][0], Q[0][1], Q[0][2], Q[0][3], Q[0][4]}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {Q[1][0], Q[1][1], Q[1][2], Q[1][3], Q[1][4]}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {Q[2][0], Q[2][1], Q[2][2], Q[2][3], Q[2][4]}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {Q[3][0], Q[3][1], Q[3][2], Q[3][3], Q[3][4]}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {Q[4][0], Q[4][1], Q[4][2], Q[4][3], Q[4][4]}, Relationship.GEQ, 0));
+    	
+    	constraints.add(new LinearConstraint(new double[] {1,1,1,1,1}, Relationship.EQ, 1));
+    	constraints.add(new LinearConstraint(new double[] {1,0,0,0,0}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {0,1,0,0,0}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {0,0,1,0,0}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {0,0,0,1,0}, Relationship.GEQ, 0));
+    	constraints.add(new LinearConstraint(new double[] {0,0,0,0,1}, Relationship.GEQ, 0));
+    	
+    	RealPointValuePair solution = null;
+    	
+    	try{
+    		solution = new SimplexSolver().optimize(f, constraints, GoalType.MINIMIZE, true);
+    	}catch(Exception e){
+    		System.out.println(e);
+    	}
+    	
+    	double[] sol = new double[5];
+    	sol[0] = solution.getPoint()[0];
+    	sol[1] = solution.getPoint()[1];
+    	sol[2] = solution.getPoint()[2];
+    	sol[3] = solution.getPoint()[3];
+    	sol[4] = solution.getPoint()[4];
+    	//sol[5] = solution.getPoint()[5];
+    	 * 
+    	 */
     	
     	LinearProgram f = new LinearProgram(new double[] {0, 0, 0, 0, 0, - 1});
+    	
     	f.setMinProblem(true);
     	
     	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {Q[0][0], Q[0][1], Q[0][2], Q[0][3], Q[0][4], -1}, 0, "c1"));
@@ -203,9 +259,9 @@ public class MinimaxQLearning implements Policy {
     	LinearProgramSolver solver  = SolverFactory.getSolver("LPSOLVE");
     	double[] sol = solver.solve(f);
     	
-    	/*for (double sols : sol){
-    		System.out.println(sols);
-    	}*/
+    	//for (double sols : sol){
+    	//	System.out.println(sols);
+    	//}
     	
     	return sol;
 
@@ -337,11 +393,11 @@ public class MinimaxQLearning implements Policy {
 		MinimaxQLearning.policy = policy;
 	}
 
-	public HashMap<State, Double> getQtable() {
+	public HashMap<MinimaxState, Double> getQtable() {
 		return qtable;
 	}
 
-	public void setQtable(HashMap<State, Double> qtable) {
+	public void setQtable(HashMap<MinimaxState, Double> qtable) {
 		this.qtable = qtable;
 	} 
 	

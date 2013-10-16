@@ -32,9 +32,10 @@ public class MultiSim {
     static double gamma = 0.1;
     static double tau = 0.0001;
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
-    static String method = "q";
-    //static String method = "mQQ";
-    
+    static EGreedyMN policymmQ = new EGreedyMN(epsilon);
+    //static String method = "q";
+    static String method = "mmQ";
+   
     public MultiSim() {
 	// TODO Auto-generated constructor stub
     }
@@ -49,8 +50,8 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 20000;
-    int nrPred = 2;
+    int nrRuns = 100;
+    int nrPred = 1;
     parameter = epsilon;
     //parameter = tau;
     String arg = "Q_egreedy_"+nrPred+'_'+nrRuns;
@@ -60,9 +61,16 @@ public class MultiSim {
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
     QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policy, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
-    testQ(verbose, nrRuns, nrPred, preyPolicy);
+    if(method.equals("q")){
+    	testQ(verbose, nrRuns, nrPred, preyPolicy);
+    }
+    else{
+    	testMinimaxQ(verbose, nrRuns, nrPred, preyPolicy);	
+    }
+    //
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
 	
     try {
@@ -126,6 +134,112 @@ public class MultiSim {
     			State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++));
     		    ((QLearning)policy).updateQ(oldState, currentState);
     		}
+    		// update qtable of the prey
+    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
+    		((QLearning)preyPolicy).updateQ(oldState, currentState);
+    		
+    		// predmoves clear
+    		predmoves.clear();
+    		
+    		if(verbose) {
+    		show("\n===========\nAt endloop: "+currentState.toString());
+    		}
+    		
+     		if(currentState.endState() == -1 || currentState.endState() == 1){
+    			if (currentState.endState() == -1){
+    				show("predators confused after "+runs+" runs!");
+    				allRunsconf.add(runs);
+    				show(""+timesRun);
+    			}
+    			else{
+    				show("prey captured after "+runs+" runs!");
+    				allRuns.add(runs);
+    				show(""+timesRun);
+    			}
+    			timesRun++;
+    			resetGrid = true;
+    		}else{
+    			runs++;
+    				if(verbose)
+    				show("new iteration");
+    		}
+    		//pauseProg();
+    	}
+	
+    	System.out.println("confused:"+allRunsconf.size());
+    	System.out.println("catched:"+allRuns.size());
+        //((QLearning)predPolicy).printTable(new Position(5,5));
+        //((QLearning)predPolicy).printList(new Position(5,5));
+    	
+    	double stdDev = getStdDev(allRuns);
+    	System.out.println("The standard deviation for catching is: "+stdDev);
+    	
+    	double stdDev2 = getStdDev(allRunsconf);
+    	System.out.println("The standard deviation for confused is: "+stdDev2);
+    }
+    
+    public static void testMinimaxQ(boolean verbose, int nrRuns, int nrPred, Policy preyPolicy) {
+    	State currentState = initShared(nrPred, method);
+    	ArrayList<String> predmoves = new ArrayList<String>();
+    	//currentState.sortPreds();
+    	State oldstate; // = new State(currentState.getPredators(), currentState.getPrey(), "wait");
+    	while(timesRun < nrRuns) {
+    		if(resetGrid){
+    			runs = 0;
+    			//show("\nResetting Grid for the "+timesRun+" run!");
+    			// reset prey and predator positions
+    			reset(nrPred);
+    			//currentState.sortPreds();
+    			resetGrid = false;
+    			//pauseProg();
+    		}
+    		if(verbose) {
+    		show("\n===========\nAt beginloop: "+currentState.toString());
+    		show("predators: "+currentState.getPredators().size());
+    		}
+
+	    	oldstate = new State(currentState.getPredators(), currentState.getPrey(), "wait");
+	    	
+    		// make every predator do a move and put in a list
+    		for (Map.Entry<Position, Policy> entry : predPolicies.entrySet()) {
+    		    Position predator = entry.getKey();
+    		    Policy policy = entry.getValue();
+    		    String predmove = policy.getAction(oldstate);
+    		    predmoves.add(predmove);
+        		if(verbose) {
+            		show("predator move: " + predmove);
+            	}
+    		}
+    		
+    		// make prey do a move
+    		String preymove = preyPolicy.getAction(oldstate);
+    		prey.move(preymove);
+    		
+    		if(verbose) {
+        		show("prey move: " + preymove);
+        	}
+    		
+    		// doing actual move to update the currentState
+    		int i = 0;
+    		for(Position pred : predPolicies.keySet()) {
+    			pred.move(predmoves.get(i++));
+    		}
+    		    		
+    		// update qtable according to oldstate, currentState
+    		i = 0;
+    		for (Policy policy : predPolicies.values()) {
+    			//State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++));
+    			MinimaxState oldStateMinMax = new MinimaxState(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++), preymove);
+    			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"wait", "wait");
+    			//((QLearning)policy).updateQ(oldState, currentState);
+    			((MinimaxQLearning)policy).updateQ(oldStateMinMax, currentStateMinMax);
+    			double[] linSol = ((MinimaxQLearning)policy).LinearProgramPi(oldStateMinMax);
+    			policymmQ.updateProb(oldStateMinMax, linSol);
+    		}
+    		
+    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
+    		((QLearning)preyPolicy).updateQ(oldState, currentState);
+    		
     		
     		// predmoves clear
     		predmoves.clear();
@@ -258,7 +372,7 @@ public class MultiSim {
 				if(method.equals("q"))
 					predPolicies.put(pred1, new QLearning(gamma, alpha, policy, nrPred,"predator"));
 				else
-					predPolicies.put(pred1, new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator"));
+					predPolicies.put(pred1, new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator"));
 				start.addPred(pred1);
 			}else if(i==1){
 				Position pred2 = new Position(0,10);

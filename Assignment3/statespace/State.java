@@ -11,7 +11,7 @@ public class State {
     protected ArrayList<Position> predators;
     protected Position prey;
     
-    private String action;
+    protected String action;
    
     
     public State(Position p) {
@@ -140,7 +140,7 @@ public class State {
     	Position predproj = pred.transformPrey55(prey);
     	preds.add(predproj);
 		}
-		Collections.sort(preds);
+		//Collections.sort(preds);
     	State stateproj = new State(preds, new Position(5,5), action);
     	return stateproj;
     }

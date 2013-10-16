@@ -19,6 +19,7 @@ public class PolicySelect {
 	}
 
 	public String getAction(State s, Map<State, Double> qtable) {return "wait";}
+	public String getActionMM(State s){return "wait";}
 	//public String getAction(State s, Map<String, Double> qtable) {return "wait";}
 
 	public double getParameter() {

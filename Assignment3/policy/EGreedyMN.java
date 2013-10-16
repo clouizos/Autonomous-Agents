@@ -20,7 +20,7 @@ public class EGreedyMN extends PolicySelect{
 	}
 
 	//@Override
-	public String getAction(State s){
+	public String getActionMM(State s){
 		ArrayList<String> actionS = PolicySelect.getAllActions();
 		// randomized list, so no move will get selected by default/preference at init stage
 		long seed = System.nanoTime();
