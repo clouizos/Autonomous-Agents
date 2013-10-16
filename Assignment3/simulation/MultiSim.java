@@ -409,7 +409,8 @@ public class MultiSim {
     
     // outputs the state actions into a file policy.data
     public static void output(double parameter, double a, double g, String arg) throws Exception {
-	File policyfile = new File(arg+'_'+parameter+'_'+a+'_'+g+".data");
+    File dir = new File ("testoutput");
+	File policyfile = new File(dir, arg+'_'+parameter+'_'+a+'_'+g+".data");
 	policyfile.delete();
 	policyfile.createNewFile();
 	//System.out.println("trying to write");
