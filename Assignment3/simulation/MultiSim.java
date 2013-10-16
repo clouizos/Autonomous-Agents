@@ -33,8 +33,8 @@ public class MultiSim {
     static double tau = 0.0001;
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
-    static String method = "q";
-    //static String method = "mmQ";
+    //static String method = "q";
+    static String method = "mmQ";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -49,9 +49,9 @@ public class MultiSim {
     // SoftMax with temperature tau
     //SoftMax policy = new SoftMax(tau);
     		
-    boolean verbose=false;
-    int nrRuns = 20000;
-    int nrPred = 2;
+    boolean verbose=true;
+    int nrRuns = 200;
+    int nrPred = 1;
     parameter = epsilon;
     //parameter = tau;
     String arg = "Q_egreedy_"+nrPred+'_'+nrRuns;
@@ -266,7 +266,7 @@ public class MultiSim {
     				if(verbose)
     				show("new iteration");
     		}
-    		//pauseProg();
+    		pauseProg();
     	}
 	
     	System.out.println("confused:"+allRunsconf.size());
