@@ -23,8 +23,6 @@ public class MultiSim {
 	static boolean resetGrid = false;
 	//static boolean discount = true;
 	static double parameter;
-	//static String arg = "softmax";
-    //static String arg = "egreedy";
 	static LinkedHashMap<Position, Policy> predPolicies;
 	static Position prey;
 	
@@ -34,6 +32,8 @@ public class MultiSim {
     static double gamma = 0.1;
     static double tau = 0.0001;
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
+    static String method = "q";
+    //static String method = "mQQ";
     
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -50,7 +50,13 @@ public class MultiSim {
     		
     boolean verbose=false;
     int nrRuns = 20000;
-    int nrPred = 4;
+    int nrPred = 2;
+    parameter = epsilon;
+    //parameter = tau;
+    String arg = "Q_egreedy_"+nrPred+'_'+nrRuns;
+    //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
+    
+    
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
     QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
@@ -58,20 +64,17 @@ public class MultiSim {
     //testRandom(verbose, nrRuns, nrPred);
     testQ(verbose, nrRuns, nrPred, preyPolicy);
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
-    //predPolicy.printTable(new Position(5,5));
-    //predPolicy.printActionsTable(new Position(5,5));
-	/*
+	
     try {
 	    output(parameter, alpha, gamma, arg);
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
-	}*/
+	}
     }
     
     public static void testQ(boolean verbose, int nrRuns, int nrPred, Policy preyPolicy) {
-    	String method = "q";
-    	State currentState = init(nrPred, method);
+    	State currentState = initShared(nrPred, method);
     	ArrayList<String> predmoves = new ArrayList<String>();
     	//currentState.sortPreds();
     	State oldstate; // = new State(currentState.getPredators(), currentState.getPrey(), "wait");
@@ -283,6 +286,51 @@ public class MultiSim {
 		return start;
 	}
 	
+	/*
+	 * initializes S; choose a start state from the qtable
+	 * 
+	 */
+	static State initShared(int nrPred, String method) {
+		predPolicies = new LinkedHashMap<Position, Policy>();
+		// with independent learning every predator should have its own policy
+		prey = new Position(5,5);
+		State start = new State(prey);
+		QLearning pQ = new QLearning(gamma, alpha, policy, nrPred,"predator");
+		MinimaxQLearning pMMQ = new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator");
+		for (int i=0; i< nrPred; i++){
+			if (i==0){
+				Position pred1 = new Position(0,0);
+				if(method.equals("q"))
+					predPolicies.put(pred1, pQ);
+				else
+					predPolicies.put(pred1, pMMQ);
+				start.addPred(pred1);
+			}else if(i==1){
+				Position pred2 = new Position(0,10);
+				if(method.equals("q"))
+					predPolicies.put(pred2, pQ);
+				else
+					predPolicies.put(pred2, pMMQ);
+				start.addPred(pred2);
+			}else if(i==2){
+				Position pred3 = new Position(10,0);
+				if(method.equals("q"))
+					predPolicies.put(pred3, pQ);
+				else
+					predPolicies.put(pred3, pMMQ);
+				start.addPred(pred3);
+			}else if (i==3){
+				Position pred4 = new Position(10,10);
+				if(method.equals("q"))
+					predPolicies.put(pred4, pQ);
+				else
+					predPolicies.put(pred4, pMMQ);
+				start.addPred(pred4);
+			}
+		}
+		return start;
+	}
+	
 	static void reset(int nrPred) {
 		prey.setPos(5, 5);
 		int i = 0;
@@ -361,12 +409,9 @@ public class MultiSim {
     
     // outputs the state actions into a file policy.data
     public static void output(double parameter, double a, double g, String arg) throws Exception {
-	File policyfile = new File("convS_"+parameter+'_'+a+'_'+g+arg+".data");
+	File policyfile = new File(arg+'_'+parameter+'_'+a+'_'+g+".data");
 	policyfile.delete();
 	policyfile.createNewFile();
-	File optfile = new File("optimalityS_"+parameter+'_'+a+'_'+g+arg+".data");
-	optfile.delete();
-	optfile.createNewFile();
 	//System.out.println("trying to write");
 	if(!allRuns.isEmpty()) {
 		//System.out.println(allRuns);

@@ -16,7 +16,7 @@ public class QLearning implements Policy {
 	 * alpha = small positive number; learning rate
 	 */
     protected HashMap<State, Double> qtable;
-    protected HashMap<String, String> stateactions;
+    //protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     //private static EGreedyPolicyTD policy;
     //private static SoftMax policy;
@@ -261,7 +261,8 @@ public class QLearning implements Policy {
       
     /*
      *  Print methods for table and list of statevalues
-     *    
+     *  ONLY for 1 predator!
+     */    
     public void printTable(Position prey){
 
     	// outputs the values of all states where state:predator[i][j]prey[5][5] in a grid
@@ -272,7 +273,8 @@ public class QLearning implements Policy {
     	for(int i = 0; i < 11; i++) {
     		if(nextline < i) {show("\n");}
     		for(int j = 0; j < 11; j++) {
-			    	s = new State(new Position(j, i), prey);
+			    	s = new State(prey);
+			    	s.addPred(new Position(j, i));
 			    	qValue = argmaxQ(s);
 			    	show(String.format( "%.3f\t", qValue));
     		}
@@ -284,7 +286,8 @@ public class QLearning implements Policy {
     	for(int i = 0; i < 11; i++) {
 		    for(int j = 0; j < 11; j++) {
 		    	for (String action : actions){
-			    	State s = new State(new Position(j, i), prey, action);
+			    	State s = new State(prey, action);
+			    	s.addPred(new Position(j, i));
 			    	show('\n'+s.toString()+s.getAction()+ " statevalue: " +(double)qtable.get(s));
 		    	}
 		    }
@@ -300,14 +303,15 @@ public class QLearning implements Policy {
     for(int i = 0; i < 11; i++) {
     	if(nextline < i) {show("\n");}
     	for(int j = 0; j < 11; j++) {
-    		s = new State(new Position(j, i), prey);
+    		s = new State(prey);
+    		s.addPred(new Position(j, i));
     		action = argmaxQaction(s);
     		show(String.format( "%s\t", action));
     	}
     	nextline = i;
     }
 	}
-*/
+
     
     /*
      *  IO methods, for writing the state actions into a file, 
@@ -328,26 +332,9 @@ public class QLearning implements Policy {
 	WriteBuff.write(string);
 	WriteBuff.close();
 	WriteFile.close();
-    }
+    }     
     
-    /*
-    public HashMap<String, String> getStateactions() {
-    	stateactions = new HashMap<String, String>();
-    	State key;
-        State s;
-        String action;
-        Position prey = new Position(5,5);
-        for(int i = 0; i < 11; i++) {
-        	for(int j = 0; j < 11; j++) {
-        		s = new State(new Position(j, i), prey);
-        		action = argmaxQaction(s);
-        		stateactions.put(s.toString(), action);
-        	}
-        }
-    	return stateactions;
-    }
-    
-    // outputs the state actions into a file policy.data
+    // outputs the state actions into a file policy.data: Only works for 1 predator
     public void output() throws Exception {
 	File policyfile = new File("policy.data");
 	policyfile.delete();
@@ -357,7 +344,8 @@ public class QLearning implements Policy {
 	if(!qtable.isEmpty()) {
 	    for(int i = 0; i < 11; i++) {
 	    	for(int j = 0; j < 11; j++) {
-	    		state = new State(new Position(j, i), new Position(5,5));
+	    		state = new State(new Position(5,5));
+	    		state.addPred(new Position(j, i));
 	    		action = argmaxQaction(state);
 	    		try {
 	    		    write(policyfile, state.toString()+"=>"+action+"\n", true);
@@ -370,7 +358,7 @@ public class QLearning implements Policy {
 	    }
 	} else
 	    show("State actions table is empty!!");
-    }*/
+    }
 		
 	public static void setPolicyA(PolicySelect policy) {
 		QLearning.policy = policy;
