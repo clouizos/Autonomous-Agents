@@ -19,7 +19,7 @@ public class EGreedyMN extends PolicySelect{
 		actionS = PolicySelect.getAllActions();
 	}
 
-	//@Override
+	@Override
 	public String getActionMM(State s){
 		ArrayList<String> actionS = PolicySelect.getAllActions();
 		// randomized list, so no move will get selected by default/preference at init stage
@@ -47,10 +47,12 @@ public class EGreedyMN extends PolicySelect{
 				maxProb = prob;
 				maxAction = action;
 			}
+			//System.out.println(maxAction);
 		}
 		Random rand = new Random();
 		int index;
 		if (Math.random()<epsilon){
+			//System.out.println("less than epsilon");
 			index = rand.nextInt(5);
 			//actionS.remove(maxAction);
 			return actionS.get(index);

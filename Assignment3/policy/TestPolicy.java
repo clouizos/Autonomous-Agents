@@ -74,8 +74,7 @@ public class TestPolicy implements Policy {
     	Position prey = new Position(5,5);
         for(int y = 0; y < 11; y++) {
         	for(int x = 0; x < 11; x++) {
-        		state = new State(prey);
-        		state.addPred(new Position(x,y));
+        		state = new State(new Position(x,y),prey);
         		test = sa.get(state.toString());
         		opti = optimal.get(state.toString());
         		if(test.equals(opti)) delta++;

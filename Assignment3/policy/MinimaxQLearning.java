@@ -39,7 +39,8 @@ public class MinimaxQLearning implements Policy {
     private double initQValue;
     //private static EGreedyPolicyTD policy;
     //private static SoftMax policy;
-    private static PolicySelect policy;
+    //private static PolicySelect policy;
+    private static EGreedyMN policy;
     private static ArrayList<String> actions = PolicySelect.getAllActions();
     protected String agent;
     
@@ -47,7 +48,7 @@ public class MinimaxQLearning implements Policy {
      *  Constructors; inherits from policy evaluation
      */	
 
-	public MinimaxQLearning(double g, double a, PolicySelect p, int nrPred, String entity){
+	public MinimaxQLearning(double g, double a, EGreedyMN p, int nrPred, String entity){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
@@ -389,9 +390,9 @@ public class MinimaxQLearning implements Policy {
 	    show("State actions table is empty!!");
     }*/
 		
-	public static void setPolicyA(PolicySelect policy) {
-		MinimaxQLearning.policy = policy;
-	}
+	//public static void setPolicyA(PolicySelect policy) {
+	//	MinimaxQLearning.policy = policy;
+	//}
 
 	public HashMap<MinimaxState, Double> getQtable() {
 		return qtable;
@@ -405,12 +406,12 @@ public class MinimaxQLearning implements Policy {
 	    double gamma = 0.5;
 	    double alpha = 0.1;
 	    // egreedy with epsilon = 0.1
-	    EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1,15.0);
+	    //EGreedyPolicyTD policy = new EGreedyPolicyTD(0.1,15.0);
 	    // SoftMax with temperature tau = 0.1
 	    //SoftMax policy = new SoftMax(0.1);
 	    // qlearning with policy
-	    MinimaxQLearning predPolicy = new MinimaxQLearning(gamma, alpha, policy, 3, "prey");
-	    show("qtable size: "+predPolicy.getQtable().size());
+	    //MinimaxQLearning predPolicy = new MinimaxQLearning(gamma, alpha, policy, 3, "prey");
+	    //show("qtable size: "+predPolicy.getQtable().size());
 	    //predPolicy.printTable(new Position(5,5));
 	}
 }

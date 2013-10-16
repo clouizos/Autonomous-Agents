@@ -179,7 +179,7 @@ public class MultiSim {
     }
     
     public static void testMinimaxQ(boolean verbose, int nrRuns, int nrPred, Policy preyPolicy) {
-    	State currentState = initShared(nrPred, method);
+    	State currentState = init(nrPred, method);
     	ArrayList<String> predmoves = new ArrayList<String>();
     	//currentState.sortPreds();
     	State oldstate; // = new State(currentState.getPredators(), currentState.getPrey(), "wait");
@@ -230,12 +230,13 @@ public class MultiSim {
     		for (Policy policy : predPolicies.values()) {
     			//State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++));
     			MinimaxState oldStateMinMax = new MinimaxState(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++), preymove);
-    			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"wait", "wait");
+    			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"", "");
     			//((QLearning)policy).updateQ(oldState, currentState);
     			((MinimaxQLearning)policy).updateQ(oldStateMinMax, currentStateMinMax);
     			double[] linSol = ((MinimaxQLearning)policy).LinearProgramPi(oldStateMinMax);
     			policymmQ.updateProb(oldStateMinMax, linSol);
     		}
+    		
     		
     		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
     		((QLearning)preyPolicy).updateQ(oldState, currentState);
@@ -266,7 +267,7 @@ public class MultiSim {
     				if(verbose)
     				show("new iteration");
     		}
-    		pauseProg();
+    		//pauseProg();
     	}
 	
     	System.out.println("confused:"+allRunsconf.size());
@@ -379,21 +380,21 @@ public class MultiSim {
 				if(method.equals("q"))
 					predPolicies.put(pred2, new QLearning(gamma, alpha, policy, nrPred,"predator"));
 				else
-					predPolicies.put(pred2, new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator"));
+					predPolicies.put(pred2, new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator"));
 				start.addPred(pred2);
 			}else if(i==2){
 				Position pred3 = new Position(10,0);
 				if(method.equals("q"))
 					predPolicies.put(pred3, new QLearning(gamma, alpha, policy, nrPred,"predator"));
 				else
-					predPolicies.put(pred3, new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator"));
+					predPolicies.put(pred3, new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator"));
 				start.addPred(pred3);
 			}else if (i==3){
 				Position pred4 = new Position(10,10);
 				if(method.equals("q"))
 					predPolicies.put(pred4, new QLearning(gamma, alpha, policy, nrPred,"predator"));
 				else
-					predPolicies.put(pred4, new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator"));
+					predPolicies.put(pred4, new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator"));
 				start.addPred(pred4);
 			}
 		}
@@ -410,7 +411,7 @@ public class MultiSim {
 		prey = new Position(5,5);
 		State start = new State(prey);
 		QLearning pQ = new QLearning(gamma, alpha, policy, nrPred,"predator");
-		MinimaxQLearning pMMQ = new MinimaxQLearning(gamma, alpha, policy, nrPred,"predator");
+		MinimaxQLearning pMMQ = new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator");
 		for (int i=0; i< nrPred; i++){
 			if (i==0){
 				Position pred1 = new Position(0,0);
