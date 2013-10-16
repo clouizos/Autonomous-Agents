@@ -27,6 +27,7 @@ public class MinimaxQLearning implements Policy {
     protected HashMap<State, Double> qtable;
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
+    private double initQValue;
     //private static EGreedyPolicyTD policy;
     //private static SoftMax policy;
     private static PolicySelect policy;
@@ -50,7 +51,8 @@ public class MinimaxQLearning implements Policy {
 	     */
 		qtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
-		initQ(-10.0, nrPred);
+		//initQ(-10.0, nrPred);
+		initQValue = -10.0;
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
@@ -97,7 +99,11 @@ public class MinimaxQLearning implements Policy {
 		double[] rewards = getReward(nextState);
 		double reward;
 		if(!(currentState.endState()==(-1|1))) {					
-			double currentQ = (Double) qtable.get(currentState);
+			Double currentQ = (Double) qtable.get(currentState);
+			if(currentQ == null){
+				currentQ = initQValue;
+				qtable.put(currentState,initQValue);
+			}
 			if(agent.equals("prey"))
 				reward = rewards[1];
 			else
@@ -129,11 +135,16 @@ public class MinimaxQLearning implements Policy {
 		long seed = System.nanoTime();
 		Collections.shuffle(actions, new Random(seed));
 		State key;
-		double temp, max = 0;
+		Double temp;
+		double max = 0;
 		String maxAction = "wait";
 		for(String action : actions) {
 			key = new State(state, action);
 			temp = (Double) qtable.get(key);
+			if(temp == null){
+				temp = initQValue;
+				qtable.put(key, initQValue);
+			}
     		if(temp>max) {
     			max = temp;
     			maxAction = action;
@@ -164,7 +175,12 @@ public class MinimaxQLearning implements Policy {
     	for(int i=0; i<actions.size();i++){
     		for (int j=0; j<actions.size(); j++){
     			MinimaxState key = new MinimaxState(s, actions.get(i), actions.get(j));
-    			Q[j][i] = qtable.get(key);
+    			Double temp = qtable.get(key);
+    			if (temp == null){
+    				temp = initQValue;
+    				qtable.put(key, temp);
+    			}
+    			Q[j][i] = temp;
     		}
     	}
     	
@@ -186,9 +202,10 @@ public class MinimaxQLearning implements Policy {
     	
     	LinearProgramSolver solver  = SolverFactory.getSolver("LPSOLVE");
     	double[] sol = solver.solve(f);
-    	for (double sols : sol){
+    	
+    	/*for (double sols : sol){
     		System.out.println(sols);
-    	}
+    	}*/
     	
     	return sol;
 
