@@ -33,6 +33,7 @@ public class MultiSim {
     static double tau = 0.0001;
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
+    static EGreedyMN policymmQPrey = new EGreedyMN(epsilon);
     //static String method = "q";
     static String method = "mmQ";
    
@@ -50,7 +51,7 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=true;
-    int nrRuns = 200;
+    int nrRuns = 100;
     int nrPred = 1;
     parameter = epsilon;
     //parameter = tau;
@@ -60,8 +61,8 @@ public class MultiSim {
     
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
-    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
-    //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policy, nrPred, "prey");
+    //QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
     if(method.equals("q")){
@@ -237,10 +238,15 @@ public class MultiSim {
     			policymmQ.updateProb(oldStateMinMax, linSol);
     		}
     		
+    		MinimaxState oldStateMinMax = new MinimaxState(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(0), preymove);
+			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"", "");
+			((MinimaxQLearning)preyPolicy).updateQ(oldStateMinMax, currentStateMinMax);
+			double[] linSol = ((MinimaxQLearning)preyPolicy).LinearProgramPi(oldStateMinMax);
+			policymmQPrey.updateProb(oldStateMinMax, linSol);
     		
-    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
-    		((QLearning)preyPolicy).updateQ(oldState, currentState);
-    		
+//    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
+//    		((QLearning)preyPolicy).updateQ(oldState, currentState);
+//    		
     		
     		// predmoves clear
     		predmoves.clear();

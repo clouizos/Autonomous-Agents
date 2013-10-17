@@ -65,7 +65,10 @@ public class MinimaxQLearning implements Policy {
 		//initQValue = -10.0;
 		
 		// in the paper it says to initialize Q's with 1
-		initQValue = 1;
+		// but i changed it to 10 since it should be a zero-sum
+		// game hence the initial value should be the maximum 
+		// reward we can have, and that's 10
+		initQValue = 10;
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
