@@ -43,6 +43,7 @@ public class MinimaxQLearning implements Policy {
     private static EGreedyMN policy;
     private static ArrayList<String> actions = PolicySelect.getAllActions();
     protected String agent;
+    LinearProgramSolver solver;
     
     /*
      *  Constructors; inherits from policy evaluation
@@ -72,6 +73,7 @@ public class MinimaxQLearning implements Policy {
 	    gamma = g;
 	    alpha = a;
 	    agent = entity;
+	    solver  = SolverFactory.getSolver("LPSOLVE");
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
@@ -260,7 +262,7 @@ public class MinimaxQLearning implements Policy {
     	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,1,0, 0}, 0, "c10" ));
     	f.addConstraint(new LinearBiggerThanEqualsConstraint(new double[] {0,0,0,0,1, 0}, 0, "c11" ));
     	
-    	LinearProgramSolver solver  = SolverFactory.getSolver("LPSOLVE");
+    	
     	double[] sol = solver.solve(f);
     	
     	//for (double sols : sol){
