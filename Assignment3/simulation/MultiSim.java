@@ -34,8 +34,8 @@ public class MultiSim {
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
     static EGreedyMN policymmQPrey = new EGreedyMN(epsilon);
-    //static String method = "q";
-    static String method = "mmQ";
+    static String method = "q";
+    //static String method = "mmQ";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -51,18 +51,18 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 100;
-    int nrPred = 1;
+    int nrRuns = 2000;
+    int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
-    String arg = "Q_egreedy_"+nrPred+'_'+nrRuns;
+    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha";
     //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
     
     
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
-    //QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
-    MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
+    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
     if(method.equals("q")){
@@ -531,7 +531,7 @@ public class MultiSim {
     // outputs the state actions into a file policy.data
     public static void output(double parameter, double a, double g, String arg) throws Exception {
     File dir = new File ("testoutput");
-	File policyfile = new File(dir, arg+'_'+parameter+'_'+a+'_'+g+".data");
+    File policyfile = new File(dir, ""+parameter+'_'+a+'_'+g+'_'+arg+".data");
 	policyfile.delete();
 	policyfile.createNewFile();
 	//System.out.println("trying to write");
