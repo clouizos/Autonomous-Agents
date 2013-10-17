@@ -57,21 +57,21 @@ for i in range(nrfiles):
         ddata[i][k] = sum(data[i][k*100:k*100+100])/100
     # Plotting
     #print data
-    plt.figure()
+    plt.figure(1)
     plt.plot(ddata[i][80:100], colors[i], label = alpha[i])
     plt.ylim([0,50])
     plt.ylabel('episode size')
     plt.xlabel('last 20 iterations x 100')
     plt.legend()    
     
-    plt.figure(6)
+    plt.figure(2)
     plt.plot(ddata[i], colors[i], label = alpha[i])
     plt.ylim([0,500])
     plt.ylabel('episode size')
     plt.xlabel('iterations x 100')
     plt.legend()
     
-    plt.figure(7)
+    plt.figure(3)
     plt.plot(ddata[i][0:20], colors[i], label = alpha[i])
     plt.ylim([0,500])
     plt.ylabel('episode size')
