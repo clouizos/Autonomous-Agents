@@ -602,7 +602,7 @@ public class MultiSim {
     	policyfile.delete();
     	policyfile.createNewFile();
     	//System.out.println("trying to write");
-    	if(!allRunsconf.isEmpty()) {
+    	if(!wins.isEmpty()) {
     		//System.out.println(allRuns);
     		for(int times : wins){
     			try {
