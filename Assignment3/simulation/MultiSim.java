@@ -16,6 +16,8 @@ public class MultiSim {
 	static ArrayList<Integer> allRuns = new ArrayList<Integer>();
 	static ArrayList<Integer> allRunsconf = new ArrayList<Integer>();
 	static double averageRuns = 0;
+	static int timesConf = 0;
+	static int timesCatch = 0;
 	static int timesRun = 0;
 	static double delta;
 	//static ArrayList<Double> optimalities = new ArrayList<Double>();
@@ -150,12 +152,16 @@ public class MultiSim {
     			if (currentState.endState() == -1){
     				show("predators confused after "+runs+" runs!");
     				allRunsconf.add(runs);
+    				allRuns.add(0);
     				show(""+timesRun);
+    				timesConf ++;
     			}
     			else{
     				show("prey captured after "+runs+" runs!");
     				allRuns.add(runs);
+    				allRunsconf.add(0);
     				show(""+timesRun);
+    				timesCatch ++;
     			}
     			timesRun++;
     			resetGrid = true;
@@ -167,8 +173,8 @@ public class MultiSim {
     		//pauseProg();
     	}
 	
-    	System.out.println("confused:"+allRunsconf.size());
-    	System.out.println("catched:"+allRuns.size());
+    	System.out.println("confused:"+timesConf);
+    	System.out.println("catched:"+timesCatch);
         //((QLearning)predPolicy).printTable(new Position(5,5));
         //((QLearning)predPolicy).printList(new Position(5,5));
     	
@@ -481,10 +487,14 @@ public class MultiSim {
     
     static double getAverage(ArrayList<Integer> allRuns){
     	double average = 0.0;
+    	int size = 0;
     	for (int i=0;i<allRuns.size();i++){
-    		average += allRuns.get(i);
+    		if(allRuns.get(i)!= 0){
+    			average += allRuns.get(i);
+    			size++;
+    		}
     	}
-    	average = average/allRuns.size();
+    	average = average/size;
     	System.out.println("Average time for the predator to catch the prey is: "+ average+" !");
     	return average;
     }
@@ -494,7 +504,9 @@ public class MultiSim {
         double average = getAverage(allRuns);
         double temp = 0;
         for(int a :allRuns)
-            temp += (average-a)*(average-a);
+        	if(a!=0){
+        		temp += (average-a)*(average-a);
+        	}
         	return temp/allRuns.size();
     }
 
