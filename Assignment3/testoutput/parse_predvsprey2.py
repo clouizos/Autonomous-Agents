@@ -88,8 +88,8 @@ for i in range(nrfiles):
         meth = 'Minimax QLearning'
     
     name = meth+" with "+str(nr_preds[i])+" predators, "+re.sub('\.data$', '', endstate[i])    
-    plt.plot(ddatapos[i], '.', color=next(colors), label = name)
-    plt.plot(ddataneg[i], '.')
+    plt.plot(data[i], '.', color=next(colors), label = name)
+    #plt.plot(ddataneg[i], '.')
     #plt.plot(data[i], colors[i], label = alpha[i])
     #plt.ylim([0,500])
     plt.ylabel('episode size')

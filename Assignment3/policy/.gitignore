@@ -26,3 +26,4 @@ PolicyEvalReduced.class
 /QLearningPrey.class
 /MinimaxQLearning.class
 /EGreedyMN.class
+/DoubleQLearning.class
