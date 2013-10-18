@@ -173,12 +173,17 @@ public class DoubleQLearning implements Policy {
 	public void updateQ(State cs, State nextS) {
 		double prob = Math.random();
 		HashMap<State, Double> qtable = null;
+		String bestaction = null;
+		//HashMap<State, Double> qtable2 = null;
 		int whichq = 0;
 		if(prob < 0.5){
 			qtable = this.qtable;
+			//qtable2 = this.qtable2;
 			whichq = 1;
+			
 		}else{
 			qtable = this.qtable2;
+			//qtable2 = this.qtable;
 		    whichq = 2;
 		}
 		State currentState = cs.projectState();
@@ -187,6 +192,7 @@ public class DoubleQLearning implements Policy {
 		double reward;
 		if(!(currentState.endState()==(-1|1))) {					
 			Double currentQ = (Double) qtable.get(currentState);
+			bestaction = argmaxQaction(nextState, whichq);
 			if(currentQ == null){
 				qtable.put(currentState, initValue);
 				currentQ = initValue;
@@ -196,7 +202,7 @@ public class DoubleQLearning implements Policy {
 			else
 				reward = rewards[0];
 			double qUpdated = currentQ + alpha*(reward 
-					+ gamma*argmaxQ(nextState, whichq) - currentQ);
+					+ gamma*getQValue(nextState, bestaction, whichq) - currentQ);
 			qtable.put(currentState, qUpdated);
 		}
 	}
@@ -226,6 +232,32 @@ public class DoubleQLearning implements Policy {
     		}
     	}
 		return max;
+	}
+	
+	public double getQValue(State state, String action, int whichq){
+		State key = new State(state.getPredators(), state.getPrey(), action);
+		HashMap<State, Double> qtable = null;
+		Double temp;
+		double return_val = 0;
+		if (whichq == 1){
+			qtable = this.qtable2;
+			temp = (Double)qtable.get(key);
+			if(temp == null){
+				qtable.put(key, initValue);
+				temp = initValue;
+			}
+			return_val =  temp;
+		}else if(whichq == 2){
+			qtable = this.qtable;
+			temp = (Double)qtable.get(key);
+			if(temp == null){
+				qtable.put(key, initValue);
+				temp = initValue;
+			}
+			return_val =  temp;
+		}
+		
+		return return_val;
 	}
 	
 	// argmax_a' of Q(s',a') output: action

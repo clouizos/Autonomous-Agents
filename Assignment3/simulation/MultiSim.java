@@ -56,21 +56,25 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 2000;
+    int nrRuns = 10000;
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
-    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch"; 
-    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_confused"; 
-    String arg3 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_preywin";
-    String arg4 =  ""+nrPred+'_'+nrRuns+"_Q_egreedy_predwin";
+//    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch"; 
+//    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_confused"; 
+//    String arg3 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_preywin";
+//    String arg4 =  ""+nrPred+'_'+nrRuns+"_Q_egreedy_predwin";
+    String arg = ""+nrPred+'_'+nrRuns+"_"+method+"_egreedy_catch"; 
+    String arg2 = ""+nrPred+'_'+nrRuns+"_"+method+"_egreedy_confused"; 
+    String arg3 = ""+nrPred+'_'+nrRuns+"_"+method+"_egreedy_preywin";
+    String arg4 =  ""+nrPred+'_'+nrRuns+"_"+method+"_egreedy_predwin";
     //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
     
     
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
-    //QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
-    DoubleQLearning preyPolicy = new DoubleQLearning(gamma, alpha, policy, nrPred, "prey");
+    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    //DoubleQLearning preyPolicy = new DoubleQLearning(gamma, alpha, policy, nrPred, "prey");
     //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
@@ -258,7 +262,8 @@ public class MultiSim {
     		}
     		// update qtable of the prey
     		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
-    		((DoubleQLearning)preyPolicy).updateQ(oldState, currentState);
+    		//((DoubleQLearning)preyPolicy).updateQ(oldState, currentState)
+    		((QLearning)preyPolicy).updateQ(oldState, currentState);
     		
     		// predmoves clear
     		predmoves.clear();
