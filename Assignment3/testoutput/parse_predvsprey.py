@@ -8,6 +8,8 @@ import glob
 import matplotlib.pyplot as plt
 from os.path import basename
 import re
+import matplotlib.cm as cm
+import numpy as np
 #==============================================================================
 # 
 # testoutput parser for structured graphing
@@ -32,7 +34,8 @@ files = range(nrfiles)
 data = range(nrfiles)
 ddata = range(nrfiles)
 
-colors = ['r','b', 'g', 'c', 'm', 'y', 'k']
+#colors = ['r','b', 'g', 'c', 'm', 'y', 'k']
+colors = iter(cm.Set1(np.linspace(0, 1, nrfiles)))
 
 for i in range(nrfiles): 
     datafile = basename(datafiles[i])
@@ -70,13 +73,22 @@ for i in range(nrfiles):
     #plt.xlabel('last 200 iterations')
     #plt.legend()    
     
-    #plt.figure(2)
-    plt.plot(ddata[i], colors[i], label = re.sub('\.data2$', '', endstate[i]))
+    
+    #plt.plot(ddata[i], colors[i], label = method[i]+" "+re.sub('\.data2$', '', endstate[i]))
+    meth = ""    
+    if method[i] == 'dq':
+        meth = 'Double QLearning'
+    elif method[i] == 'q':
+        meth = 'Independent QLearning'
+    elif method[i] == 'mmq':
+        meth = 'Minimax QLearning'
+        
+    plt.plot(data[i], color=next(colors) , label = meth+" with "+str(nr_preds[i])+" predators, "+re.sub('\.data2$', '', endstate[i]))
     #plt.plot(data[i], colors[i], label = alpha[i])
     #plt.ylim([0,500])
     plt.ylabel('episode size')
     plt.xlabel('iterations')
-    plt.legend()
+    plt.legend(loc = 2, prop= {'size': 12})
     
     #plt.figure(3)
     #plt.plot(ddata[i][0:step_to_show], colors[i], label = endstate[i])
