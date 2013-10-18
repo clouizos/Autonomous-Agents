@@ -598,7 +598,7 @@ public class MultiSim {
     
     public static void output_wins(ArrayList<Integer> wins, double parameter, double a, double g, String arg) throws Exception {
         File dir = new File ("testoutput");
-        File policyfile = new File(dir, ""+parameter+'_'+a+'_'+g+'_'+arg+".data");
+        File policyfile = new File(dir, ""+parameter+'_'+a+'_'+g+'_'+arg+".data2");
     	policyfile.delete();
     	policyfile.createNewFile();
     	//System.out.println("trying to write");

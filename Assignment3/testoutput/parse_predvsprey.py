@@ -12,7 +12,7 @@ from os.path import basename
 # testoutput parser for structured graphing
 #==============================================================================
 
-datafiles = glob.glob("*.data")
+datafiles = glob.glob("*.data2")
 nrfiles = len(datafiles)
 
 # parameters
