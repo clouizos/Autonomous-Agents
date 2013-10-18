@@ -39,8 +39,8 @@ public class MultiSim {
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
     static EGreedyMN policymmQPrey = new EGreedyMN(epsilon);
     //static String method = "q";
-    static String method = "dq";
-    //static String method = "mmq";
+//    static String method = "dq";
+    static String method = "mmq";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -57,7 +57,7 @@ public class MultiSim {
     		
     boolean verbose=false;
     int nrRuns = 10000;
-    int nrPred = 2;
+    int nrPred = 1;
     parameter = epsilon;
     //parameter = tau;
 //    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch"; 
@@ -75,7 +75,7 @@ public class MultiSim {
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
     QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
     //DoubleQLearning preyPolicy = new DoubleQLearning(gamma, alpha, policy, nrPred, "prey");
-    //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
+//    MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
     if(method.equals("q")){
@@ -368,15 +368,17 @@ public class MultiSim {
     			MinimaxState oldStateMinMax = new MinimaxState(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++), preymove);
     			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"", "");
     			//((QLearning)policy).updateQ(oldState, currentState);
-    			((MinimaxQLearning)policy).updateQ(oldStateMinMax, currentStateMinMax);
+    			((MinimaxQLearning)policy).updateQ(oldStateMinMax, currentStateMinMax, runs);
     			double[] linSol = ((MinimaxQLearning)policy).LinearProgramPi(oldStateMinMax);
     			policymmQ.updateProb(oldStateMinMax, linSol);
+    			((MinimaxQLearning)policy).updateV(oldStateMinMax, linSol[5]);
     		}
     		
     		MinimaxState oldStateMinMax = new MinimaxState(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(0), preymove);
 			MinimaxState currentStateMinMax = new MinimaxState(currentState.getPredators(), currentState.getPrey(),"", "");
-			((MinimaxQLearning)preyPolicy).updateQ(oldStateMinMax, currentStateMinMax);
+			((MinimaxQLearning)preyPolicy).updateQ(oldStateMinMax, currentStateMinMax,runs);
 			double[] linSol = ((MinimaxQLearning)preyPolicy).LinearProgramPi(oldStateMinMax);
+			((MinimaxQLearning)preyPolicy).updateV(oldStateMinMax, linSol[5]);
 			policymmQPrey.updateProb(oldStateMinMax, linSol);
     		
 //    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);

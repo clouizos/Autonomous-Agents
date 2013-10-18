@@ -34,6 +34,7 @@ public class MinimaxQLearning implements Policy {
 	 * alpha = small positive number; learning rate
 	 */
     protected HashMap<MinimaxState, Double> qtable;
+    protected HashMap<State, Double> vtable;
     protected HashMap<String, String> stateactions;
     protected double gamma, alpha;
     private double initQValue;
@@ -43,11 +44,17 @@ public class MinimaxQLearning implements Policy {
     private static EGreedyMN policy;
     private static ArrayList<String> actions = PolicySelect.getAllActions();
     protected String agent;
+    private int maxRuns = 100; //if pred can't catch until this runs, he is defeated
     LinearProgramSolver solver;
     
     /*
      *  Constructors; inherits from policy evaluation
      */	
+    
+    public void updateV(MinimaxState s, double v){
+    	State st= new State(s.getPredators(), s.getPrey());
+    	vtable.put(st, v);
+    }
 
 	public MinimaxQLearning(double g, double a, EGreedyMN p, int nrPred, String entity){
 		
@@ -61,6 +68,7 @@ public class MinimaxQLearning implements Policy {
 	     * predator[i][j]prey[5][5]moves[k]
 	     */
 		qtable = new HashMap<MinimaxState, Double>();
+		vtable = new HashMap<State, Double>();
 		// initializes Q(s,a) with input:value
 		//initQ(-10.0, nrPred);
 		//initQValue = -10.0;
@@ -82,7 +90,10 @@ public class MinimaxQLearning implements Policy {
 	    Position prey = new Position(5, 5);
 	    if(nrPred==1) {
 	    	for(int i = 0; i < 11; i++) 
-	    		for(int j = 0; j < 11; j++) 
+	    		for(int j = 0; j < 11; j++) {
+	    			State st = new State(prey);
+	    			st.addPred(new Position(i,j));
+	    			vtable.put(st, 1.0);
 	    			for (String action : actions){
 	    				for (String action_opp : actions){
 	    					MinimaxState s = new MinimaxState(prey, action, action_opp);
@@ -93,7 +104,8 @@ public class MinimaxQLearning implements Policy {
 	    					else
 	    						qtable.put(s, value);
 	    				}
-	    			}	    			    	
+	    			}
+	    		}
 	    }
 	}
 	
@@ -112,10 +124,10 @@ public class MinimaxQLearning implements Policy {
 		return action;
 	}
 	
-	public void updateQ(MinimaxState cs, MinimaxState nextS) {			
+	public void updateQ(MinimaxState cs, MinimaxState nextS, int runs) {			
 		MinimaxState currentState = (MinimaxState) cs.projectState();
 		MinimaxState nextState = (MinimaxState) nextS.projectState();
-		double[] rewards = getReward(nextState);
+		double[] rewards = getReward(nextState, runs);
 		double reward;
 		if(!(currentState.endState()==(-1|1))) {					
 			Double currentQ = (Double) qtable.get(currentState);
@@ -128,7 +140,7 @@ public class MinimaxQLearning implements Policy {
 			else
 				reward = rewards[0];
 			double qUpdated = currentQ + alpha*(reward 
-					+ gamma*argmaxQ(nextState) - currentQ);
+					+ gamma*vtable.get(nextState.toState()) - currentQ);
 			qtable.put(currentState, qUpdated);
 		}
 	}
@@ -184,8 +196,8 @@ public class MinimaxQLearning implements Policy {
     // implement reward function: 
 	// first check if predators got confused then immediate award = -10
 	// else if captured then immediate award=10, else 0
-    public double[] getReward(State s) {
-        if(s.endState() == -1){
+    public double[] getReward(State s, int runs) {
+        if(runs == maxRuns){
         	double[] ret = {-10.00,10.00};
         	return ret;
         }
