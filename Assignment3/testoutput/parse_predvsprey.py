@@ -62,14 +62,14 @@ for i in range(nrfiles):
     # Plotting
     step_to_show = 20
     plt.figure(1)
-    plt.plot(ddata[i][len(ddata[i]) - step_to_show:len(ddata[i])], colors[i], label = endstate[i])
+    #plt.plot(ddata[i][len(ddata[i]) - step_to_show:len(ddata[i])], colors[i], label = endstate[i])
     #plt.plot(data[i][len(data[i]) - step_to_show:len(data[i])], colors[i], label = alpha[i])
     #plt.ylim([0,50])
-    plt.ylabel('episode size')
-    plt.xlabel('last 200 iterations')
-    plt.legend()    
+    #plt.ylabel('episode size')
+    #plt.xlabel('last 200 iterations')
+    #plt.legend()    
     
-    plt.figure(2)
+    #plt.figure(2)
     plt.plot(ddata[i], colors[i], label = endstate[i])
     #plt.plot(data[i], colors[i], label = alpha[i])
     #plt.ylim([0,500])
@@ -77,12 +77,12 @@ for i in range(nrfiles):
     plt.xlabel('iterations')
     plt.legend()
     
-    plt.figure(3)
-    plt.plot(ddata[i][0:step_to_show], colors[i], label = endstate[i])
+    #plt.figure(3)
+    #plt.plot(ddata[i][0:step_to_show], colors[i], label = endstate[i])
     #plt.plot(data[i][0:step_to_show], colors[i], label = alpha[i])
     #plt.ylim([0,500])
-    plt.ylabel('episode size')
-    plt.xlabel('first 20 iterations')
-    plt.legend()
+    #plt.ylabel('episode size')
+    #plt.xlabel('first 20 iterations')
+    #plt.legend()
 
 plt.show()

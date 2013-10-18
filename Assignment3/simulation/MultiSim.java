@@ -57,8 +57,8 @@ public class MultiSim {
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
-    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha"+"_catch";
-    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha"+"_conf";
+    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch";
+    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_confused";
     //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
     
     
