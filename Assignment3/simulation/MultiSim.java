@@ -38,8 +38,9 @@ public class MultiSim {
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
     static EGreedyMN policymmQPrey = new EGreedyMN(epsilon);
-    static String method = "q";
-    //static String method = "mmQ";
+    //static String method = "q";
+    static String method = "dq";
+    //static String method = "mmq";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -55,7 +56,7 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 20000;
+    int nrRuns = 2000;
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
@@ -68,15 +69,19 @@ public class MultiSim {
     
     // qlearning with input:policy
     //QLearning predPolicy = new QLearning(gamma, alpha, policy, nrPred,"predator");
-    QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    //QLearning preyPolicy = new QLearning(gamma, alpha, policy, nrPred,"prey");
+    DoubleQLearning preyPolicy = new DoubleQLearning(gamma, alpha, policy, nrPred, "prey");
     //MinimaxQLearning preyPolicy = new MinimaxQLearning(gamma, alpha, policymmQPrey, nrPred, "prey");
     //Sarsa predPolicy = new Sarsa(gamma, alpha, policy);
     //testRandom(verbose, nrRuns, nrPred);
     if(method.equals("q")){
     	testQ(verbose, nrRuns, nrPred, preyPolicy);
     }
-    else{
+    else if(method.equals("mmq")){
     	testMinimaxQ(verbose, nrRuns, nrPred, preyPolicy);	
+    }
+    else if(method.equals("dq")){
+    	testDoubleQ(verbose, nrRuns, nrPred, preyPolicy);
     }
     //
     //testSarsa(predPolicy, preyPolicy, verbose, nrRuns);
@@ -148,6 +153,112 @@ public class MultiSim {
     		// update qtable of the prey
     		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
     		((QLearning)preyPolicy).updateQ(oldState, currentState);
+    		
+    		// predmoves clear
+    		predmoves.clear();
+    		
+    		if(verbose) {
+    		show("\n===========\nAt endloop: "+currentState.toString());
+    		}
+    		
+     		if(currentState.endState() == -1 || currentState.endState() == 1){
+    			if (currentState.endState() == -1){
+    				show("predators confused after "+runs+" runs!");
+    				allRunsconf.add(runs);
+    				allRuns.add(0);
+    				timesConf ++;
+    				predWins.add(timesCatch);
+    				preyWins.add(timesConf);
+    				show(""+timesRun);
+    				
+    			}
+    			else{
+    				show("prey captured after "+runs+" runs!");
+    				allRuns.add(runs);
+    				allRunsconf.add(0);
+    				timesCatch ++;
+    				predWins.add(timesCatch);
+    				preyWins.add(timesConf);
+    				show(""+timesRun);
+    			}
+    			timesRun++;
+    			resetGrid = true;
+    		}else{
+    			runs++;
+    				if(verbose)
+    				show("new iteration");
+    		}
+    		//pauseProg();
+    	}
+	
+    	System.out.println("confused:"+timesConf);
+    	System.out.println("catched:"+timesCatch);
+        //((QLearning)predPolicy).printTable(new Position(5,5));
+        //((QLearning)predPolicy).printList(new Position(5,5));
+    	
+    	double stdDev = getStdDev(allRuns);
+    	System.out.println("The standard deviation for catching is: "+stdDev);
+    	
+    	double stdDev2 = getStdDev(allRunsconf);
+    	System.out.println("The standard deviation for confused is: "+stdDev2);
+    }
+    
+    public static void testDoubleQ(boolean verbose, int nrRuns, int nrPred, Policy preyPolicy) {
+    	State currentState = initShared(nrPred, method);
+    	ArrayList<String> predmoves = new ArrayList<String>();
+    	//currentState.sortPreds();
+    	State oldstate; // = new State(currentState.getPredators(), currentState.getPrey(), "wait");
+    	while(timesRun < nrRuns) {
+    		if(resetGrid){
+    			runs = 0;
+    			//show("\nResetting Grid for the "+timesRun+" run!");
+    			// reset prey and predator positions
+    			reset(nrPred);
+    			//currentState.sortPreds();
+    			resetGrid = false;
+    			//pauseProg();
+    		}
+    		if(verbose) {
+    		show("\n===========\nAt beginloop: "+currentState.toString());
+    		show("predators: "+currentState.getPredators().size());
+    		}
+
+	    	oldstate = new State(currentState.getPredators(), currentState.getPrey(), "wait");
+	    	
+    		// make every predator do a move and put in a list
+    		for (Map.Entry<Position, Policy> entry : predPolicies.entrySet()) {
+    		    Position predator = entry.getKey();
+    		    Policy policy = entry.getValue();
+    		    String predmove = policy.getAction(oldstate);
+    		    predmoves.add(predmove);
+        		if(verbose) {
+            		show("predator move: " + predmove);
+            	}
+    		}
+    		
+    		// make prey do a move
+    		String preymove = preyPolicy.getAction(oldstate);
+    		prey.move(preymove);
+    		
+    		if(verbose) {
+        		show("prey move: " + preymove);
+        	}
+    		
+    		// doing actual move to update the currentState
+    		int i = 0;
+    		for(Position pred : predPolicies.keySet()) {
+    			pred.move(predmoves.get(i++));
+    		}
+    		    		
+    		// update qtable according to oldstate, currentState
+    		i = 0;
+    		for (Policy policy : predPolicies.values()) {
+    			State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), predmoves.get(i++));
+    		    ((DoubleQLearning)policy).updateQ(oldState, currentState);
+    		}
+    		// update qtable of the prey
+    		State oldState = new State(oldstate.getPredators(), oldstate.getPrey(), preymove);
+    		((DoubleQLearning)preyPolicy).updateQ(oldState, currentState);
     		
     		// predmoves clear
     		predmoves.clear();
@@ -437,34 +548,43 @@ public class MultiSim {
 		State start = new State(prey);
 		QLearning pQ = new QLearning(gamma, alpha, policy, nrPred,"predator");
 		MinimaxQLearning pMMQ = new MinimaxQLearning(gamma, alpha, policymmQ, nrPred,"predator");
+		DoubleQLearning dQ = new DoubleQLearning(gamma, alpha, policy, nrPred, "predator");
 		for (int i=0; i< nrPred; i++){
 			if (i==0){
 				Position pred1 = new Position(0,0);
 				if(method.equals("q"))
 					predPolicies.put(pred1, pQ);
-				else
+				else if (method.equals("mmq"))
 					predPolicies.put(pred1, pMMQ);
+				else if (method.equals("dq"))
+					predPolicies.put(pred1, dQ);
 				start.addPred(pred1);
 			}else if(i==1){
 				Position pred2 = new Position(0,10);
 				if(method.equals("q"))
 					predPolicies.put(pred2, pQ);
-				else
+				else if (method.equals("mmq"))
 					predPolicies.put(pred2, pMMQ);
+				else if (method.equals("dq"))
+					predPolicies.put(pred2, dQ);
 				start.addPred(pred2);
 			}else if(i==2){
 				Position pred3 = new Position(10,0);
 				if(method.equals("q"))
 					predPolicies.put(pred3, pQ);
-				else
+				else if (method.equals("mmq"))
 					predPolicies.put(pred3, pMMQ);
+				else if (method.equals("dq"))
+					predPolicies.put(pred3, dQ);
 				start.addPred(pred3);
 			}else if (i==3){
 				Position pred4 = new Position(10,10);
 				if(method.equals("q"))
 					predPolicies.put(pred4, pQ);
-				else
+				else if (method.equals("mmq"))
 					predPolicies.put(pred4, pMMQ);
+				else if (method.equals("dq"))
+					predPolicies.put(pred4, dQ);
 				start.addPred(pred4);
 			}
 		}
