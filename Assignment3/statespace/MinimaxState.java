@@ -26,6 +26,11 @@ public class MinimaxState extends State{
 		super(preds,p,a);
     	action_opponent =  b;
     }
+	
+	public State toState(){
+		State s = new State(this.getPredators(),this.getPrey());
+		return s;
+	}
     
 	public MinimaxState projectState() {
     	ArrayList<Position> preds = new ArrayList<Position>();
