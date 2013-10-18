@@ -57,7 +57,8 @@ public class MultiSim {
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
-    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha";
+    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha"+"_catch";
+    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_alpha"+"_conf";
     //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
     
     
@@ -78,6 +79,7 @@ public class MultiSim {
 	
     try {
 	    output(parameter, alpha, gamma, arg);
+	    output_conf(parameter, alpha, gamma, arg2);
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -561,4 +563,25 @@ public class MultiSim {
 	} else
 	    show("\nRuns each episode is empty!!");
     }
+    
+    public static void output_conf(double parameter, double a, double g, String arg) throws Exception {
+        File dir = new File ("testoutput");
+        File policyfile = new File(dir, ""+parameter+'_'+a+'_'+g+'_'+arg+".data");
+    	policyfile.delete();
+    	policyfile.createNewFile();
+    	//System.out.println("trying to write");
+    	if(!allRunsconf.isEmpty()) {
+    		//System.out.println(allRuns);
+    		for(int times : allRunsconf){
+    			try {
+    				write(policyfile, String.valueOf(times)+"\n", true);
+    			} catch (Exception e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    				System.out.println("Cannot write to file");
+    			}
+    		}
+    	} else
+    	    show("\nRuns each episode is empty!!");
+        }
 }
