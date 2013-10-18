@@ -39,9 +39,9 @@ public class MultiSim {
     static EGreedyPolicyTD policy = new EGreedyPolicyTD(epsilon, initQ);
     static EGreedyMN policymmQ = new EGreedyMN(epsilon);
     static EGreedyMN policymmQPrey = new EGreedyMN(epsilon);
-    //static String method = "q";
+    static String method = "q";
 //    static String method = "dq";
-    static String method = "mmq";
+    //static String method = "mmq";
    
     public MultiSim() {
 	// TODO Auto-generated constructor stub
@@ -57,8 +57,8 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 1000;
-    int nrPred = 1;
+    int nrRuns = 20000;
+    int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
 //    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch"; 
@@ -93,9 +93,9 @@ public class MultiSim {
 	
     try {
 	    output(parameter, alpha, gamma, arg);
-	    output_conf(parameter, alpha, gamma, arg2);
-	    output_wins(predWins, parameter, alpha, gamma, arg4);
-	    output_wins(preyWins, parameter, alpha, gamma, arg3);
+	    //output_conf(parameter, alpha, gamma, arg2);
+	    //output_wins(predWins, parameter, alpha, gamma, arg4);
+	    //output_wins(preyWins, parameter, alpha, gamma, arg3);
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -170,7 +170,8 @@ public class MultiSim {
     			if (currentState.endState() == -1){
     				show("predators confused after "+runs+" runs!");
     				allRunsconf.add(runs);
-    				allRuns.add(0);
+    				// change for capture times vs confused times with spatial ordering
+    				allRuns.add(0-runs);
     				timesConf ++;
     				predWins.add(timesCatch);
     				preyWins.add(timesConf);

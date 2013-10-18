@@ -32,7 +32,8 @@ endstate = range(nrfiles)
 files = range(nrfiles)
 # data parse
 data = range(nrfiles)
-ddata = range(nrfiles)
+ddatapos = range(nrfiles)
+ddataneg = range(nrfiles)
 
 #colors = ['r','b', 'g', 'c', 'm', 'y', 'k']
 colors = iter(cm.Set1(np.linspace(0, 1, nrfiles)))
@@ -60,9 +61,13 @@ for i in range(nrfiles):
         data[i][j] = float(data[i][j])
     averaging_step = 100
     # Averaging
-    ddata[i] = range(int(nr_runs[i])/averaging_step)
+    ddatapos[i] = range(int(nr_runs[i])/averaging_step)
+    ddataneg[i] = range(int(nr_runs[i])/averaging_step)
     for k in range(len(data[i])/averaging_step):
-        ddata[i][k] = sum(data[i][k*averaging_step:k*averaging_step + averaging_step])/averaging_step
+        if data[i][k] >= 0:
+            ddatapos[i][k] = sum(data[i][k*averaging_step:k*averaging_step + averaging_step])/averaging_step
+        if data[i][k] <= 0:
+            ddataneg[i][k] = sum(data[i][k*averaging_step:k*averaging_step + averaging_step])/averaging_step
     # Plotting
     step_to_show = 20
     fig = plt.figure(1)
@@ -83,7 +88,8 @@ for i in range(nrfiles):
         meth = 'Minimax QLearning'
     
     name = meth+" with "+str(nr_preds[i])+" predators, "+re.sub('\.data$', '', endstate[i])    
-    plt.plot(data[i], 'o', color=next(colors) , label = name)
+    plt.plot(ddatapos[i], '.', color=next(colors), label = name)
+    plt.plot(ddataneg[i], '.')
     #plt.plot(data[i], colors[i], label = alpha[i])
     #plt.ylim([0,500])
     plt.ylabel('episode size')
