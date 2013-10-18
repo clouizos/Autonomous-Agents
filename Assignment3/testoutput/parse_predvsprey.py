@@ -7,6 +7,7 @@ Created on Wed Oct 16 19:53:12 2013
 import glob
 import matplotlib.pyplot as plt
 from os.path import basename
+import re
 #==============================================================================
 # 
 # testoutput parser for structured graphing
@@ -70,7 +71,7 @@ for i in range(nrfiles):
     #plt.legend()    
     
     #plt.figure(2)
-    plt.plot(ddata[i], colors[i], label = endstate[i])
+    plt.plot(ddata[i], colors[i], label = re.sub('\.data2$', '', endstate[i]))
     #plt.plot(data[i], colors[i], label = alpha[i])
     #plt.ylim([0,500])
     plt.ylabel('episode size')

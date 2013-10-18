@@ -55,7 +55,7 @@ public class MultiSim {
     //SoftMax policy = new SoftMax(tau);
     		
     boolean verbose=false;
-    int nrRuns = 2000;
+    int nrRuns = 20000;
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
