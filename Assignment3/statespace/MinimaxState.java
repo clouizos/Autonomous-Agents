@@ -28,7 +28,7 @@ public class MinimaxState extends State{
     }
 	
 	public State toState(){
-		State s = new State(this.getPredators(),this.getPrey());
+		State s = new State(this.getPredators(),this.getPrey(), "wait");
 		return s;
 	}
     

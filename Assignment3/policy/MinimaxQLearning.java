@@ -44,7 +44,7 @@ public class MinimaxQLearning implements Policy {
     private static EGreedyMN policy;
     private static ArrayList<String> actions = PolicySelect.getAllActions();
     protected String agent;
-    private int maxRuns = 100; //if pred can't catch until this runs, he is defeated
+    private int maxRuns; //if pred can't catch until this runs, he is defeated
     LinearProgramSolver solver;
     
     /*
@@ -52,11 +52,11 @@ public class MinimaxQLearning implements Policy {
      */	
     
     public void updateV(MinimaxState s, double v){
-    	State st= new State(s.getPredators(), s.getPrey());
+    	State st= new State(s.getPredators(), s.getPrey(), "wait");
     	vtable.put(st, v);
     }
 
-	public MinimaxQLearning(double g, double a, EGreedyMN p, int nrPred, String entity){
+	public MinimaxQLearning(double g, double a, EGreedyMN p, int maxRuns, int nrPred, String entity){
 		
 		// policy could be e-greedy or softmax
 	    //policy = (EGreedyPolicyTD) p;
@@ -82,6 +82,7 @@ public class MinimaxQLearning implements Policy {
 	    alpha = a;
 	    agent = entity;
 	    solver  = SolverFactory.getSolver("LPSOLVE");
+	    this.maxRuns = maxRuns;
 	}
 	
 	// initializes Qtable: Q(s,a) arbitrarily with input:value
@@ -139,8 +140,13 @@ public class MinimaxQLearning implements Policy {
 				reward = rewards[1];
 			else
 				reward = rewards[0];
+			Double upd = vtable.get(nextState.toState());
+			if(upd == null){
+				vtable.put(nextState.toState(), initQValue);
+				upd = initQValue;
+			}
 			double qUpdated = currentQ + alpha*(reward 
-					+ gamma*vtable.get(nextState.toState()) - currentQ);
+					+ gamma*upd - currentQ);
 			qtable.put(currentState, qUpdated);
 		}
 	}
