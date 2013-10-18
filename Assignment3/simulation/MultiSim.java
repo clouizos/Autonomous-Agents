@@ -15,6 +15,8 @@ public class MultiSim {
 	static int runs = 0;
 	static ArrayList<Integer> allRuns = new ArrayList<Integer>();
 	static ArrayList<Integer> allRunsconf = new ArrayList<Integer>();
+	static ArrayList<Integer> predWins = new ArrayList<Integer>();
+	static ArrayList<Integer> preyWins = new ArrayList<Integer>();
 	static double averageRuns = 0;
 	static int timesConf = 0;
 	static int timesCatch = 0;
@@ -57,8 +59,10 @@ public class MultiSim {
     int nrPred = 2;
     parameter = epsilon;
     //parameter = tau;
-    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch";
-    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_confused";
+    String arg = ""+nrPred+'_'+nrRuns+"_Q_egreedy_catch"; 
+    String arg2 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_confused"; 
+    String arg3 = ""+nrPred+'_'+nrRuns+"_Q_egreedy_preywin";
+    String arg4 =  ""+nrPred+'_'+nrRuns+"_Q_egreedy_predwin";
     //String arg = "minimaxQ_egreedy_"+nrPred+'_'+nrRuns;
     
     
@@ -80,6 +84,8 @@ public class MultiSim {
     try {
 	    output(parameter, alpha, gamma, arg);
 	    output_conf(parameter, alpha, gamma, arg2);
+	    output_wins(predWins, parameter, alpha, gamma, arg4);
+	    output_wins(preyWins, parameter, alpha, gamma, arg3);
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -155,15 +161,20 @@ public class MultiSim {
     				show("predators confused after "+runs+" runs!");
     				allRunsconf.add(runs);
     				allRuns.add(0);
-    				show(""+timesRun);
     				timesConf ++;
+    				predWins.add(timesCatch);
+    				preyWins.add(timesConf);
+    				show(""+timesRun);
+    				
     			}
     			else{
     				show("prey captured after "+runs+" runs!");
     				allRuns.add(runs);
     				allRunsconf.add(0);
-    				show(""+timesRun);
     				timesCatch ++;
+    				predWins.add(timesCatch);
+    				preyWins.add(timesConf);
+    				show(""+timesRun);
     			}
     			timesRun++;
     			resetGrid = true;
@@ -573,6 +584,27 @@ public class MultiSim {
     	if(!allRunsconf.isEmpty()) {
     		//System.out.println(allRuns);
     		for(int times : allRunsconf){
+    			try {
+    				write(policyfile, String.valueOf(times)+"\n", true);
+    			} catch (Exception e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    				System.out.println("Cannot write to file");
+    			}
+    		}
+    	} else
+    	    show("\nRuns each episode is empty!!");
+        }
+    
+    public static void output_wins(ArrayList<Integer> wins, double parameter, double a, double g, String arg) throws Exception {
+        File dir = new File ("testoutput");
+        File policyfile = new File(dir, ""+parameter+'_'+a+'_'+g+'_'+arg+".data");
+    	policyfile.delete();
+    	policyfile.createNewFile();
+    	//System.out.println("trying to write");
+    	if(!allRunsconf.isEmpty()) {
+    		//System.out.println(allRuns);
+    		for(int times : wins){
     			try {
     				write(policyfile, String.valueOf(times)+"\n", true);
     			} catch (Exception e) {
